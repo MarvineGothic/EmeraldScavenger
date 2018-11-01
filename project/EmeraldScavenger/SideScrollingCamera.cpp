@@ -1,51 +1,68 @@
+#include <utility>
+
 //
 // Created by Morten Nobel-Jørgensen on 10/10/2017.
 //
 
 #include "SideScrollingCamera.hpp"
-#include "PlatformerGame.hpp"
-
-using namespace glm;
+#include "EmeraldGame.hpp"
 
 SideScrollingCamera::SideScrollingCamera(GameObject *gameObject)
-        : Component(gameObject)
-{
+        : Component(gameObject) {
     setZoomMode(false);
 }
 
-sre::Camera &SideScrollingCamera::getCamera() {
+Camera &SideScrollingCamera::getCamera() {
     return camera;
 }
 
 void SideScrollingCamera::update(float deltaTime) {
-    if (followObject != nullptr){
-        auto position = followObject->getPosition();
+    if (followObject != nullptr) {
+        auto objectPos = followObject->getPosition();
+        auto position = objectPos;
+        auto windowWidth = EmeraldGame::windowSize.x;
+        auto windowHeight = EmeraldGame::windowSize.y;
+        auto levelWidth = EmeraldGame::gameInstance->getLevel()->getWidth();
+        auto levelHeight = EmeraldGame::gameInstance->getLevel()->getHeight();
 
-        position.x += offset.x;
+        position.x = offset.x;
         position.y = offset.y;
-        if (zoom){
-            position.x -= offset.x/2;
-            position.y = offset.y/2;
+        // start moving camera when player walks out of half of window size:
+        if (objectPos.x > windowWidth / 2)
+            position.x = objectPos.x;
+        if (objectPos.y > windowHeight / 2)
+            position.y = objectPos.y;
+        // stop moving camera when on the edge of the world:
+        if ((objectPos.x + (windowWidth / 2)) > levelWidth) {
+            position.x = levelWidth - (windowWidth / 2);
+        }
+        if ((objectPos.y + (windowHeight / 2)) > levelHeight) {
+            position.y = levelHeight - (windowHeight / 2);
+        }
+
+        if (zoom) {
+            position.x -= offset.x;
+            position.y = offset.y / 2;
         }
         gameObject->setPosition(position);
-        vec3 eye (position, 0);
-        vec3 at (position, -1);
-        vec3 up (0, 1, 0);
+        vec3 eye(position, 0);
+        vec3 at(position, -1);
+        vec3 up(0, 1, 0);
         camera.lookAt(eye, at, up);
     }
 }
 
-void SideScrollingCamera::setFollowObject(std::shared_ptr<GameObject> followObject, glm::vec2 offset) {
-    this->followObject = followObject;
+void SideScrollingCamera::setFollowObject(shared_ptr<GameObject> followObject, vec2 offset) {
+    this->followObject = move(followObject);
     this->offset = offset;
 }
 
 void SideScrollingCamera::setZoomMode(bool zoomEnabled) {
     this->zoom = zoomEnabled;
-    if (zoomEnabled){
-        camera.setOrthographicProjection(PlatformerGame::windowSize.y/4,-1,1);
+    if (zoomEnabled) {
+        camera.setOrthographicProjection(EmeraldGame::windowSize.y / 4, -1, 1);
     } else {
-        camera.setOrthographicProjection(PlatformerGame::windowSize.y/2,-1,1);
+        camera.setOrthographicProjection(EmeraldGame::windowSize.y / 2, -1, 1);
     }
 }
 

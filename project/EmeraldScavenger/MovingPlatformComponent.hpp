@@ -4,20 +4,24 @@
 #include "Component.hpp"
 #include "glm/glm.hpp"
 
+using namespace std;
+using namespace sre;
+using namespace glm;
+
 class PlatformComponent;
 
 class MovingPlatformComponent : public Component {
 public:
     explicit MovingPlatformComponent(GameObject *gameObject);
 
-    void setMovementStart(glm::vec2 pos);
-    void setMovementEnd(glm::vec2 pos);
+    void setMovementStart(vec2 pos);
+    void setMovementEnd(vec2 pos);
 
     void update(float deltaTime) override;
 
 private:
     float totalTime = 0;
-    glm::vec2 movementStart = glm::vec2(0,0);
-    glm::vec2 movementEnd = glm::vec2(0,0);
+    vec2 movementStart = vec2(0,0);
+    vec2 movementEnd = vec2(0,0);
     std::shared_ptr<PlatformComponent> platformComponent;
 };

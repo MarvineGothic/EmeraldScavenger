@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm/vec3.hpp>
 
+using namespace std;
 
 // Captures debug information from Box2D as lines (polygon fill and color is discarded)
 class Box2DDebugDraw : public b2Draw{
@@ -25,8 +26,8 @@ public:
     void DrawPoint(const b2Vec2 &p, float32 size, const b2Color &color) override;
 
     void clear();
-    const std::vector<glm::vec3>& getLines();
+    const vector<glm::vec3>& getLines();
 private:
-    std::vector<glm::vec3> lines;
+    vector<glm::vec3> lines;
     float scale;
 };

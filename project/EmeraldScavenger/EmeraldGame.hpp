@@ -8,6 +8,10 @@
 #include "Level.hpp"
 #include "BirdMovementComponent.hpp"
 
+using namespace std;
+using namespace sre;
+using namespace glm;
+
 class PhysicsComponent;
 
 enum class GameState{
@@ -16,22 +20,8 @@ enum class GameState{
     GameOver
 };
 
-class PlatformerGame : public b2ContactListener {
-public:
-    PlatformerGame();
-
-    std::shared_ptr<GameObject> createGameObject();
-    static const glm::vec2 windowSize;
-
-    void BeginContact(b2Contact *contact) override;
-
-    void EndContact(b2Contact *contact) override;
-
-    static PlatformerGame* instance;
-
-    static constexpr float32 timeStep = 1.0f / 60.0f;
-private:
-    sre::SDLRenderer r;
+class EmeraldGame : public b2ContactListener {
+    SDLRenderer r;
 
     void initLevel();
     void initPhysics();
@@ -44,27 +34,45 @@ private:
 
     void handleContact(b2Contact *contact, bool begin);
 
-    std::shared_ptr<SideScrollingCamera> camera;
-    std::shared_ptr<sre::SpriteAtlas> spriteAtlas;
+    shared_ptr<SideScrollingCamera> camera;
+    shared_ptr<SpriteAtlas> spriteAtlas;
 
-    std::vector<std::shared_ptr<GameObject>> sceneObjects;
+    vector<shared_ptr<GameObject>> sceneObjects;
 
     void updatePhysics();
 
-    std::shared_ptr<Level> level;
+    shared_ptr<Level> level;
 
-    sre::Color backgroundColor;
+    // todo: add some textures to background
+    Color backgroundColor;
     b2World * world = nullptr;
     BirdMovementComponent* birdMovement;
     const float physicsScale = 100;
     void registerPhysicsComponent(PhysicsComponent *r);
     void deregisterPhysicsComponent(PhysicsComponent *r);
-    std::map<b2Fixture*,PhysicsComponent *> physicsComponentLookup;
+    map<b2Fixture*,PhysicsComponent *> physicsComponentLookup;
     Box2DDebugDraw debugDraw;
     bool doDebugDraw = false;
     friend class PhysicsComponent;
     friend class Level;
-    friend class CharacterController;
+    friend class Player;
     friend class PlatformComponent;
+    friend class SideScrollingCamera;
+public:
+    EmeraldGame();
+
+    shared_ptr<GameObject> createGameObject();
+    static const vec2 windowSize;
+
+    void BeginContact(b2Contact *contact) override;
+
+    void EndContact(b2Contact *contact) override;
+
+    static EmeraldGame* gameInstance;
+
+    static constexpr float32 timeStep = 1.0f / 60.0f;
+
+    shared_ptr<Level> getLevel();
+
 };
 

@@ -1,8 +1,8 @@
-#include "PlatformerGame.hpp"
+#include "EmeraldGame.hpp"
 #include <iostream>
 
 int main(){
    std::cout << "https://github.com/mortennobel/SimpleRenderEngineProject" << std::endl;
-   new PlatformerGame();
+   new EmeraldGame();
    return 0;
 }

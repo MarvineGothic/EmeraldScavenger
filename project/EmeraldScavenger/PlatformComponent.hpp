@@ -5,24 +5,31 @@
 #include <memory>
 #include "glm/glm.hpp"
 
+using namespace std;
+using namespace sre;
+using namespace glm;
+
 class GameObject;
 
 class PlatformComponent : public Component {
 public:
     explicit PlatformComponent(GameObject *gameObject);
 
-    void init(std::shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int width, bool kinematic);
-    void initWall(std::shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int height);
+    void initPlatform(shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int width,
+                      bool kinematic);
+    void initWall(shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int height);
 
-    void moveTo(glm::vec2 tilePos);
+    void moveTo(vec2 tilePos);
     void update(float deltaTime) override;
 
-    glm::vec2 getPosition();
+    vec2 getPosition();
+    shared_ptr<PhysicsComponent> getPhysicsComponent();
+    
 private:
-    std::vector<std::shared_ptr<GameObject>> tiles;
-    std::shared_ptr<PhysicsComponent> physics;
+    vector<shared_ptr<GameObject>> tiles;
+    shared_ptr<PhysicsComponent> physicsComponent;
     bool kinematic;
-    glm::vec2 pos;
+    vec2 pos;
     int width;
     float physicsScale;
 };

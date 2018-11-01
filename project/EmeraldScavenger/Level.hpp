@@ -4,8 +4,14 @@
 #include <vector>
 #include <sre/SpriteAtlas.hpp>
 
-class PlatformerGame;
+using namespace std;
+using namespace sre;
+using namespace glm;
+
+class EmeraldGame;
+
 class GameObject;
+
 class PlatformComponent;
 
 enum class TileCollider {
@@ -16,17 +22,41 @@ enum class TileCollider {
 };
 
 class Level {
-public:
-    static std::shared_ptr<Level> createDefaultLevel(PlatformerGame* game, std::shared_ptr<sre::SpriteAtlas> spriteAtlas);
+    Level() = default;
 
-    void generateLevel();
-    std::shared_ptr<PlatformComponent> addPlatform(int x, int y, int startSpriteId, int length, bool kinematic);
-    std::shared_ptr<PlatformComponent> addWall(int x, int y, int startSpriteId, int height);
+    float levelWidth;
+    float levelHeight;
+    EmeraldGame *game;
+    shared_ptr<SpriteAtlas> spriteAtlas;
+public:
+    static shared_ptr<Level> createDefaultLevel(EmeraldGame *game, shared_ptr<SpriteAtlas> spriteAtlas);
+
+    void level_01();
+
+    void level_02();
+
+    void level_03();
+
+    void level_04();
+
+    void level_05();
+
+    shared_ptr<PlatformComponent> addPlatform(int x, int y, int startSpriteId, int length, bool kinematic);
+
+    shared_ptr<PlatformComponent> addWall(int x, int y, int startSpriteId, int height);
 
     static constexpr float tileSize = 21;
-private:
-    Level() = default;
-    PlatformerGame* game;
-    std::shared_ptr<sre::SpriteAtlas> spriteAtlas;
+
+    void generateLevel();
+
+    void Level::Procedural_level();
+
+    vec2 min;
+    vec2 max;
+
+    float Level::getWidth();
+
+    float Level::getHeight();
+
 };
 

@@ -7,16 +7,16 @@
 
 SpriteComponent::SpriteComponent(GameObject *gameObject) : Component(gameObject) {}
 
-void SpriteComponent::renderSprite(sre::SpriteBatch::SpriteBatchBuilder &spriteBatchBuilder) {
+void SpriteComponent::renderSprite(SpriteBatch::SpriteBatchBuilder &spriteBatchBuilder) {
     sprite.setPosition(gameObject->getPosition());
     sprite.setRotation(gameObject->getRotation());
     spriteBatchBuilder.addSprite(sprite);
 }
 
-void SpriteComponent::setSprite(const sre::Sprite &sprite) {
+void SpriteComponent::setSprite(const Sprite &sprite) {
     this->sprite = sprite;
 }
 
-sre::Sprite SpriteComponent::getSprite() {
+Sprite SpriteComponent::getSprite() {
     return sprite;
 }

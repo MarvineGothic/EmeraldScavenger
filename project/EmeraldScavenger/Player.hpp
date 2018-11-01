@@ -5,16 +5,20 @@
 #include "SpriteComponent.hpp"
 #include "sre/Sprite.hpp"
 
-class CharacterController : public Component, public b2RayCastCallback {
-public:
-    explicit CharacterController(GameObject *gameObject);
+using namespace std;
+using namespace sre;
+using namespace glm;
 
-    void setSprites(sre::Sprite standing,
-                    sre::Sprite walk1,
-                    sre::Sprite walk2,
-                    sre::Sprite flyUp,
-                    sre::Sprite fly,
-                    sre::Sprite flyDown);
+class Player : public Component, public b2RayCastCallback {
+public:
+    explicit Player(GameObject *gameObject);
+
+    void setSprites(Sprite standing,
+                    Sprite walk1,
+                    Sprite walk2,
+                    Sprite flyUp,
+                    Sprite fly,
+                    Sprite flyDown);
 
     void updateSprite(float deltaTime);
 
@@ -32,15 +36,15 @@ public:
 
     void onCollisionEnd(PhysicsComponent *comp) override;
 private:
-    sre::Sprite standing;
-    sre::Sprite walk1;
-    sre::Sprite walk2;
-    sre::Sprite flyUp;
-    sre::Sprite fly;
-    sre::Sprite flyDown;
+    Sprite standing;
+    Sprite walkLeft;
+    Sprite walkRight;
+    Sprite flyUp;
+    Sprite fly;
+    Sprite flyDown;
 
-    std::shared_ptr<SpriteComponent> spriteComponent;
-    std::shared_ptr<PhysicsComponent> characterPhysics;
+    shared_ptr<SpriteComponent> spriteComponent;
+    shared_ptr<PhysicsComponent> characterPhysics;
     bool isGrounded = false;
     float radius;
     bool left = false;
