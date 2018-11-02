@@ -10,8 +10,8 @@ GameObject::~GameObject(){
     }
 }
 
-bool GameObject::removeComponent(std::shared_ptr<Component> component) {
-    auto comp = std::find(components.begin(), components.end(),component);
+bool GameObject::removeComponent(shared_ptr<Component> component) {
+    auto comp = find(components.begin(), components.end(),component);
     if (comp != components.end()){
         components.erase(comp);
     }
@@ -46,6 +46,6 @@ void GameObject::update(float deltaTime) {
     }
 }
 
-const std::vector<std::shared_ptr<Component>> &GameObject::getComponents() {
+const vector<shared_ptr<Component>> &GameObject::getComponents() {
     return components;
 }

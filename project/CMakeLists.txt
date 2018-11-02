@@ -55,7 +55,6 @@ ENDIF (USE_BULLET)
 ENDIF(WIN32)
 
 add_subdirectory(Box2DTestbed)
-add_subdirectory(platformer)
 add_subdirectory(particle_system)
 # add_subdirectory(BussIK)
 add_subdirectory(EmeraldScavenger)

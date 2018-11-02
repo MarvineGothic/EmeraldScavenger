@@ -16,7 +16,7 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
 
     auto physicsScale = EmeraldGame::gameInstance->physicsScale;
     radius = 10 / physicsScale;
-    characterPhysics->initCircle(b2_dynamicBody, radius, glm::vec2{1.5, 1.5} * Level::tileSize / physicsScale, 1);
+    characterPhysics->initCircle(b2_dynamicBody, radius, vec2{1.5, 1.5} * Level::tileSize / physicsScale, 1);
     //characterPhysics->getFixture()->SetRestitution(1);
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
@@ -54,26 +54,43 @@ void Player::update(float deltaTime) {
     isGrounded = false;
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
 
-    characterPhysics->fixRotation();
+    //characterPhysics->fixRotation();
     vec2 movement{0, 0};
     if (left) {
         movement.x--;
+        characterPhysics->getFixture()->SetFriction(0);
     }
     if (right) {
         movement.x++;
+        characterPhysics->getFixture()->SetFriction(0);
     }
+    if (!left && !right)
+        characterPhysics->getFixture()->SetFriction(1);
+    //todo: switch friction
+    cout<<left<<" "<<right<<endl;
     b2Body *body = characterPhysics->getBody();
 
+    // ====================== PLAYER VELOCITY =====================
     float accelerationSpeed = 0.005f;
     characterPhysics->addImpulse(movement * accelerationSpeed);
     float maximumVelocity = 2;
     auto linearVelocity = characterPhysics->getLinearVelocity();
     float currentVelocity = linearVelocity.x;
     if (abs(currentVelocity) > maximumVelocity) {
-        linearVelocity.x = glm::sign(linearVelocity.x) * maximumVelocity;
+        linearVelocity.x = sign(linearVelocity.x) * maximumVelocity;
         characterPhysics->setLinearVelocity(linearVelocity);
     }
     updateSprite(deltaTime);
+
+    // ====================== PLAYER DIES =======================
+    if (this->getGameObject()->getPosition().y <= 0) {
+        EmeraldGame::gameInstance->livesCounter--;
+        auto lives = EmeraldGame::gameInstance->livesCounter;
+        EmeraldGame::gameInstance->setGameState(GameState::GetReady);
+        cout << "Loose life " << lives << endl;
+        isDead = true;
+    }
+
 }
 
 void Player::jump() {
@@ -106,7 +123,7 @@ void Player::setSprites(sre::Sprite standing, sre::Sprite walk1, sre::Sprite wal
 
 void Player::updateSprite(float deltaTime) {
     auto velocity = characterPhysics->getLinearVelocity();
-    // todo implement
+    // todo: animation
 }
 
 

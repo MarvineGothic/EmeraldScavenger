@@ -46,6 +46,7 @@ private:
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> characterPhysics;
     bool isGrounded = false;
+    bool isDead = false;
     float radius;
     bool left = false;
     bool right = false;

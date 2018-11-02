@@ -1,3 +1,5 @@
+#include <memory>
+
 #include <sre/Inspector.hpp>
 #include "EmeraldGame.hpp"
 #include "GameObject.hpp"
@@ -14,24 +16,14 @@ EmeraldGame *EmeraldGame::gameInstance = nullptr;
 
 EmeraldGame::EmeraldGame()
         : debugDraw(physicsScale) {
+    bool useVsync = true;
     gameInstance = this;
     r.setWindowSize(windowSize);
-    bool useVsync = true;
     r.init().withSdlInitFlags(SDL_INIT_EVERYTHING)
             .withSdlWindowFlags(SDL_WINDOW_OPENGL)
             .withVSync(useVsync);
 
-    backgroundColor = {0.6f, 0.6f, 1.0f, 1.0f};
-
-    //spriteAtlas = SpriteAtlas::create("platformer-art-deluxe.json","platformer-art-deluxe.png");
-    spriteAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
-            .withFile("platformer-art-deluxe.png")
-            .withFilterSampling(false)
-            .build());
-
-    level = Level::createDefaultLevel(this, spriteAtlas);
-
-    initLevel();
+    initGame();
 
     // setup callback functions
     r.keyEvent = [&](SDL_Event &e) {
@@ -47,17 +39,70 @@ EmeraldGame::EmeraldGame()
     r.startEventLoop();
 }
 
-void EmeraldGame::initLevel() {
-    initPhysics();
+// ============================================ INIT FUNCTIONS =========================================================
+void EmeraldGame::initGame() {
+    if (world != nullptr) { // deregister call backlistener to avoid getting callbacks when recreating the world
+        world->SetContactListener(nullptr);
+    }
 
-    auto player = createGameObject();
+    resetGame();
+    initCamera();
+    initPhysics();
+    initAssets();
+
+    initPlayer();
+
+    // todo: automatically switch to level
+    level->level_01();
+
+    gameState = GameState::Running;
+}
+
+void EmeraldGame::resetGame() {
+    player.reset();
+    camera.reset();
+    background.resetBackground();
+    //level.reset();
+    gameObjectsList.clear();
+    physicsComponentMap.clear();
+}
+
+void EmeraldGame::initCamera() {
+    auto camObj = createGameObject();
+    camObj->name = "Camera";
+    camera = camObj->addComponent<SideScrollingCamera>();
+    camObj->setPosition(windowSize * 0.5f);
+}
+
+void EmeraldGame::initPhysics() {
+    float gravity = -9.8f; // 9.8 m/s2
+    delete world;
+    world = new b2World(b2Vec2(0, gravity));
+    world->SetContactListener(this);
+
+    if (doDebugDraw)
+        world->SetDebugDraw(&debugDraw);
+}
+
+void EmeraldGame::initAssets() {
+    spriteAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
+            .withFile("platformer-art-deluxe.png")
+            .withFilterSampling(false)
+            .build());
+    background.init("background.png");
+
+    level = Level::createDefaultLevel(this, spriteAtlas);
+}
+
+void EmeraldGame::initPlayer() {
+    player = createGameObject();
     player->name = "Player";
     auto playerSprite = player->addComponent<SpriteComponent>();
     auto playerSpriteObj = spriteAtlas->get("19.png");
     playerSpriteObj.setPosition(vec2{1.5, 2.5} * Level::tileSize);
     playerSprite->setSprite(playerSpriteObj);
-    auto characterController = player->addComponent<Player>();
-    characterController->setSprites(
+    auto playerComponent = player->addComponent<Player>();
+    playerComponent->setSprites(
             spriteAtlas->get("19.png"),
             spriteAtlas->get("20.png"),
             spriteAtlas->get("21.png"),
@@ -65,108 +110,13 @@ void EmeraldGame::initLevel() {
             spriteAtlas->get("27.png"),
             spriteAtlas->get("28.png")
     );
-
-    auto camObj = createGameObject();
-    camObj->name = "Camera";
-    camera = camObj->addComponent<SideScrollingCamera>();
-    //camObj->setPosition(windowSize );
+    // set camera follow player:
     camera->setFollowObject(player, {windowSize * 0.5f});
-
-
-    auto birdObj = createGameObject();
-    birdObj->name = "Bird";
-    auto spriteComponent = birdObj->addComponent<SpriteComponent>();
-    auto bird = spriteAtlas->get("433.png");
-    bird.setFlip({true, false});
-    spriteComponent->setSprite(bird);
-    birdMovement = birdObj->addComponent<BirdMovementComponent>().get();
-
-    birdMovement->setPositions({
-                                       {-50,  350},
-                                       {0,    300},
-                                       {50,   350},
-                                       {100,  400},
-                                       {150,  300},
-                                       {200,  200},
-                                       {250,  300},
-                                       {300,  400},
-                                       {350,  350},
-                                       {400,  300},
-                                       {450,  350},
-                                       {500,  400},
-                                       {550,  350},
-                                       {600,  300},
-                                       {650,  350},
-                                       {700,  400},
-                                       {750,  350},
-                                       {800,  300},
-                                       {850,  350},
-                                       {900,  400},
-                                       {950,  350},
-                                       {1000, 300},
-                                       {1050, 350},
-                                       {1100, 400},
-                                       {1150, 350},
-                                       {1200, 300},
-                                       {1250, 350},
-                               });
-
-    //level->level_01();
-    level->generateLevel();
 }
 
-void EmeraldGame::update(float time) {
-    updatePhysics();
-    if (time > 0.03) // if framerate approx 30 fps then run two physics steps
-    {
-        updatePhysics();
-    }
-    for (auto &sceneObject : sceneObjects) {
-        sceneObject->update(time);
-    }
-}
-
-void EmeraldGame::render() {
-    auto rp = RenderPass::create()
-            .withCamera(camera->getCamera())
-            .build();
-
-    if (doDebugDraw) {
-        static Inspector profiler;
-        profiler.update();
-        profiler.gui(false);
-
-        vector<vec3> lines;
-        for (int i = 0; i < 5000; i++) {
-            float t = (i / 5001.0f) * birdMovement->getNumberOfSegments();
-            float t1 = ((i + 1) / 5001.0f) * birdMovement->getNumberOfSegments();
-            auto p = birdMovement->computePositionAtTime(t);
-            auto p1 = birdMovement->computePositionAtTime(t1);
-            lines.emplace_back(p, 0);
-            lines.emplace_back(p1, 0);
-        }
-        rp.drawLines(lines);
-    }
-
-    auto pos = camera->getGameObject()->getPosition();
-
-    auto spriteBatchBuilder = SpriteBatch::create();
-    for (auto &go : sceneObjects) {
-        go->renderSprite(spriteBatchBuilder);
-    }
-
-    auto sb = spriteBatchBuilder.build();
-    rp.draw(sb);
-
-    if (doDebugDraw) {
-        world->DrawDebugData();
-        rp.drawLines(debugDraw.getLines());
-        debugDraw.clear();
-    }
-}
-
+// ============================================ GAME LOOP FUNCTIONS ====================================================
 void EmeraldGame::onKey(SDL_Event &event) {
-    for (auto &gameObject: sceneObjects) {
+    for (auto &gameObject: gameObjectsList) {
         for (auto &c : gameObject->getComponents()) {
             bool consumed = c->onKey(event);
             if (consumed) {
@@ -189,25 +139,93 @@ void EmeraldGame::onKey(SDL_Event &event) {
                     world->SetDebugDraw(nullptr);
                 }
                 break;
+            case SDLK_SPACE:
+                if (gameState == GameState::GameOver) {
+                    initGame();
+                }
+                break;
             default:
                 break;
         }
     }
 }
 
+void EmeraldGame::update(float time) {
+    if (gameState == GameState::Running) {
+        cout << "Running" << endl;
+        updatePhysics();
+        if (time > 0.03) // if framerate approx 30 fps then run two physics steps
+            updatePhysics();
+
+        for (auto &gameObject : gameObjectsList) {
+            gameObject->update(time);
+        }
+    }
+
+    if (gameState == GameState::GetReady) {
+        cout << "GetReady" << endl;
+        if (livesCounter < 2) {
+            gameState = GameState::GameOver;
+        } else
+            initGame();
+    }
+}
+
+void EmeraldGame::render() {
+    auto renderPass = RenderPass::create()
+            .withCamera(camera->getCamera())
+            .build();
+
+    if (doDebugDraw) {
+        static Inspector profiler;
+        profiler.update();
+        profiler.gui(false);
+    }
+
+    auto pos = camera->getGameObject()->getPosition() * 0.5f;
+    background.renderBackground(renderPass, 0.0f);
+
+    auto spriteBatchBuilder = SpriteBatch::create();
+    for (auto &go : gameObjectsList) {
+        go->renderSprite(spriteBatchBuilder);
+    }
+
+    if (gameState == GameState::GameOver) {
+        cout << "GameOver" << endl;
+        // todo: render game over state
+        resetGame();
+        initCamera();
+        //background.init("background01.jpg");
+        auto sprite = spriteAtlas->get("11.png");
+        sprite.setPosition({pos.x, pos.y});
+        spriteBatchBuilder.addSprite(sprite);
+        //gameState = GameState::Ready;
+    }
+
+    auto sb = spriteBatchBuilder.build();
+    renderPass.draw(sb);
+
+    if (doDebugDraw) {
+        world->DrawDebugData();
+        renderPass.drawLines(debugDraw.getLines());
+        debugDraw.clear();
+    }
+}
+
 shared_ptr<GameObject> EmeraldGame::createGameObject() {
-    auto obj = shared_ptr<GameObject>(new GameObject());
-    sceneObjects.push_back(obj);
+    auto obj = make_shared<GameObject>();
+    gameObjectsList.push_back(obj);
     return obj;
 }
 
+// ============================================ HELPER FUNCTIONS =======================================================
 void EmeraldGame::updatePhysics() {
 
     const int positionIterations = 4;
     const int velocityIterations = 12;
     world->Step(timeStep, velocityIterations, positionIterations);
 
-    for (auto phys : physicsComponentLookup) {
+    for (auto phys : physicsComponentMap) {
         PhysicsComponent *physicsComponent = phys.second;
         if (!physicsComponent->isAutoUpdate()) continue;
         auto position = physicsComponent->getBody()->GetPosition();
@@ -215,17 +233,6 @@ void EmeraldGame::updatePhysics() {
         auto gameObject = physicsComponent->getGameObject();
         gameObject->setPosition(vec2(position.x * physicsScale, position.y * physicsScale));
         gameObject->setRotation(angle);
-    }
-}
-
-void EmeraldGame::initPhysics() {
-    float gravity = -9.8f; // 9.8 m/s2
-    delete world;
-    world = new b2World(b2Vec2(0, gravity));
-    world->SetContactListener(this);
-
-    if (doDebugDraw) {
-        world->SetDebugDraw(&debugDraw);
     }
 }
 
@@ -240,24 +247,24 @@ void EmeraldGame::EndContact(b2Contact *contact) {
 }
 
 void EmeraldGame::deregisterPhysicsComponent(PhysicsComponent *r) {
-    auto iter = physicsComponentLookup.find(r->getFixture());
-    if (iter != physicsComponentLookup.end()) {
-        physicsComponentLookup.erase(iter);
+    auto iter = physicsComponentMap.find(r->getFixture());
+    if (iter != physicsComponentMap.end()) {
+        physicsComponentMap.erase(iter);
     } else {
         assert(false); // cannot find physics object
     }
 }
 
 void EmeraldGame::registerPhysicsComponent(PhysicsComponent *r) {
-    physicsComponentLookup[r->getFixture()] = r;
+    physicsComponentMap[r->getFixture()] = r;
 }
 
 void EmeraldGame::handleContact(b2Contact *contact, bool begin) {
     auto fixA = contact->GetFixtureA();
     auto fixB = contact->GetFixtureB();
-    auto physA = physicsComponentLookup.find(fixA);
-    auto physB = physicsComponentLookup.find(fixB);
-    if (physA != physicsComponentLookup.end() && physB != physicsComponentLookup.end()) {
+    auto physA = physicsComponentMap.find(fixA);
+    auto physB = physicsComponentMap.find(fixB);
+    if (physA != physicsComponentMap.end() && physB != physicsComponentMap.end()) {
         auto &aComponents = physA->second->getGameObject()->getComponents();
         auto &bComponents = physB->second->getGameObject()->getComponents();
         for (auto &c : aComponents) {
@@ -279,4 +286,8 @@ void EmeraldGame::handleContact(b2Contact *contact, bool begin) {
 
 shared_ptr<Level> EmeraldGame::getLevel() {
     return this->level;
+}
+
+void EmeraldGame::setGameState(GameState newState) {
+    this->gameState = newState;
 }

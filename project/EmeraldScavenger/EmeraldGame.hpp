@@ -7,6 +7,7 @@
 #include "Box2DDebugDraw.hpp"
 #include "Level.hpp"
 #include "BirdMovementComponent.hpp"
+#include "Background.hpp"
 
 using namespace std;
 using namespace sre;
@@ -14,17 +15,47 @@ using namespace glm;
 
 class PhysicsComponent;
 
-enum class GameState{
+enum class GameState {
+    GetReady,
     Ready,
     Running,
     GameOver
 };
 
 class EmeraldGame : public b2ContactListener {
-    SDLRenderer r;
+    const float physicsScale = 100;
+    bool doDebugDraw = false;
 
-    void initLevel();
+    int levelCounter = 0;
+    int livesCounter = 3;
+
+    SDLRenderer r;
+    Background background;
+    Box2DDebugDraw debugDraw;
+    GameState gameState = GameState::Ready;
+
+    shared_ptr<GameObject> player;
+    shared_ptr<SideScrollingCamera> camera;
+    shared_ptr<SpriteAtlas> spriteAtlas;
+    shared_ptr<Level> level;
+
+    vector<shared_ptr<GameObject>> gameObjectsList;
+    map<b2Fixture *, PhysicsComponent *> physicsComponentMap;
+
+    b2World *world = nullptr;
+
+    void initGame();
+
+    void resetGame();
+
+    void initCamera();
+
     void initPhysics();
+
+    void initAssets();
+
+    void initPlayer();
+
 
     void update(float time);
 
@@ -34,41 +65,36 @@ class EmeraldGame : public b2ContactListener {
 
     void handleContact(b2Contact *contact, bool begin);
 
-    shared_ptr<SideScrollingCamera> camera;
-    shared_ptr<SpriteAtlas> spriteAtlas;
-
-    vector<shared_ptr<GameObject>> sceneObjects;
-
     void updatePhysics();
 
-    shared_ptr<Level> level;
-
-    // todo: add some textures to background
-    Color backgroundColor;
-    b2World * world = nullptr;
-    BirdMovementComponent* birdMovement;
-    const float physicsScale = 100;
     void registerPhysicsComponent(PhysicsComponent *r);
+
     void deregisterPhysicsComponent(PhysicsComponent *r);
-    map<b2Fixture*,PhysicsComponent *> physicsComponentLookup;
-    Box2DDebugDraw debugDraw;
-    bool doDebugDraw = false;
+
+    void setGameState(GameState newState);
+
     friend class PhysicsComponent;
+
     friend class Level;
+
     friend class Player;
+
     friend class PlatformComponent;
+
     friend class SideScrollingCamera;
+
 public:
     EmeraldGame();
 
     shared_ptr<GameObject> createGameObject();
+
     static const vec2 windowSize;
 
     void BeginContact(b2Contact *contact) override;
 
     void EndContact(b2Contact *contact) override;
 
-    static EmeraldGame* gameInstance;
+    static EmeraldGame *gameInstance;
 
     static constexpr float32 timeStep = 1.0f / 60.0f;
 

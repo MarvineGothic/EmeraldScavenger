@@ -8,6 +8,7 @@
 using namespace std;
 using namespace sre;
 using namespace glm;
+
 // Forward declaration
 class Component;
 
@@ -20,17 +21,18 @@ class GameObject {
 public:
 
     GameObject() = default;
+
     ~GameObject();
 
     template<class T>
     // Add component of a given type to a gameObject. example:
-    shared_ptr<T>
-    addComponent();                   // shared_ptr<SpriteComponent> spriteComponent = gameObject->addComponent<SpriteComponent>();
+    // shared_ptr<SpriteComponent> spriteComponent = gameObject->addComponent<SpriteComponent>();
+    shared_ptr<T> addComponent();
 
     template<class T>
     //  Get component of a given type to a gameObject. If not found return empty shared_ptr (==nullptr). example:
-    shared_ptr<T>
-    getComponent();                   // shared_ptr<SpriteComponent> spriteComponent = gameObject->getComponent<SpriteComponent>();
+    // shared_ptr<SpriteComponent> spriteComponent = gameObject->getComponent<SpriteComponent>();
+    shared_ptr<T> getComponent();
 
     bool removeComponent(shared_ptr<Component> component);
 
@@ -50,7 +52,7 @@ public:
 
     string name = "_";
 
-    friend class PlatformerGame;
+    friend class EmeraldGame;
 };
 
 // definition of the template member function addComponent

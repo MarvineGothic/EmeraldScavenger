@@ -28,8 +28,10 @@ void Level::level_01() {
     addWall(0, 0, 2, 51);
 
     // floor
-    addPlatform(1, 0, 2, 100, false);
-
+    addPlatform(1, 0, 2, 5, false);
+    // gap = 5
+    addPlatform(10, 0, 2, 90, false);
+    // gap = 5
     addPlatform(105, 0, 2, 100, false);
     // ceil
     addPlatform(1, 50, 2, 204, false);
@@ -92,8 +94,11 @@ void Level::generateLevel() {
 
     auto movingPlatform = addPlatform(10, 3, 2, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent->setMovementStart({ 10,3 });
-    movingPlatformComponent->setMovementEnd({ 10,5 });
+    movingPlatform->getPhysicsComponent()->setLinearVelocity({0,100});
+    b2Body *body = movingPlatform->getPhysicsComponent()->getBody();
+    movingPlatformComponent->setBody(body);
+    movingPlatformComponent->setMovementStart({10, 3});
+    movingPlatformComponent->setMovementEnd({10, 5});
 
     //Procedurally generated level
     Procedural_level();
@@ -119,14 +124,13 @@ void Level::Procedural_level() {
     glm::vec2 prev_platform = glm::vec2(15 + 5, 7);
 
     int i = 0;
-    while (i < 100)
-    {
+    while (i < 100) {
         //int min_y = clamp(min.y, floor, ceil);
         //int max_y = clamp(max.y, floor, ceil);
 
         int length = 5;
-        int rand_x = (rand() % (int)((max.x - min.x) + 1)) + min.x + prev_platform.x;
-        int rand_y = (rand() % (int)((max.y - min.y) + 1)) + min.y + prev_platform.y;
+        int rand_x = (rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x;
+        int rand_y = (rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y;
         addPlatform(rand_x, rand_y, 2, length, true);
         prev_platform = glm::vec2(rand_x + length, clamp(rand_y, floor, ceil));
         i++;
