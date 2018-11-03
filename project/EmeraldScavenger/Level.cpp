@@ -48,9 +48,18 @@ void Level::makeLevel(int level) {
 }
 
 void Level::level_00() {
+
     int width = 205;
     int height = 51;
-    startPosition = {vec2{1.5, 2.5} * Level::tileSize};
+
+	// start wall
+	addWall(-1, 0, 2, 10);
+	// floor
+	addPlatform(0, 0, 2, width, false);
+	// ceil
+	addPlatform(0, height, 2, width, false);
+
+	startPosition = {vec2{1.5, 2.5} * Level::tileSize};
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
@@ -118,13 +127,6 @@ void Level::level_05() {
 }
 
 void Level::generateLevel() {
-    // start wall
-    addWall(-1, 0, 2, 10);
-
-    // floor
-    addPlatform(0, 0, 2, 100, false);
-    // ceil
-    addPlatform(0, 20, 2, 100, false);
 
     auto movingPlatform = addPlatform(10, 3, 2, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
@@ -146,13 +148,29 @@ float clamp(float n, float lower, float upper) {
 //Procedurally generates a level.
 void Level::Procedural_level() {
 
+	int width = 500;
+	int height = 50;
+
+	// start wall
+	addWall(-1, 0, 2, height); 
+	// floor
+	addPlatform(0, 0, 2, 10, false);
+	// ceil
+	addPlatform(0, height, 2, width, false);
+
+	startPosition = { vec2{1.5, 2.5} *Level::tileSize };
+	levelWidth = static_cast<int>((width + 1) * tileSize);
+	levelHeight = static_cast<int>(height * tileSize);
+	game->background.initDynamicBackground("background.png");
+
     glm::vec2 min(0, -3);
     glm::vec2 max(5, 3);
 
-    float floor = 0;
+    float floor = 1;
     float ceil = 15;
     float wall_l = 0;
     float wall_r = 500;
+
 
     addPlatform(15, 7, 2, 5, true);
     glm::vec2 prev_platform = glm::vec2(15 + 5, 7);
@@ -162,16 +180,13 @@ void Level::Procedural_level() {
         //int min_y = clamp(min.y, floor, ceil);
         //int max_y = clamp(max.y, floor, ceil);
 
-        int length = 5;
+        int length = (rand() % 5) + 1;;
         int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
-        int rand_y = static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y);
+        int rand_y = clamp(static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y), floor, ceil);
         addPlatform(rand_x, rand_y, 2, length, true);
-        prev_platform = glm::vec2(rand_x + length, clamp(rand_y, floor, ceil));
+        prev_platform = glm::vec2(rand_x + length, rand_y);
         i++;
     }
-
-    levelWidth = static_cast<int>(206 * tileSize);
-    levelHeight = static_cast<int>(51 * tileSize);
 }
 
 std::shared_ptr<PlatformComponent> Level::addPlatform(int x, int y, int startSpriteId, int length, bool kinematic) {

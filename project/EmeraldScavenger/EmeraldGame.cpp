@@ -10,6 +10,8 @@
 #include "PhysicsComponent.hpp"
 #include "Player.hpp"
 #include "BirdMovementComponent.hpp"
+#include <time.h>
+#include <windows.h>
 
 const vec2 EmeraldGame::windowSize(800, 600);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
@@ -28,6 +30,14 @@ EmeraldGame::EmeraldGame()
             .withFilterSampling(false)
             .build());
     level = Level::createDefaultLevel(this, spriteAtlas);
+
+	// Initiate random seed based on time in milliseconds
+	SYSTEMTIME time;
+	GetSystemTime(&time);
+	LONG time_ms = (time.wSecond * 1000) + time.wMilliseconds;
+	time_t rand_seed = (time_t)time_ms;
+	printf("Random seed: %d\n", rand_seed);
+	srand(rand_seed);
 
     initGame();
 
@@ -166,7 +176,7 @@ void EmeraldGame::update(float time) {
     }
     if (gameState == GameState::GetReady) {
         cout << "GetReady" << endl;
-        if (livesCounter < 2) {
+        if (livesCounter < 1) {
             gameState = GameState::GameOver;
         } else
             runGame();
