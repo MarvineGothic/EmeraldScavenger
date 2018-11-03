@@ -34,12 +34,16 @@ void SideScrollingCamera::update(float deltaTime) {
         // sets game camera to behave correctly on Mac
         auto macWidthOffset = 0;
         auto macHeightOffset = 0;
+        auto windowsWidthOffset = 0;
+        auto windowsHeightOffset = 0;
         if (platform=="Mac") {
-            std::cout << "You are on Mac" << std::endl;
             windowWidth = windowWidth / 2;
             windowHeight = windowHeight / 2;
-            macWidthOffset += windowWidth / 2;
-            macHeightOffset += windowHeight / 2;
+            macWidthOffset = windowWidth / 2;
+            macHeightOffset = windowHeight / 2;
+        } else if (platform=="Windows") {
+            windowsWidthOffset = windowWidth / 2;
+            windowsHeightOffset = windowHeight / 2;
         }
 
         position.x = offset.x;
@@ -51,10 +55,10 @@ void SideScrollingCamera::update(float deltaTime) {
             position.y = objectPos.y  + macHeightOffset;
         // stop moving camera when on the edge of the world:
         if ((objectPos.x + (windowWidth / 2)) > levelWidth && levelWidth > windowWidth) {
-            position.x = levelWidth;
+            position.x = levelWidth - windowsWidthOffset;
         }
         if ((objectPos.y + (windowHeight / 2)) > levelHeight && levelHeight > windowHeight) {
-            position.y = levelHeight;
+            position.y = levelHeight - windowsHeightOffset;
         }
 
         if (zoom) {

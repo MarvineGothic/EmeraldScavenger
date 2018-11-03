@@ -105,6 +105,8 @@ public:
     static constexpr float32 timeStep = 1.0f / 60.0f;
 
     shared_ptr<Level> getLevel();
+    
+    time_t rand_seed;
 
 };
 
