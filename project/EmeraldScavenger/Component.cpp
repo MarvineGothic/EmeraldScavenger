@@ -5,8 +5,7 @@
 #include "Component.hpp"
 
 Component::Component(GameObject *gameObject)
-:gameObject(gameObject)
-{
+        : gameObject(gameObject) {
 }
 
 void Component::renderSprite(sre::SpriteBatch::SpriteBatchBuilder &spriteBatchBuilder) {
@@ -25,10 +24,10 @@ bool Component::onKey(SDL_Event &event) {
     return false;
 }
 
-void Component::onCollisionStart(PhysicsComponent* comp) {
+void Component::onCollisionStart(PhysicsComponent *comp) {
 
 }
 
-void Component::onCollisionEnd(PhysicsComponent* comp) {
+void Component::onCollisionEnd(PhysicsComponent *comp) {
 
 }

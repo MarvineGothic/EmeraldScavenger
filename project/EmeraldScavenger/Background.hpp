@@ -13,6 +13,7 @@ public:
     Background();
 
     Sprite backgroundSprite;
+
     void initDynamicBackground(string filename);
 
     void initStaticBackground(string filename);

@@ -13,11 +13,12 @@ using namespace glm;
 class PhysicsComponent : public Component {
 public:
     explicit PhysicsComponent(GameObject *gameObject);
+
     virtual ~PhysicsComponent();
 
-    void initCircle(b2BodyType type, float radius,vec2 center,float density);
+    void initCircle(b2BodyType type, float radius, vec2 center, float density);
 
-    void initBox(b2BodyType type, vec2 size,vec2 center,float density);
+    void initBox(b2BodyType type, vec2 size, vec2 center, float density);
 
     void addForce(vec2 force);     // Force gradually affects the velocity over time
 
@@ -47,20 +48,21 @@ public:
     //  update sprite transform based on ridig body
     void setAutoUpdate(bool autoUpdate);
 
-    b2Body * getBody ();
+    b2Body *getBody();
 
-    b2Fixture* getFixture();
+    b2Fixture *getFixture();
+
 private:
     // auto update sprite position and rotation based on physics update
     bool autoUpdate = true;
-    b2PolygonShape * polygon = nullptr;
-    b2CircleShape * circle = nullptr;
-    b2Body * body = nullptr;
+    b2PolygonShape *polygon = nullptr;
+    b2CircleShape *circle = nullptr;
+    b2Body *body = nullptr;
     b2Shape::Type shapeType;
-    b2Fixture* fixture = nullptr;
+    b2Fixture *fixture = nullptr;
     b2BodyType rbType;
     vector<PhysicsComponent *> collidingBodies;
-    b2World * world = nullptr;
+    b2World *world = nullptr;
 
 
 };

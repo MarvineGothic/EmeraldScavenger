@@ -38,7 +38,7 @@ void PlatformComponent::initPlatform(std::shared_ptr<sre::SpriteAtlas> spriteAtl
 
     pos.x += (width - 1) * 0.5f * tileSize;
     physicsComponent->initBox(kinematic ? b2_kinematicBody : b2_staticBody,
-                     vec2{tileSize * width, tileSize} / physicsScale * 0.5f, pos / physicsScale, 0);
+                              vec2{tileSize * width, tileSize} / physicsScale * 0.5f, pos / physicsScale, 0);
 
     physicsComponent->setAutoUpdate(false);
     for (int i = 1; i < width; i++) {
@@ -71,7 +71,7 @@ void PlatformComponent::initWall(std::shared_ptr<sre::SpriteAtlas> spriteAtlas, 
     physicsComponent = gameObject->addComponent<PhysicsComponent>();
     pos.y += (height - 1) * 0.5f * tileSize;
     physicsComponent->initBox(kinematic ? b2_kinematicBody : b2_staticBody,
-                     vec2{tileSize, tileSize * height} / physicsScale * 0.5f, pos / physicsScale, 0);
+                              vec2{tileSize, tileSize * height} / physicsScale * 0.5f, pos / physicsScale, 0);
     physicsComponent->setAutoUpdate(false);
 
     for (int i = 1; i < height; i++) {

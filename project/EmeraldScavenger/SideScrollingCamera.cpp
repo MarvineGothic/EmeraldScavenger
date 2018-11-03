@@ -30,7 +30,7 @@ void SideScrollingCamera::update(float deltaTime) {
         auto windowHeight = EmeraldGame::windowSize.y;
         auto levelWidth = EmeraldGame::gameInstance->getLevel()->getWidth();
         auto levelHeight = EmeraldGame::gameInstance->getLevel()->getHeight();
-        
+
         // sets game camera to behave correctly on Mac
         auto macWidthOffset = 0;
         auto macHeightOffset = 0;
@@ -41,7 +41,7 @@ void SideScrollingCamera::update(float deltaTime) {
             macWidthOffset += windowWidth / 2;
             macHeightOffset += windowHeight / 2;
         }
-        
+
         position.x = offset.x;
         position.y = offset.y;
         // start moving camera when player walks out of half of window size:

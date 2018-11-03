@@ -4,7 +4,7 @@
 #include "sre/Sprite.hpp"
 #include "SpriteComponent.hpp"
 
-class SpriteAnimationComponent: public Component {
+class SpriteAnimationComponent : public Component {
 public:
     SpriteAnimationComponent(GameObject *gameObject);
 
@@ -14,6 +14,7 @@ public:
 
     float getAnimationTime() const;                         // time between animations (in seconds)
     void setAnimationTime(float animationTime);
+
 private:
     float animationTime = 0.300f;
     std::vector<sre::Sprite> sprites;

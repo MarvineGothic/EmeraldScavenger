@@ -7,7 +7,7 @@
 using namespace std;
 
 // Captures debug information from Box2D as lines (polygon fill and color is discarded)
-class Box2DDebugDraw : public b2Draw{
+class Box2DDebugDraw : public b2Draw {
 public:
     Box2DDebugDraw(float scale);
 
@@ -26,7 +26,9 @@ public:
     void DrawPoint(const b2Vec2 &p, float32 size, const b2Color &color) override;
 
     void clear();
-    const vector<glm::vec3>& getLines();
+
+    const vector<glm::vec3> &getLines();
+
 private:
     vector<glm::vec3> lines;
     float scale;

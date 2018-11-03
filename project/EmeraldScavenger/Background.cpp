@@ -37,7 +37,8 @@ void Background::initDynamicBackground(string filename) {
     }
     batch = batchBuilder.build();
 }
-void Background::resetBackground(){
+
+void Background::resetBackground() {
     batch.reset();
 }
 

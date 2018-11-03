@@ -17,7 +17,7 @@ void SpriteAnimationComponent::update(float deltaTime) {
 
     time += deltaTime;
 
-    if (time > animationTime){
+    if (time > animationTime) {
         time = fmod(time, animationTime);
         spriteIndex = (spriteIndex + 1) % sprites.size();
         spriteComponent->setSprite(sprites[spriteIndex]);

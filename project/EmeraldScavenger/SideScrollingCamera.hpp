@@ -21,9 +21,10 @@ public:
     void setFollowObject(shared_ptr<GameObject> followObject, vec2 offset);
 
     void setZoomMode(bool zoomEnabled);
+
     bool isZoomMode();
 
-    Camera& getCamera();
-    
+    Camera &getCamera();
+
 };
 

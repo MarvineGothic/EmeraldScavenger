@@ -29,6 +29,10 @@ EmeraldGame::EmeraldGame()
             .withFile("platformer-art-deluxe.png")
             .withFilterSampling(false)
             .build());
+    spriteAtlas_02 = SpriteAtlas::create("gameSprites.json", Texture::create()
+            .withFile("gameSprites.png")
+            .withFilterSampling(false)
+            .build());
     level = Level::createDefaultLevel(this, spriteAtlas);
 
 	// Initiate random seed based on time in milliseconds
@@ -41,18 +45,20 @@ EmeraldGame::EmeraldGame()
 
     initGame();
 
-    // setup callback functions
-    r.keyEvent = [&](SDL_Event &e) {
-        onKey(e);
-    };
-    r.frameUpdate = [&](float deltaTime) {
-        update(deltaTime);
-    };
-    r.frameRender = [&]() {
-        render();
-    };
-    // start game loop
-    r.startEventLoop();
+    if (gameState != GameState::Pause) {
+        // setup callback functions
+        r.keyEvent = [&](SDL_Event &e) {
+            onKey(e);
+        };
+        r.frameUpdate = [&](float deltaTime) {
+            update(deltaTime);
+        };
+        r.frameRender = [&]() {
+            render();
+        };
+        // start game loop
+        r.startEventLoop();
+    }
 }
 
 // ============================================ INIT FUNCTIONS =========================================================
@@ -125,19 +131,20 @@ void EmeraldGame::initPlayer(vec2 position) {
 
 // ============================================ GAME LOOP FUNCTIONS ====================================================
 void EmeraldGame::onKey(SDL_Event &event) {
-    for (auto &gameObject: gameObjectsList) {
-        for (auto &c : gameObject->getComponents()) {
-            bool consumed = c->onKey(event);
-            if (consumed) {
-                return;
+    if (gameState != GameState::Pause)
+        for (auto &gameObject : gameObjectsList) {
+            for (auto &c : gameObject->getComponents()) {
+                bool consumed = c->onKey(event);
+                if (consumed) {
+                    return;
+                }
             }
         }
-    }
 
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
             // when game-over - any button lead to start menu
-            default:
+            case SDLK_a:
                 if (gameState == GameState::GameOver)
                     gameState = GameState::Start;
                 break;
@@ -156,8 +163,18 @@ void EmeraldGame::onKey(SDL_Event &event) {
                 break;
                 // in start menu press space to play;
             case SDLK_SPACE:
-                if (gameState == GameState::Start)
+                if (gameState == GameState::Ready)
                     runGame();
+                break;
+            case SDLK_p:
+                if (gameState == GameState::Running) {
+                    gameState = GameState::Pause;
+                } else if (gameState == GameState::Pause) {
+                    gameState = GameState::Running;
+
+                }
+                break;
+            default:
                 break;
         }
     }
@@ -166,7 +183,6 @@ void EmeraldGame::onKey(SDL_Event &event) {
 void EmeraldGame::update(float time) {
 
     if (gameState == GameState::Running) {
-        cout << "Running" << endl;
         updatePhysics();
         if (time > 0.03) // if framerate approx 30 fps then run two physics steps
             updatePhysics();
@@ -175,7 +191,6 @@ void EmeraldGame::update(float time) {
         gameObject->update(time);
     }
     if (gameState == GameState::GetReady) {
-        cout << "GetReady" << endl;
         if (livesCounter < 1) {
             gameState = GameState::GameOver;
         } else
@@ -194,26 +209,30 @@ void EmeraldGame::render() {
         profiler.gui(false);
     }
 
-    auto pos = camera->getGameObject()->getPosition() * 0.5f;
+    auto pos = camera->getGameObject()->getPosition();
     auto spriteBatchBuilder = SpriteBatch::create();
     for (auto &go : gameObjectsList) {
         go->renderSprite(spriteBatchBuilder);
     }
 
     if (gameState == GameState::GameOver) {
-        cout << "GameOver" << endl;
-        // todo: render game-over state
         resetGame();
         initCamera();
-        background.initStaticBackground("background.png");
-        auto sprite = spriteAtlas->get("11.png");
-        sprite.setPosition({pos.x, pos.y});
+        auto sprite = spriteAtlas_02->get("spr_gameOver.png");
+        sprite.setPosition({0.0f, 0.0f});
         spriteBatchBuilder.addSprite(sprite);
     }
-    // todo: render start screen:
     if (gameState == GameState::Start) {
-        background.initStaticBackground("background.png");
-        cout << "Start" << endl;
+        /*auto sprite = spriteAtlas_02->get("spr_gameOver.png");
+        sprite.setPosition({ 0.0f,0.0f });
+        spriteBatchBuilder.addSprite(sprite);*/
+        gameState = GameState::Ready;
+        livesCounter = 5;
+    }
+    if (gameState == GameState::Pause) {
+        pauseSprite = spriteAtlas_02->get("spr_paused.png");
+        pauseSprite.setPosition(pos);
+        spriteBatchBuilder.addSprite(pauseSprite);
     }
 
     background.renderBackground(renderPass, 0.0f);

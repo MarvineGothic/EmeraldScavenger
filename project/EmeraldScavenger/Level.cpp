@@ -64,16 +64,16 @@ void Level::level_00() {
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
     // start wall
-    addWall(0, 0, 2, 51);
+    addWall(0, 0, 2, height);
 
     // floor
-    addPlatform(1, 0, 2, 5, false);
+    addPlatform(1, 0, 2, width - 200, false);
     // gap = 5
-    addPlatform(10, 0, 2, 90, false);
+    addPlatform(10, 0, 2, width - 115, false);
     // gap = 5
-    addPlatform(105, 0, 2, 100, false);
+    addPlatform(105, 0, 2, width - 105, false);
     // ceil
-    addPlatform(1, 50, 2, 204, false);
+    addPlatform(1, height, 2, width - 1, false);
 
 
     auto movingPlatform = addPlatform(10, 3, 2, 5, true);

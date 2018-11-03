@@ -25,7 +25,7 @@ class Level {
     Level() = default;
 
     int levelWidth, levelHeight;
-    vec2  startPosition, finishPosition;
+    vec2 startPosition, finishPosition;
     EmeraldGame *game;
     shared_ptr<SpriteAtlas> spriteAtlas;
 public:

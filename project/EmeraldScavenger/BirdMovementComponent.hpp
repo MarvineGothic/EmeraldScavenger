@@ -18,8 +18,10 @@ public:
 
     int getNumberOfSegments();
 
-    const std::vector<glm::vec2>& getPositions();
+    const std::vector<glm::vec2> &getPositions();
+
     void setPositions(std::vector<glm::vec2> positions);
+
 private:
     std::vector<glm::vec2> positions;
     float time = 0;

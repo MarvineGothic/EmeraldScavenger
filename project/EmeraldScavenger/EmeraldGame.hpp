@@ -17,6 +17,7 @@ class PhysicsComponent;
 
 enum class GameState {
     Start,
+    Pause,
     GetReady,
     Ready,
     Running,
@@ -28,7 +29,7 @@ class EmeraldGame : public b2ContactListener {
     bool doDebugDraw = false;
 
     int levelCounter = 0;
-    int livesCounter = 3;
+    int livesCounter = 5;
 
     SDLRenderer r;
     Box2DDebugDraw debugDraw;
@@ -37,6 +38,8 @@ class EmeraldGame : public b2ContactListener {
     shared_ptr<GameObject> player;
     shared_ptr<SideScrollingCamera> camera;
     shared_ptr<SpriteAtlas> spriteAtlas;
+    shared_ptr<SpriteAtlas> spriteAtlas_02;
+    Sprite pauseSprite;
     shared_ptr<Level> level;
 
     vector<shared_ptr<GameObject>> gameObjectsList;

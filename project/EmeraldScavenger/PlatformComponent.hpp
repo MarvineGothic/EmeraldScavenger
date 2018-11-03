@@ -17,14 +17,17 @@ public:
 
     void initPlatform(shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int width,
                       bool kinematic);
+
     void initWall(shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int height);
 
     void moveTo(vec2 tilePos);
+
     void update(float deltaTime) override;
 
     vec2 getPosition();
+
     shared_ptr<PhysicsComponent> getPhysicsComponent();
-    
+
 private:
     vector<shared_ptr<GameObject>> tiles;
     shared_ptr<PhysicsComponent> physicsComponent;

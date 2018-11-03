@@ -11,8 +11,10 @@ public:
 
     void renderSprite(SpriteBatch::SpriteBatchBuilder &spriteBatchBuilder) override;
 
-    void setSprite(const Sprite& sprite);
+    void setSprite(const Sprite &sprite);
+
     Sprite getSprite();
+
 private:
     Sprite sprite;
 };

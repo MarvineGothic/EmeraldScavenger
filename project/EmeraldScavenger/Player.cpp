@@ -25,6 +25,7 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
 }
 
 bool Player::onKey(SDL_Event &event) {
+
     switch (event.key.keysym.sym) {
         case SDLK_SPACE: {
             if (isGrounded && event.type == SDL_KEYDOWN) { // prevents double jump
@@ -54,24 +55,19 @@ void Player::update(float deltaTime) {
     isGrounded = false;
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
 
-    //characterPhysics->fixRotation();
     vec2 movement{0, 0};
     if (left) {
         movement.x--;
-        characterPhysics->getFixture()->SetFriction(0);
     }
+
     if (right) {
         movement.x++;
-        characterPhysics->getFixture()->SetFriction(0);
     }
-    if (!left && !right)
-        characterPhysics->getFixture()->SetFriction(1);
-    //todo: switch friction
-    //cout<<left<<" "<<right<<endl;
+
     b2Body *body = characterPhysics->getBody();
 
     // ====================== PLAYER VELOCITY =====================
-    float accelerationSpeed = 0.005f;
+    float accelerationSpeed = 0.01f;
     characterPhysics->addImpulse(movement * accelerationSpeed);
     float maximumVelocity = 2;
     auto linearVelocity = characterPhysics->getLinearVelocity();
@@ -80,6 +76,7 @@ void Player::update(float deltaTime) {
         linearVelocity.x = sign(linearVelocity.x) * maximumVelocity;
         characterPhysics->setLinearVelocity(linearVelocity);
     }
+
     updateSprite(deltaTime);
 
     // ====================== PLAYER DIES =======================

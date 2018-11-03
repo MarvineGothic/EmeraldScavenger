@@ -3,16 +3,16 @@
 #include <algorithm>
 #include "Component.hpp"
 
-GameObject::~GameObject(){
+GameObject::~GameObject() {
     // remove reference to this in components
-    for (auto& c : components){
+    for (auto &c : components) {
         c->gameObject = nullptr;
     }
 }
 
 bool GameObject::removeComponent(shared_ptr<Component> component) {
-    auto comp = find(components.begin(), components.end(),component);
-    if (comp != components.end()){
+    auto comp = find(components.begin(), components.end(), component);
+    if (comp != components.end()) {
         components.erase(comp);
     }
     return false;
@@ -35,13 +35,13 @@ void GameObject::setRotation(float rotation) {
 }
 
 void GameObject::renderSprite(sre::SpriteBatch::SpriteBatchBuilder &spriteBatchBuilder) {
-    for (auto& comp : components){
+    for (auto &comp : components) {
         comp->renderSprite(spriteBatchBuilder);
     }
 }
 
 void GameObject::update(float deltaTime) {
-    for (auto& comp : components){
+    for (auto &comp : components) {
         comp->update(deltaTime);
     }
 }
