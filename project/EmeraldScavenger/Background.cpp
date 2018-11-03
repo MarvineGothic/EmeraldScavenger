@@ -20,7 +20,7 @@ void Background::renderBackground(RenderPass &renderPass, float offset) {
     renderPass.draw(batch, translate(vec3(offset, 0, 0)));
 }
 
-void Background::init(string filename) {
+void Background::initDynamicBackground(string filename) {
     tex = Texture::create().withFile(move(filename))
             .withFilterSampling(false)
             .build();
@@ -28,7 +28,7 @@ void Background::init(string filename) {
     auto backgroundAtlas = SpriteAtlas::createSingleSprite(tex, "background", vec2(0, 0));
     auto backgroundSprite = backgroundAtlas->get("background");
     float scaleY = EmeraldGame::windowSize.y / tex->getHeight();
-    float scaleX = EmeraldGame::windowSize.x / tex->getWidth();
+    //float scaleX = EmeraldGame::windowSize.x / tex->getWidth();
     backgroundSprite.setScale({scaleY, scaleY});
     auto batchBuilder = SpriteBatch::create();
     for (int i = 0; i < 100; i++) {
@@ -41,3 +41,19 @@ void Background::resetBackground(){
     batch.reset();
 }
 
+void Background::initStaticBackground(string filename) {
+    tex = Texture::create().withFile(move(filename))
+            .withFilterSampling(false)
+            .build();
+
+    auto backgroundAtlas = SpriteAtlas::createSingleSprite(tex, "background", vec2(0, 0));
+    backgroundSprite = backgroundAtlas->get("background");
+    vec2 winSize = EmeraldGame::windowSize;
+    float scaleY = winSize.y / tex->getHeight();
+    float scaleX = winSize.x / tex->getWidth();
+    backgroundSprite.setScale({scaleX, scaleY});
+    auto batchBuilder = SpriteBatch::create();
+    backgroundSprite.setPosition(winSize * -0.5f);
+    batchBuilder.addSprite(backgroundSprite);
+    batch = batchBuilder.build();
+}

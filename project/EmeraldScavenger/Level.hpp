@@ -24,12 +24,16 @@ enum class TileCollider {
 class Level {
     Level() = default;
 
-    float levelWidth;
-    float levelHeight;
+    int levelWidth, levelHeight;
+    vec2  startPosition, finishPosition;
     EmeraldGame *game;
     shared_ptr<SpriteAtlas> spriteAtlas;
 public:
     static shared_ptr<Level> createDefaultLevel(EmeraldGame *game, shared_ptr<SpriteAtlas> spriteAtlas);
+
+    void makeLevel(int level);
+
+    void level_00();
 
     void level_01();
 
@@ -49,14 +53,16 @@ public:
 
     void generateLevel();
 
-    void Level::Procedural_level();
+    void Procedural_level();
 
     vec2 min;
     vec2 max;
 
-    float Level::getWidth();
+    int getWidth();
 
-    float Level::getHeight();
+    int getHeight();
 
+    vec2 getStartPos();
+
+    vec2 getFinishPos();
 };
-

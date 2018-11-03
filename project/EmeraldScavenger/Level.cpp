@@ -15,15 +15,45 @@
 std::shared_ptr<Level> Level::createDefaultLevel(EmeraldGame *game,
                                                  std::shared_ptr<sre::SpriteAtlas> spriteAtlas) {
     std::shared_ptr<Level> res = std::shared_ptr<Level>(new Level());
-
-    // todo initialize
     res->game = game;
     res->spriteAtlas = std::move(spriteAtlas);
 
     return res;
 }
 
-void Level::level_01() {
+void Level::makeLevel(int level) {
+    switch (level) {
+        case 0:
+            this->level_00();
+            break;
+        case 1:
+            this->level_01();
+            break;
+        case 2:
+            this->level_02();
+            break;
+        case 3:
+            this->level_03();
+            break;
+        case 4:
+            this->level_04();
+            break;
+        case 5:
+            this->level_05();
+            break;
+        default:
+            this->generateLevel();
+            break;
+    }
+}
+
+void Level::level_00() {
+    int width = 205;
+    int height = 51;
+    startPosition = {vec2{1.5, 2.5} * Level::tileSize};
+    levelWidth = static_cast<int>((width + 1) * tileSize);
+    levelHeight = static_cast<int>(height * tileSize);
+    game->background.initDynamicBackground("background.png");
     // start wall
     addWall(0, 0, 2, 51);
 
@@ -61,12 +91,16 @@ void Level::level_01() {
 
     addWall(125, 0, 2, 2);
     // end wall
-    addWall(205, 0, 2, 51);
-    levelWidth = 206 * tileSize;
-    levelHeight = 51 * tileSize;
+    addWall(width, 0, 2, height);
+
 }
 
 //todo: design levels:
+
+void Level::level_01() {
+
+}
+
 void Level::level_02() {
 
 }
@@ -94,7 +128,7 @@ void Level::generateLevel() {
 
     auto movingPlatform = addPlatform(10, 3, 2, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatform->getPhysicsComponent()->setLinearVelocity({0,100});
+    movingPlatform->getPhysicsComponent()->setLinearVelocity({0, 100});
     b2Body *body = movingPlatform->getPhysicsComponent()->getBody();
     movingPlatformComponent->setBody(body);
     movingPlatformComponent->setMovementStart({10, 3});
@@ -129,15 +163,15 @@ void Level::Procedural_level() {
         //int max_y = clamp(max.y, floor, ceil);
 
         int length = 5;
-        int rand_x = (rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x;
-        int rand_y = (rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y;
+        int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
+        int rand_y = static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y);
         addPlatform(rand_x, rand_y, 2, length, true);
         prev_platform = glm::vec2(rand_x + length, clamp(rand_y, floor, ceil));
         i++;
     }
 
-    levelWidth = 206 * tileSize;
-    levelHeight = 51 * tileSize;
+    levelWidth = static_cast<int>(206 * tileSize);
+    levelHeight = static_cast<int>(51 * tileSize);
 }
 
 std::shared_ptr<PlatformComponent> Level::addPlatform(int x, int y, int startSpriteId, int length, bool kinematic) {
@@ -157,10 +191,18 @@ std::shared_ptr<PlatformComponent> Level::addWall(int x, int y, int startSpriteI
     return res;
 }
 
-float Level::getWidth() {
+int Level::getWidth() {
     return this->levelWidth;
 }
 
-float Level::getHeight() {
+int Level::getHeight() {
     return this->levelHeight;
+}
+
+vec2 Level::getStartPos() {
+    return this->startPosition;
+}
+
+vec2 Level::getFinishPos() {
+    return this->finishPosition;
 }

@@ -23,6 +23,12 @@ EmeraldGame::EmeraldGame()
             .withSdlWindowFlags(SDL_WINDOW_OPENGL)
             .withVSync(useVsync);
 
+    spriteAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
+            .withFile("platformer-art-deluxe.png")
+            .withFilterSampling(false)
+            .build());
+    level = Level::createDefaultLevel(this, spriteAtlas);
+
     initGame();
 
     // setup callback functions
@@ -40,21 +46,20 @@ EmeraldGame::EmeraldGame()
 }
 
 // ============================================ INIT FUNCTIONS =========================================================
+
 void EmeraldGame::initGame() {
     if (world != nullptr) { // deregister call backlistener to avoid getting callbacks when recreating the world
         world->SetContactListener(nullptr);
     }
-
     resetGame();
     initCamera();
+}
+
+void EmeraldGame::runGame() {
+    initGame();
     initPhysics();
-    initAssets();
-
-    initPlayer();
-
-    // todo: automatically switch to level
-    level->level_01();
-
+    initLevel();
+    initPlayer(level->getStartPos());
     gameState = GameState::Running;
 }
 
@@ -62,7 +67,6 @@ void EmeraldGame::resetGame() {
     player.reset();
     camera.reset();
     background.resetBackground();
-    //level.reset();
     gameObjectsList.clear();
     physicsComponentMap.clear();
 }
@@ -72,6 +76,7 @@ void EmeraldGame::initCamera() {
     camObj->name = "Camera";
     camera = camObj->addComponent<SideScrollingCamera>();
     camObj->setPosition(windowSize * 0.5f);
+    auto camPos = camObj->getPosition();
 }
 
 void EmeraldGame::initPhysics() {
@@ -84,22 +89,16 @@ void EmeraldGame::initPhysics() {
         world->SetDebugDraw(&debugDraw);
 }
 
-void EmeraldGame::initAssets() {
-    spriteAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
-            .withFile("platformer-art-deluxe.png")
-            .withFilterSampling(false)
-            .build());
-    background.init("background.png");
-
-    level = Level::createDefaultLevel(this, spriteAtlas);
+void EmeraldGame::initLevel() {
+    level->makeLevel(levelCounter);
 }
 
-void EmeraldGame::initPlayer() {
+void EmeraldGame::initPlayer(vec2 position) {
     player = createGameObject();
     player->name = "Player";
     auto playerSprite = player->addComponent<SpriteComponent>();
     auto playerSpriteObj = spriteAtlas->get("19.png");
-    playerSpriteObj.setPosition(vec2{1.5, 2.5} * Level::tileSize);
+    playerSpriteObj.setPosition(position);
     playerSprite->setSprite(playerSpriteObj);
     auto playerComponent = player->addComponent<Player>();
     playerComponent->setSprites(
@@ -127,6 +126,12 @@ void EmeraldGame::onKey(SDL_Event &event) {
 
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
+            // when game-over - any button lead to start menu
+            default:
+                if (gameState == GameState::GameOver)
+                    gameState = GameState::Start;
+                break;
+
             case SDLK_z:
                 camera->setZoomMode(!camera->isZoomMode());
                 break;
@@ -139,35 +144,32 @@ void EmeraldGame::onKey(SDL_Event &event) {
                     world->SetDebugDraw(nullptr);
                 }
                 break;
+                // in start menu press space to play;
             case SDLK_SPACE:
-                if (gameState == GameState::GameOver) {
-                    initGame();
-                }
-                break;
-            default:
+                if (gameState == GameState::Start)
+                    runGame();
                 break;
         }
     }
 }
 
 void EmeraldGame::update(float time) {
+
     if (gameState == GameState::Running) {
         cout << "Running" << endl;
         updatePhysics();
         if (time > 0.03) // if framerate approx 30 fps then run two physics steps
             updatePhysics();
-
-        for (auto &gameObject : gameObjectsList) {
-            gameObject->update(time);
-        }
     }
-
+    for (auto &gameObject : gameObjectsList) {
+        gameObject->update(time);
+    }
     if (gameState == GameState::GetReady) {
         cout << "GetReady" << endl;
         if (livesCounter < 2) {
             gameState = GameState::GameOver;
         } else
-            initGame();
+            runGame();
     }
 }
 
@@ -183,8 +185,6 @@ void EmeraldGame::render() {
     }
 
     auto pos = camera->getGameObject()->getPosition() * 0.5f;
-    background.renderBackground(renderPass, 0.0f);
-
     auto spriteBatchBuilder = SpriteBatch::create();
     for (auto &go : gameObjectsList) {
         go->renderSprite(spriteBatchBuilder);
@@ -192,16 +192,21 @@ void EmeraldGame::render() {
 
     if (gameState == GameState::GameOver) {
         cout << "GameOver" << endl;
-        // todo: render game over state
+        // todo: render game-over state
         resetGame();
         initCamera();
-        //background.init("background01.jpg");
+        background.initStaticBackground("background.png");
         auto sprite = spriteAtlas->get("11.png");
         sprite.setPosition({pos.x, pos.y});
         spriteBatchBuilder.addSprite(sprite);
-        //gameState = GameState::Ready;
+    }
+    // todo: render start screen:
+    if (gameState == GameState::Start) {
+        background.initStaticBackground("background.png");
+        cout << "Start" << endl;
     }
 
+    background.renderBackground(renderPass, 0.0f);
     auto sb = spriteBatchBuilder.build();
     renderPass.draw(sb);
 
@@ -212,13 +217,13 @@ void EmeraldGame::render() {
     }
 }
 
+// ============================================ HELPER FUNCTIONS =======================================================
 shared_ptr<GameObject> EmeraldGame::createGameObject() {
     auto obj = make_shared<GameObject>();
     gameObjectsList.push_back(obj);
     return obj;
 }
 
-// ============================================ HELPER FUNCTIONS =======================================================
 void EmeraldGame::updatePhysics() {
 
     const int positionIterations = 4;
@@ -291,3 +296,4 @@ shared_ptr<Level> EmeraldGame::getLevel() {
 void EmeraldGame::setGameState(GameState newState) {
     this->gameState = newState;
 }
+

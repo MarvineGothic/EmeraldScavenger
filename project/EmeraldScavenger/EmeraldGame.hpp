@@ -16,6 +16,7 @@ using namespace glm;
 class PhysicsComponent;
 
 enum class GameState {
+    Start,
     GetReady,
     Ready,
     Running,
@@ -30,9 +31,8 @@ class EmeraldGame : public b2ContactListener {
     int livesCounter = 3;
 
     SDLRenderer r;
-    Background background;
     Box2DDebugDraw debugDraw;
-    GameState gameState = GameState::Ready;
+    GameState gameState = GameState::Start;
 
     shared_ptr<GameObject> player;
     shared_ptr<SideScrollingCamera> camera;
@@ -46,15 +46,17 @@ class EmeraldGame : public b2ContactListener {
 
     void initGame();
 
+    void runGame();
+
     void resetGame();
 
     void initCamera();
 
     void initPhysics();
 
-    void initAssets();
+    void initLevel();
 
-    void initPlayer();
+    void initPlayer(vec2 position);
 
 
     void update(float time);
@@ -94,6 +96,7 @@ public:
 
     void EndContact(b2Contact *contact) override;
 
+    Background background;
     static EmeraldGame *gameInstance;
 
     static constexpr float32 timeStep = 1.0f / 60.0f;

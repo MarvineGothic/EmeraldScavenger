@@ -67,7 +67,7 @@ void Player::update(float deltaTime) {
     if (!left && !right)
         characterPhysics->getFixture()->SetFriction(1);
     //todo: switch friction
-    cout<<left<<" "<<right<<endl;
+    //cout<<left<<" "<<right<<endl;
     b2Body *body = characterPhysics->getBody();
 
     // ====================== PLAYER VELOCITY =====================
