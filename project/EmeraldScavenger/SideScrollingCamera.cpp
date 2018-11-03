@@ -7,6 +7,12 @@
 #include "SideScrollingCamera.hpp"
 #include "EmeraldGame.hpp"
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+static const std::string platform="Windows";
+#else
+static const std::string platform="Mac";
+#endif
+
 SideScrollingCamera::SideScrollingCamera(GameObject *gameObject)
         : Component(gameObject) {
     setZoomMode(false);
@@ -24,20 +30,31 @@ void SideScrollingCamera::update(float deltaTime) {
         auto windowHeight = EmeraldGame::windowSize.y;
         auto levelWidth = EmeraldGame::gameInstance->getLevel()->getWidth();
         auto levelHeight = EmeraldGame::gameInstance->getLevel()->getHeight();
-
+        
+        // sets game camera to behave correctly on Mac
+        auto macWidthOffset = 0;
+        auto macHeightOffset = 0;
+        if (platform=="Mac") {
+            std::cout << "You are on Mac" << std::endl;
+            windowWidth = windowWidth / 2;
+            windowHeight = windowHeight / 2;
+            macWidthOffset += windowWidth / 2;
+            macHeightOffset += windowHeight / 2;
+        }
+        
         position.x = offset.x;
         position.y = offset.y;
         // start moving camera when player walks out of half of window size:
-        if (objectPos.x > windowWidth / 2)
-            position.x = objectPos.x;
-        if (objectPos.y > windowHeight / 2)
-            position.y = objectPos.y;
+        if (objectPos.x > windowWidth / 2 && levelWidth > windowWidth)
+            position.x = objectPos.x + macWidthOffset;
+        if (objectPos.y > windowHeight / 2 && levelHeight > windowHeight)
+            position.y = objectPos.y  + macHeightOffset;
         // stop moving camera when on the edge of the world:
-        if ((objectPos.x + (windowWidth / 2)) > levelWidth) {
-            position.x = levelWidth - (windowWidth / 2);
+        if ((objectPos.x + (windowWidth / 2)) > levelWidth && levelWidth > windowWidth) {
+            position.x = levelWidth;
         }
-        if ((objectPos.y + (windowHeight / 2)) > levelHeight) {
-            position.y = levelHeight - (windowHeight / 2);
+        if ((objectPos.y + (windowHeight / 2)) > levelHeight && levelHeight > windowHeight) {
+            position.y = levelHeight;
         }
 
         if (zoom) {
