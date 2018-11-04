@@ -15,13 +15,13 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
     characterPhysics = gameObject->addComponent<PhysicsComponent>();
 
     auto physicsScale = EmeraldGame::gameInstance->physicsScale;
-    radius = 10 / physicsScale;
+    radius = 16 / physicsScale;
     characterPhysics->initCircle(b2_dynamicBody, radius, vec2{1.5, 1.5} * Level::tileSize / physicsScale, 1);
     //characterPhysics->getFixture()->SetRestitution(1);
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
     spriteComponent = gameObject->getComponent<SpriteComponent>();
-
+    
 }
 
 bool Player::onKey(SDL_Event &event) {
@@ -91,7 +91,7 @@ void Player::update(float deltaTime) {
 }
 
 void Player::jump() {
-    characterPhysics->addImpulse({0, 0.15f});
+    characterPhysics->addImpulse({0, 0.4f});
 }
 
 void Player::onCollisionStart(PhysicsComponent *comp) {
@@ -108,14 +108,15 @@ Player::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &nor
     return 0; // terminate raycast
 }
 
-void Player::setSprites(sre::Sprite standing, sre::Sprite walk1, sre::Sprite walk2, sre::Sprite flyUp,
-                        sre::Sprite fly, sre::Sprite flyDown) {
-    this->standing = standing;
-    this->walkLeft = walk1;
-    this->walkRight = walk2;
-    this->flyUp = flyUp;
-    this->fly = fly;
-    this->flyDown = flyDown;
+void Player::setSprites(sre::Sprite idle, sre::Sprite jump1, sre::Sprite jump2, sre::Sprite run1,
+                        sre::Sprite run2, sre::Sprite run3, sre::Sprite death) {
+    this->idle = idle;
+    this->jump1= jump1;
+    this->jump2 = jump2;
+    this->run1 = run1;
+    this->run2 = run2;
+    this->run3 = run3;
+    this->death = death;
 }
 
 void Player::updateSprite(float deltaTime) {
