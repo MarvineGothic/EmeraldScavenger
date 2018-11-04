@@ -11,20 +11,12 @@
 #include "Player.hpp"
 #include "BirdMovementComponent.hpp"
 #include <time.h>
+#include <windows.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-    static const std::string platform="Windows";
-    #include <windows.h>
-    SYSTEMTIME windowsTime;
-    auto currentTime= GetSystemTime(&windowsTime);
-    auto time_ms = (windowsTime.wSecond * 1000) + windowsTime.wMilliseconds;
-    rand_seed = (time_t)time_ms;
+	static const std::string platform="Windows";	
 #else
     static const std::string platform="Mac";
-    #include <sys/time.h>
-    timeval macTime;
-    auto currentTime = gettimeofday(&macTime, NULL);
-    auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 #endif
 
 const vec2 EmeraldGame::windowSize(800, 600);
@@ -48,14 +40,23 @@ EmeraldGame::EmeraldGame()
             .withFilterSampling(false)
             .build());
     level = Level::createDefaultLevel(this, spriteAtlas);
-            
-    if (platform=="Mac") {
-        rand_seed = (time_t)time_ms;
-    } else if (platform=="Windows") {
-        rand_seed = (time_t)time_ms;
-    }
+
+	//Get the current time in milliseconds and use it as a seed
+	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+		#include <windows.h>
+		SYSTEMTIME windowsTime;
+		GetSystemTime(&windowsTime);
+		auto time_ms = (windowsTime.wSecond * 1000) + windowsTime.wMilliseconds;
+	#else
+		#include <sys/time.h>
+		timeval macTime;
+		auto currentTime = gettimeofday(&macTime, NULL);
+		auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
+	#endif
+	int rand_seed = (time_t)time_ms;
     printf("Random seed: %ld\n", rand_seed);
-            
+	srand(rand_seed);
+
     initGame();
 
     if (gameState != GameState::Pause) {
