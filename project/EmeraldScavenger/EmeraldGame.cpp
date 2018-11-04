@@ -13,6 +13,7 @@
 #include <time.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	#include <windows.h>
 	static const std::string platform="Windows";	
 #else
     static const std::string platform="Mac";
@@ -46,7 +47,6 @@ EmeraldGame::EmeraldGame()
 
 	//Get the current time in milliseconds and use it as a seed
 	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		#include <windows.h>
 		SYSTEMTIME windowsTime;
 		GetSystemTime(&windowsTime);
 		auto time_ms = (windowsTime.wSecond * 1000) + windowsTime.wMilliseconds;
