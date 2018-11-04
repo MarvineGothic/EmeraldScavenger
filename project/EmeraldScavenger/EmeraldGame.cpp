@@ -47,6 +47,10 @@ EmeraldGame::EmeraldGame()
             .withFile("gameSprites.png")
             .withFilterSampling(false)
             .build());
+    scavangerAtlas = SpriteAtlas::create("scavangerStages.json", Texture::create()
+             .withFile("scavangerStages.png")
+             .withFilterSampling(false)
+             .build());
     level = Level::createDefaultLevel(this, spriteAtlas);
             
     if (platform=="Mac") {
@@ -126,17 +130,19 @@ void EmeraldGame::initPlayer(vec2 position) {
     player = createGameObject();
     player->name = "Player";
     auto playerSprite = player->addComponent<SpriteComponent>();
-    auto playerSpriteObj = spriteAtlas->get("19.png");
+    auto playerSpriteObj = scavangerAtlas->get("boy-idle.png");
     playerSpriteObj.setPosition(position);
+    playerSpriteObj.setScale({0.2, 0.2});
     playerSprite->setSprite(playerSpriteObj);
     auto playerComponent = player->addComponent<Player>();
     playerComponent->setSprites(
-            spriteAtlas->get("19.png"),
-            spriteAtlas->get("20.png"),
-            spriteAtlas->get("21.png"),
-            spriteAtlas->get("26.png"),
-            spriteAtlas->get("27.png"),
-            spriteAtlas->get("28.png")
+            scavangerAtlas->get("boy-idle.png"),
+            scavangerAtlas->get("jump_fallboy.png"),
+            scavangerAtlas->get("jump_upboy.png"),
+            scavangerAtlas->get("frame-1_boy.png"),
+            scavangerAtlas->get("frame-2_boy.png"),
+            scavangerAtlas->get("frame-3_boy.png"),
+            scavangerAtlas->get("boy-hit.png")
     );
     // set camera follow player:
     camera->setFollowObject(player, {windowSize * 0.5f});
