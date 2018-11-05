@@ -85,6 +85,8 @@ class EmeraldGame : public b2ContactListener {
 
     friend class Player;
 
+    friend class Enemy;
+
     friend class PlatformComponent;
 
     friend class SideScrollingCamera;
@@ -95,6 +97,7 @@ public:
     shared_ptr<GameObject> createGameObject();
 
     static const vec2 windowSize;
+    static const vec2 scale;
 
     void BeginContact(b2Contact *contact) override;
 
@@ -106,7 +109,7 @@ public:
     static constexpr float32 timeStep = 1.0f / 60.0f;
 
     shared_ptr<Level> getLevel();
-    
+
     time_t rand_seed;
 
 };

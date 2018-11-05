@@ -13,6 +13,8 @@
 
 Player::Player(GameObject *gameObject) : Component(gameObject) {
     characterPhysics = gameObject->addComponent<PhysicsComponent>();
+    accelerationSpeed = 1.00f;
+    maximumVelocity = 2.0f;
 
     auto physicsScale = EmeraldGame::gameInstance->physicsScale;
     radius = 16 / physicsScale;
@@ -21,7 +23,7 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
     spriteComponent = gameObject->getComponent<SpriteComponent>();
-    
+
 }
 
 bool Player::onKey(SDL_Event &event) {
@@ -58,18 +60,17 @@ void Player::update(float deltaTime) {
     vec2 movement{0, 0};
     if (left) {
         movement.x--;
+        facingLeft = true;
     }
 
     if (right) {
         movement.x++;
+        facingLeft = false;
     }
 
-    b2Body *body = characterPhysics->getBody();
-
     // ====================== PLAYER VELOCITY =====================
-    float accelerationSpeed = 0.01f;
+
     characterPhysics->addImpulse(movement * accelerationSpeed);
-    float maximumVelocity = 2;
     auto linearVelocity = characterPhysics->getLinearVelocity();
     float currentVelocity = linearVelocity.x;
     if (abs(currentVelocity) > maximumVelocity) {
@@ -80,11 +81,10 @@ void Player::update(float deltaTime) {
     updateSprite(deltaTime);
 
     // ====================== PLAYER DIES =======================
+    // ================ by: Sergiy Isakov 02.11.18 ======================
     if (this->getGameObject()->getPosition().y <= 0) {
         EmeraldGame::gameInstance->livesCounter--;
-        auto lives = EmeraldGame::gameInstance->livesCounter;
         EmeraldGame::gameInstance->setGameState(GameState::GetReady);
-        cout << "Loose life " << lives << endl;
         isDead = true;
     }
 
@@ -108,20 +108,55 @@ Player::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &nor
     return 0; // terminate raycast
 }
 
-void Player::setSprites(sre::Sprite idle, sre::Sprite jump1, sre::Sprite jump2, sre::Sprite run1,
-                        sre::Sprite run2, sre::Sprite run3, sre::Sprite death) {
+void Player::setSprites(Sprite idle, Sprite jumpUp, Sprite fall, Sprite run1,
+                        Sprite run2, Sprite run3, Sprite death) {
+    auto scale = EmeraldGame::scale;
+    idle.setScale(scale);
+    jumpUp.setScale(scale);
+    fall.setScale(scale);
+    run1.setScale(scale);
+    run2.setScale(scale);
+    run3.setScale(scale);
+    death.setScale(scale);
     this->idle = idle;
-    this->jump1= jump1;
-    this->jump2 = jump2;
+    this->jumpUp = jumpUp;
+    this->fall = fall;
     this->run1 = run1;
     this->run2 = run2;
     this->run3 = run3;
     this->death = death;
+    runningSprites = {run1, run2, run3};
 }
 
 void Player::updateSprite(float deltaTime) {
     auto velocity = characterPhysics->getLinearVelocity();
-    // todo: animation
+    // ================================ animation ==============================
+    // ============= by: Sergiy Isakov 05.11.18 05:07 ======================
+    if (isGrounded) {
+        distance += velocity.x * deltaTime;
+        if (velocity.x == 0.0f) {
+            idle.setFlip({(facingLeft), false});
+            spriteComponent->setSprite(idle);
+        }
+        if (distance > 0.06 || distance < -0.06) {
+            spriteIndex = (spriteIndex + 1) % runningSprites.size();
+            Sprite runningSprite = runningSprites[spriteIndex];
+            if (distance < -0.06)
+                runningSprite.setFlip({true, false});
+            spriteComponent->setSprite(runningSprite);
+            distance = 0.0f;
+        }
+    } else if (velocity.y > 0) {
+        jumpUp.setFlip({(facingLeft), false});
+        spriteComponent->setSprite(jumpUp);
+    } else if (velocity.y < 0) {
+        fall.setFlip({(facingLeft), false});
+        spriteComponent->setSprite(fall);
+    }
+    if (isDead) {
+        death.setFlip({(facingLeft), false});
+        spriteComponent->setSprite(death);
+    }
 }
 
 

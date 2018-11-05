@@ -1,3 +1,7 @@
+//
+// Created by Sergiy Isakov on 05.11.2018.
+//
+
 #pragma once
 
 #include <Box2D/Box2D.h>
@@ -10,13 +14,13 @@ using namespace std;
 using namespace sre;
 using namespace glm;
 
-class Player : public Component, public b2RayCastCallback {
+class Enemy : public Component, public b2RayCastCallback {
 public:
-    explicit Player(GameObject *gameObject);
+    explicit Enemy(GameObject *gameObject);
 
     void setSprites(Sprite idle,
-                    Sprite jumpUp,
-                    Sprite fall,
+                    Sprite jump1,
+                    Sprite jump2,
                     Sprite run1,
                     Sprite run2,
                     Sprite run3,
@@ -40,25 +44,20 @@ public:
 
 private:
     Sprite idle;
-    Sprite jumpUp;
-    Sprite fall;
+    Sprite jump1;
+    Sprite jump2;
     Sprite run1;
     Sprite run2;
     Sprite run3;
     Sprite death;
 
-    vector<sre::Sprite> runningSprites;
+    std::vector<sre::Sprite> runningSprites;
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> characterPhysics;
-
-    float accelerationSpeed;
-    float maximumVelocity;
-    int spriteIndex = 0;
-    float distance = 0.0f;
+    shared_ptr<SpriteAnimationComponent> animationComponent;
     bool isGrounded = false;
     bool isDead = false;
     float radius;
     bool left = false;
     bool right = false;
-    bool facingLeft = false;
 };

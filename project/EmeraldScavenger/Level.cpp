@@ -52,20 +52,13 @@ void Level::level_00() {
     int width = 205;
     int height = 51;
 
-	// start wall
-	addWall(-1, 0, 2, 10);
-	// floor
-	addPlatform(0, 0, 2, width, false);
-	// ceil
-	addPlatform(0, height, 2, width, false);
-
 	startPosition = {vec2{1.5, 2.5} * Level::tileSize};
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
+
     // start wall
     addWall(0, 0, 2, height);
-
     // floor
     addPlatform(1, 0, 2, width - 200, false);
     // gap = 5
@@ -73,7 +66,7 @@ void Level::level_00() {
     // gap = 5
     addPlatform(105, 0, 2, width - 105, false);
     // ceil
-    addPlatform(1, height, 2, width - 1, false);
+    addPlatform(1, height-1, 2, width - 1, false);
 
 
     auto movingPlatform = addPlatform(10, 3, 2, 5, true);

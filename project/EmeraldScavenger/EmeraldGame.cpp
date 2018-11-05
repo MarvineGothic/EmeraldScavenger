@@ -9,21 +9,23 @@
 #include "Box2D/Dynamics/Contacts/b2Contact.h"
 #include "PhysicsComponent.hpp"
 #include "Player.hpp"
-#include "BirdMovementComponent.hpp"
 #include <time.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-	#include <windows.h>
-	static const std::string platform="Windows";	
+
+#include <windows.h>
+
+static const string platform = "Windows";
 #else
-    static const std::string platform="Mac";
-    #include <sys/time.h>
-    timeval macTime;
-    auto currentTime = gettimeofday(&macTime, NULL);
-    auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
+static const std::string platform="Mac";
+#include <sys/time.h>
+timeval macTime;
+auto currentTime = gettimeofday(&macTime, NULL);
+auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 #endif
 
 const vec2 EmeraldGame::windowSize(800, 600);
+const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
 
 EmeraldGame::EmeraldGame()
@@ -44,20 +46,20 @@ EmeraldGame::EmeraldGame()
             .withFilterSampling(false)
             .build());
     scavangerAtlas = SpriteAtlas::create("scavangerStages.json", Texture::create()
-             .withFile("scavangerStages.png")
-             .withFilterSampling(false)
-             .build());
+            .withFile("scavangerStages.png")
+            .withFilterSampling(false)
+            .build());
     level = Level::createDefaultLevel(this, spriteAtlas);
 
-	//Get the current time in milliseconds and use it as a seed
-	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		SYSTEMTIME windowsTime;
-		GetSystemTime(&windowsTime);
-		auto time_ms = (windowsTime.wSecond * 1000) + windowsTime.wMilliseconds;
-	#endif
-	int rand_seed = (time_t)time_ms;
+    //Get the current time in milliseconds and use it as a seed
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    SYSTEMTIME windowsTime;
+    GetSystemTime(&windowsTime);
+    auto time_ms = (windowsTime.wSecond * 1000) + windowsTime.wMilliseconds;
+#endif
+    int rand_seed = (time_t) time_ms;
     printf("Random seed: %ld\n", rand_seed);
-	srand(rand_seed);
+    srand(rand_seed);
 
     initGame();
 
@@ -128,16 +130,16 @@ void EmeraldGame::initLevel() {
 void EmeraldGame::initPlayer(vec2 position) {
     player = createGameObject();
     player->name = "Player";
-    auto playerSprite = player->addComponent<SpriteComponent>();
+    auto playerSpriteComponent = player->addComponent<SpriteComponent>();
     auto playerSpriteObj = scavangerAtlas->get("boy-idle.png");
     playerSpriteObj.setPosition(position);
-    playerSpriteObj.setScale({0.2, 0.2});
-    playerSprite->setSprite(playerSpriteObj);
+    playerSpriteObj.setScale(EmeraldGame::scale);
+    playerSpriteComponent->setSprite(playerSpriteObj);
     auto playerComponent = player->addComponent<Player>();
     playerComponent->setSprites(
             scavangerAtlas->get("boy-idle.png"),
-            scavangerAtlas->get("jump_fallboy.png"),
             scavangerAtlas->get("jump_upboy.png"),
+            scavangerAtlas->get("jump_fallboy.png"),
             scavangerAtlas->get("frame-1_boy.png"),
             scavangerAtlas->get("frame-2_boy.png"),
             scavangerAtlas->get("frame-3_boy.png"),
@@ -227,12 +229,16 @@ void EmeraldGame::render() {
         profiler.gui(false);
     }
 
+    background.renderBackground(renderPass, 0.0f);
+
     auto pos = camera->getGameObject()->getPosition();
     auto spriteBatchBuilder = SpriteBatch::create();
     for (auto &go : gameObjectsList) {
         go->renderSprite(spriteBatchBuilder);
     }
 
+    // ================================ GAME STATES ================================
+    // ================ by: Sergiy Isakov 02 - 03.11.18 ============================
     if (gameState == GameState::GameOver) {
         resetGame();
         initCamera();
@@ -241,11 +247,13 @@ void EmeraldGame::render() {
         spriteBatchBuilder.addSprite(sprite);
     }
     if (gameState == GameState::Start) {
-        /*auto sprite = spriteAtlas_02->get("spr_gameOver.png");
-        sprite.setPosition({ 0.0f,0.0f });
-        spriteBatchBuilder.addSprite(sprite);*/
         gameState = GameState::Ready;
         livesCounter = 5;
+    }
+    if (gameState == GameState::Ready) {
+        auto sprite = spriteAtlas_02->get("spr_gemPiece.png");
+        sprite.setPosition({0.0f, 0.0f});
+        spriteBatchBuilder.addSprite(sprite);
     }
     if (gameState == GameState::Pause) {
         pauseSprite = spriteAtlas_02->get("spr_paused.png");
@@ -253,7 +261,15 @@ void EmeraldGame::render() {
         spriteBatchBuilder.addSprite(pauseSprite);
     }
 
-    background.renderBackground(renderPass, 0.0f);
+    // =================================== LIVES ==================================
+    // ========= by: Sergiy Isakov 05.11.18 05.07 =================================
+    if (gameState == GameState::Running || gameState == GameState::Pause) {
+        auto livesSprite = spriteAtlas_02->get("spr_heart" + to_string(livesCounter) + ".png");
+        livesSprite.setPosition({pos.x - windowSize.x*0.45f, pos.y+ windowSize.y*0.45f});
+        livesSprite.setScale(EmeraldGame::scale);
+        spriteBatchBuilder.addSprite(livesSprite);
+    }
+
     auto sb = spriteBatchBuilder.build();
     renderPass.draw(sb);
 
