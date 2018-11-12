@@ -10,8 +10,8 @@ add_executable(EmeraldScavenger ${EmeraldScavenger} Enemy.hpp)
 target_link_libraries(EmeraldScavenger ${all_libs})
 
 # copy files to dest
-file(COPY assets/background.png assets/scavangerStages.json assets/scavangerStages.png assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png assets/gameSprites.json assets/gameSprites.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
-file(COPY assets/background.png assets/scavangerStages.json assets/scavangerStages.png assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png assets/gameSprites.json assets/gameSprites.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
+file(COPY assets/fireSprites.json assets/fireSprites.png assets/enemiesSprites.json assets/enemiesSprites.png assets/obstacles.json assets/obstacles.png assets/background.png assets/scavangerStages.json assets/scavangerStages.png assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png assets/gameSprites.json assets/gameSprites.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
+file(COPY assets/fireSprites.json assets/fireSprites.png assets/enemiesSprites.json assets/enemiesSprites.png assets/obstacles.json assets/obstacles.png assets/background.png assets/scavangerStages.json assets/scavangerStages.png assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png assets/gameSprites.json assets/gameSprites.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 
 IF (WIN32)
     # Copy dll files to ${CMAKE_CURRENT_BINARY_DIR}/Debug

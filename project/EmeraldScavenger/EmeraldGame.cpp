@@ -37,10 +37,14 @@ EmeraldGame::EmeraldGame()
             .withSdlWindowFlags(SDL_WINDOW_OPENGL)
             .withVSync(useVsync);
 
-    spriteAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
-            .withFile("platformer-art-deluxe.png")
+    spriteAtlas = SpriteAtlas::create("obstacles.json", Texture::create()
+            .withFile("obstacles.png")
             .withFilterSampling(false)
             .build());
+    enemiesAtlas = SpriteAtlas::create("enemiesSprites.json", Texture::create()
+              .withFile("enemiesSprites.png")
+              .withFilterSampling(false)
+              .build());
     spriteAtlas_02 = SpriteAtlas::create("gameSprites.json", Texture::create()
             .withFile("gameSprites.png")
             .withFilterSampling(false)
@@ -49,7 +53,7 @@ EmeraldGame::EmeraldGame()
             .withFile("scavangerStages.png")
             .withFilterSampling(false)
             .build());
-    level = Level::createDefaultLevel(this, spriteAtlas);
+    level = Level::createDefaultLevel(this, spriteAtlas, enemiesAtlas);
 
     //Get the current time in milliseconds and use it as a seed
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)

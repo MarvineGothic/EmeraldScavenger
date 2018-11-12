@@ -38,6 +38,7 @@ class EmeraldGame : public b2ContactListener {
     shared_ptr<GameObject> player;
     shared_ptr<SideScrollingCamera> camera;
     shared_ptr<SpriteAtlas> spriteAtlas;
+    shared_ptr<SpriteAtlas> enemiesAtlas;
     shared_ptr<SpriteAtlas> spriteAtlas_02;
     shared_ptr<SpriteAtlas> scavangerAtlas;
     Sprite pauseSprite;

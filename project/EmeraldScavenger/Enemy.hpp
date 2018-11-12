@@ -14,17 +14,25 @@ using namespace std;
 using namespace sre;
 using namespace glm;
 
+class GameObject;
+
 class Enemy : public Component, public b2RayCastCallback {
 public:
     explicit Enemy(GameObject *gameObject);
 
-    void setSprites(Sprite idle,
-                    Sprite jump1,
-                    Sprite jump2,
-                    Sprite run1,
-                    Sprite run2,
-                    Sprite run3,
-                    Sprite death);
+    void setSprites(Sprite move1,
+                    Sprite move2,
+                    Sprite move3,
+                    Sprite move4,
+                    Sprite dead1,
+                    Sprite dead2,
+                    vec2 scale);
+    
+    enum class EnemyType {
+        Zombie,
+        Dragon,
+        AngryBird,
+    };
 
     void updateSprite(float deltaTime);
 
@@ -41,23 +49,36 @@ public:
     void onCollisionStart(PhysicsComponent *comp) override;
 
     void onCollisionEnd(PhysicsComponent *comp) override;
+    
+    void initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 position, EnemyType enemyType);
 
 private:
-    Sprite idle;
-    Sprite jump1;
-    Sprite jump2;
-    Sprite run1;
-    Sprite run2;
-    Sprite run3;
-    Sprite death;
+    Sprite move1;
+    Sprite move2;
+    Sprite move3;
+    Sprite move4;
+    Sprite dead1;
+    Sprite dead2;
+    
+    static const vec2 dragonScale;
+    static const vec2 birdScale;
 
-    std::vector<sre::Sprite> runningSprites;
+    vector<shared_ptr<GameObject>> enemies;
+    std::vector<sre::Sprite> movingSprites;
+    std::vector<sre::Sprite> deadSprites;
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> characterPhysics;
     shared_ptr<SpriteAnimationComponent> animationComponent;
+    float physicsScale;
     bool isGrounded = false;
     bool isDead = false;
     float radius;
     bool left = false;
     bool right = false;
+    vec2 pos;
+    float distance = 0.0f;
+    bool facingLeft = true;
+    int spriteIndex = 0;
+    float enemyVelocity;
+    bool flyingEnemy = false;
 };

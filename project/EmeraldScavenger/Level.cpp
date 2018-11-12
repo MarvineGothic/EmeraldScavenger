@@ -10,13 +10,16 @@
 #include "PhysicsComponent.hpp"
 #include "PlatformComponent.hpp"
 #include "MovingPlatformComponent.hpp"
+#include "Enemy.hpp"
 
 
 std::shared_ptr<Level> Level::createDefaultLevel(EmeraldGame *game,
-                                                 std::shared_ptr<sre::SpriteAtlas> spriteAtlas) {
+                                                 std::shared_ptr<sre::SpriteAtlas> spriteAtlas,
+                                                 std::shared_ptr<sre::SpriteAtlas> enemiesAtlas) {
     std::shared_ptr<Level> res = std::shared_ptr<Level>(new Level());
     res->game = game;
     res->spriteAtlas = std::move(spriteAtlas);
+    res->enemiesAtlas = std::move(enemiesAtlas);
 
     return res;
 }
@@ -73,6 +76,16 @@ void Level::level_00() {
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({10, 3});
     movingPlatformComponent->setMovementEnd({10, 10});
+    
+    // add some enemies to the level
+    addEnemy({50, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({25, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({75, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({100, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({75, 10}, Enemy::EnemyType::AngryBird);
+    addEnemy({100, 5}, Enemy::EnemyType::Dragon);
+    addEnemy({30, 5}, Enemy::EnemyType::AngryBird);
+    addEnemy({50, 5}, Enemy::EnemyType::Dragon);
 
     // add some more platforms
     addPlatform(15, 7, 2, 5, true);
@@ -196,6 +209,15 @@ std::shared_ptr<PlatformComponent> Level::addWall(int x, int y, int startSpriteI
     gameObject->name = "Wall";
     auto res = gameObject->addComponent<PlatformComponent>();
     res->initWall(spriteAtlas, x, y, startSpriteId, length);
+    return res;
+}
+
+std::shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
+    auto gameObject = game->createGameObject();
+    gameObject->name = "Enemy";
+    auto res = gameObject->addComponent<Enemy>();
+    res->initEnemy(enemiesAtlas, pos, enemyType);
+    res->getGameObject()->setPosition(pos);
     return res;
 }
 

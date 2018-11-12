@@ -1,0 +1,138 @@
+{"frames": [
+
+{
+	"filename": "1.png",
+	"frame": {"x":171,"y":0,"w":57,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":43},
+	"sourceSize": {"w":57,"h":43},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "2.png",
+	"frame": {"x":285,"y":0,"w":57,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":43},
+	"sourceSize": {"w":57,"h":43},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "3.png",
+	"frame": {"x":228,"y":0,"w":57,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":43},
+	"sourceSize": {"w":57,"h":43},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "4.png",
+	"frame": {"x":57,"y":0,"w":57,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":43},
+	"sourceSize": {"w":57,"h":43},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "5.png",
+	"frame": {"x":0,"y":0,"w":57,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":43},
+	"sourceSize": {"w":57,"h":43},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "6.png",
+	"frame": {"x":114,"y":0,"w":57,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":43},
+	"sourceSize": {"w":57,"h":43},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-1_dragon.png",
+	"frame": {"x":117,"y":255,"w":117,"h":85},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":85},
+	"sourceSize": {"w":117,"h":85},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-1_zombie_hit.png",
+	"frame": {"x":338,"y":118,"w":117,"h":137},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":137},
+	"sourceSize": {"w":117,"h":137},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-1_zombie_idle.png",
+	"frame": {"x":342,"y":0,"w":104,"h":118},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":118},
+	"sourceSize": {"w":104,"h":118},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-2_dragon.png",
+	"frame": {"x":234,"y":255,"w":117,"h":85},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":85},
+	"sourceSize": {"w":117,"h":85},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-2_zombie_hit.png",
+	"frame": {"x":221,"y":118,"w":117,"h":137},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":137},
+	"sourceSize": {"w":117,"h":137},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-2_zombie_idle.png",
+	"frame": {"x":0,"y":118,"w":104,"h":118},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":118},
+	"sourceSize": {"w":104,"h":118},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-3_dragon.png",
+	"frame": {"x":104,"y":118,"w":117,"h":85},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":85},
+	"sourceSize": {"w":117,"h":85},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "frame-4_dragon.png",
+	"frame": {"x":0,"y":255,"w":117,"h":85},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":85},
+	"sourceSize": {"w":117,"h":85},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "enemiesSprites.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":512},
+	"scale": "0.125",
+	"smartupdate": "$TexturePacker:SmartUpdate:34cb3e88dfa5a6ea2c635cce3c2bffdb:83a34cec40a5e266962f68f5d4798c91:d928ab6ad991844f005e829f34693ce2$"
+}
+}

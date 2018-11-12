@@ -95,7 +95,9 @@ void Player::jump() {
 }
 
 void Player::onCollisionStart(PhysicsComponent *comp) {
-
+    if (comp->getGameObject()->name == "Enemy") {
+        isDead = true;
+    }
 }
 
 void Player::onCollisionEnd(PhysicsComponent *comp) {
