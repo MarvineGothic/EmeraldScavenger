@@ -1,0 +1,165 @@
+{"frames": [
+
+{
+	"filename": "spike B.png",
+	"frame": {"x":0,"y":0,"w":23,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":23,"h":24},
+	"sourceSize": {"w":23,"h":24},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spike.png",
+	"frame": {"x":23,"y":0,"w":17,"h":31},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":31},
+	"sourceSize": {"w":17,"h":31},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "tile 2.png",
+	"frame": {"x":40,"y":0,"w":26,"h":26},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":26,"h":26},
+	"sourceSize": {"w":26,"h":26},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "tile ground.png",
+	"frame": {"x":66,"y":0,"w":26,"h":26},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":26,"h":26},
+	"sourceSize": {"w":26,"h":26},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spike C.png",
+	"frame": {"x":92,"y":0,"w":19,"h":37},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":37},
+	"sourceSize": {"w":19,"h":37},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spike D.png",
+	"frame": {"x":111,"y":0,"w":20,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":41},
+	"sourceSize": {"w":20,"h":41},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spike monster B.png",
+	"frame": {"x":131,"y":0,"w":43,"h":22},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":43,"h":22},
+	"sourceSize": {"w":43,"h":22},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spike A.png",
+	"frame": {"x":174,"y":0,"w":34,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":34,"h":32},
+	"sourceSize": {"w":34,"h":32},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spike monster A.png",
+	"frame": {"x":208,"y":0,"w":46,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":25},
+	"sourceSize": {"w":46,"h":25},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "tile 1.png",
+	"frame": {"x":254,"y":0,"w":77,"h":20},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":77,"h":20},
+	"sourceSize": {"w":77,"h":20},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "moss_tile.png",
+	"frame": {"x":331,"y":0,"w":65,"h":65},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":65,"h":65},
+	"sourceSize": {"w":65,"h":65},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "brick_1.png",
+	"frame": {"x":396,"y":0,"w":82,"h":76},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":82,"h":76},
+	"sourceSize": {"w":82,"h":76},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "moss_obstacle_1.png",
+	"frame": {"x":0,"y":76,"w":65,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":65,"h":128},
+	"sourceSize": {"w":65,"h":128},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "brick_2.png",
+	"frame": {"x":65,"y":76,"w":82,"h":150},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":82,"h":150},
+	"sourceSize": {"w":82,"h":150},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "brick_3.png",
+	"frame": {"x":147,"y":76,"w":101,"h":186},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":101,"h":186},
+	"sourceSize": {"w":101,"h":186},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "moss_obstacle_2.png",
+	"frame": {"x":248,"y":76,"w":83,"h":212},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":83,"h":212},
+	"sourceSize": {"w":83,"h":212},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "diamond blue.png",
+	"frame": {"x":0,"y":288,"w":228,"h":183},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":228,"h":183},
+	"sourceSize": {"w":228,"h":183},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "obstacles.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":512},
+	"scale": "0.125",
+	"smartupdate": "$TexturePacker:SmartUpdate:1d2b915216c84e04dff4c281362d1582:60300745721dc2db5526240c444f3726:641f848f5767e234ed2c8b58348ca01d$"
+}
+}

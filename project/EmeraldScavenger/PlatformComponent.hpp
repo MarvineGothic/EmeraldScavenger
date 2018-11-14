@@ -27,6 +27,9 @@ public:
     vec2 getPosition();
 
     shared_ptr<PhysicsComponent> getPhysicsComponent();
+    
+    static const vec2 tileScale;
+    static const vec2 brickScale;
 
 private:
     vector<shared_ptr<GameObject>> tiles;

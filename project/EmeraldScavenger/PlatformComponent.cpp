@@ -10,6 +10,9 @@
 #include "SpriteComponent.hpp"
 #include "PhysicsComponent.hpp"
 
+const vec2 PlatformComponent::tileScale(0.85f, 0.85f);
+const vec2 PlatformComponent::brickScale(0.3f, 0.3f);
+
 PlatformComponent::PlatformComponent(GameObject *gameObject) : Component(gameObject) {
     auto game = EmeraldGame::gameInstance;
     physicsScale = game->physicsScale;
@@ -22,13 +25,13 @@ void PlatformComponent::initPlatform(std::shared_ptr<sre::SpriteAtlas> spriteAtl
     this->width = width;
     auto game = EmeraldGame::gameInstance;
     auto spriteComponent = gameObject->addComponent<SpriteComponent>();
-    auto sprite = spriteAtlas->get(std::to_string(startSpriteId) + ".png");
+    auto sprite = spriteAtlas->get("tile ground.png");
+    sprite.setScale(tileScale);
     float tileSize = Level::tileSize;
     vec2 offset{tileSize / 2, tileSize / 2};
     vec2 pos = offset + vec2{x * tileSize, y * tileSize};
 
     gameObject->setPosition(pos);
-
     this->pos = pos;
 
     spriteComponent->setSprite(sprite);
@@ -45,7 +48,8 @@ void PlatformComponent::initPlatform(std::shared_ptr<sre::SpriteAtlas> spriteAtl
         auto go = game->createGameObject();
         auto spriteComponent = go->addComponent<SpriteComponent>();
         int spriteOffset = i == width - 1 ? 2 : 1; // select middle or right piece
-        auto sprite = spriteAtlas->get(std::to_string(startSpriteId + spriteOffset) + ".png");
+        auto sprite = spriteAtlas->get("tile ground.png");
+        sprite.setScale(tileScale);
         vec2 offset{tileSize / 2, tileSize / 2};
         vec2 pos = offset + vec2{(x + i) * tileSize, y * tileSize};
         go->setPosition(pos);
@@ -60,7 +64,8 @@ void PlatformComponent::initWall(std::shared_ptr<sre::SpriteAtlas> spriteAtlas, 
     auto game = EmeraldGame::gameInstance;
 
     auto spriteComponent = gameObject->addComponent<SpriteComponent>();
-    auto sprite = spriteAtlas->get(std::to_string(startSpriteId + 30) + ".png");
+    auto sprite = spriteAtlas->get("brick_1.png");
+    sprite.setScale(brickScale);
     float tileSize = Level::tileSize;
     vec2 offset{tileSize / 2, tileSize / 2};
     pos = offset + vec2{x * tileSize, y * tileSize};
@@ -78,7 +83,8 @@ void PlatformComponent::initWall(std::shared_ptr<sre::SpriteAtlas> spriteAtlas, 
         auto go = game->createGameObject();
         auto spriteComponent = go->addComponent<SpriteComponent>();
         int spriteOffset = i == height - 1 ? 0 : 30; // select middle or right piece
-        auto sprite = spriteAtlas->get(std::to_string(startSpriteId + spriteOffset) + ".png");
+        auto sprite = spriteAtlas->get("brick_1.png");
+        sprite.setScale(brickScale);
         vec2 offset{tileSize / 2, tileSize / 2};
         vec2 pos = offset + vec2{x * tileSize, (y + i) * tileSize};
         go->setPosition(pos);
