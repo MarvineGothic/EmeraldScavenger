@@ -23,7 +23,7 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
     spriteComponent = gameObject->getComponent<SpriteComponent>();
-
+    lastSprite = idle;
 }
 
 bool Player::onKey(SDL_Event &event) {
@@ -31,7 +31,7 @@ bool Player::onKey(SDL_Event &event) {
     switch (event.key.keysym.sym) {
         case SDLK_SPACE: {
             if (isGrounded && event.type == SDL_KEYDOWN) { // prevents double jump
-                jump();
+                isJump = true;
             }
         }
             break;
@@ -51,6 +51,7 @@ bool Player::onKey(SDL_Event &event) {
 }
 
 void Player::update(float deltaTime) {
+
     // raycast ignores any shape in the starting point
     auto from = characterPhysics->getBody()->GetWorldCenter();
     b2Vec2 to{from.x, from.y - radius * 1.3f};
@@ -58,16 +59,18 @@ void Player::update(float deltaTime) {
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
 
     vec2 movement{0, 0};
-    if (left) {
-        movement.x--;
-        facingLeft = true;
-    }
+    if (blinkTime <= 2.5f) {
+        if (left) {
+            movement.x--;
+            facingLeft = true;
+        }
 
-    if (right) {
-        movement.x++;
-        facingLeft = false;
+        if (right) {
+            movement.x++;
+            facingLeft = false;
+        }
+        if (isJump) jump();
     }
-
     // ====================== PLAYER VELOCITY =====================
 
     characterPhysics->addImpulse(movement * accelerationSpeed);
@@ -80,23 +83,33 @@ void Player::update(float deltaTime) {
 
     updateSprite(deltaTime);
 
-    // ====================== PLAYER DIES =======================
+    // ====================== PLAYER FALLS IN THE PIT ===================
     // ================ by: Sergiy Isakov 02.11.18 ======================
     if (this->getGameObject()->getPosition().y <= 0) {
-        EmeraldGame::gameInstance->livesCounter--;
-        EmeraldGame::gameInstance->setGameState(GameState::GetReady);
-        isDead = true;
+        inPit = true;
+        lostLife = true;
     }
 
 }
 
 void Player::jump() {
     characterPhysics->addImpulse({0, 0.4f});
+    isJump = false;
 }
 
 void Player::onCollisionStart(PhysicsComponent *comp) {
-    if (comp->getGameObject()->name == "Enemy") {
-        isDead = true;
+    // ================================ PLAYER COLLISIONS ================================
+    // ================ by: Sergiy Isakov 17.11.18 22:16 =================================
+    auto obj = comp->getGameObject();
+    if (!invincible && obj->name == "Enemy") {
+        lostLife = true;
+        blinkTime = 3.0f;
+        characterPhysics->addImpulse(-characterPhysics->getLinearVelocity());
+    }
+    if (obj->name == "Emerald" && obj->getComponent<SpriteComponent>() != nullptr) {
+        obj->removeComponent(obj->getComponent<SpriteComponent>());
+        if (EmeraldGame::gameInstance->emeraldCounter < 9)
+            EmeraldGame::gameInstance->emeraldCounter++;
     }
 }
 
@@ -123,42 +136,72 @@ void Player::setSprites(Sprite idle, Sprite jumpUp, Sprite fall, Sprite run1,
     this->idle = idle;
     this->jumpUp = jumpUp;
     this->fall = fall;
-    this->run1 = run1;
-    this->run2 = run2;
-    this->run3 = run3;
     this->death = death;
     runningSprites = {run1, run2, run3};
 }
 
 void Player::updateSprite(float deltaTime) {
+
+    // ========================== PLAYER HIT ANIMATION ==================================
+    // ========================== by: Sergiy Isakov 17.11.18 17:32 ======================
+
+    if (invincible && blinkTime <= 2.5f) {
+        this->gameObject->removeComponent(spriteComponent);
+        blinkDelta += deltaTime;
+        if (blinkDelta >= blinkFreq) {
+            gameObject->addComponent<SpriteComponent>();
+            spriteComponent = gameObject->getComponent<SpriteComponent>();
+            blinkTime -= blinkDelta;
+            blinkDelta = 0.0f;
+        }
+        if (blinkTime <= 0.0f && gameObject->getComponent<SpriteComponent>() == nullptr)
+            invincible = false;
+
+    }
+    if (!invincible && gameObject->getComponent<SpriteComponent>() == nullptr) {
+        gameObject->addComponent<SpriteComponent>();
+        spriteComponent = gameObject->getComponent<SpriteComponent>();
+    }
+
+
     auto velocity = characterPhysics->getLinearVelocity();
-    // ================================ animation ==============================
-    // ============= by: Sergiy Isakov 05.11.18 05:07 ======================
+    // ================================ PLAYER SPRITES ANIMATION ==============================
+    // =========================== by: Sergiy Isakov 05.11.18 05:07 ======================
+
     if (isGrounded) {
         distance += velocity.x * deltaTime;
         if (velocity.x == 0.0f) {
             idle.setFlip({(facingLeft), false});
-            spriteComponent->setSprite(idle);
+            lastSprite = idle;
         }
         if (distance > 0.06 || distance < -0.06) {
             spriteIndex = (spriteIndex + 1) % runningSprites.size();
             Sprite runningSprite = runningSprites[spriteIndex];
             if (distance < -0.06)
                 runningSprite.setFlip({true, false});
-            spriteComponent->setSprite(runningSprite);
             distance = 0.0f;
+            lastSprite = runningSprite;
         }
-    } else if (velocity.y > 0) {
-        jumpUp.setFlip({(facingLeft), false});
-        spriteComponent->setSprite(jumpUp);
-    } else if (velocity.y < 0) {
-        fall.setFlip({(facingLeft), false});
-        spriteComponent->setSprite(fall);
+    } else {
+        if (velocity.y > 0) {
+            jumpUp.setFlip({(facingLeft), false});
+            lastSprite = jumpUp;
+        }
+        if (velocity.y < 0) {
+            fall.setFlip({(facingLeft), false});
+            lastSprite = fall;
+        }
     }
-    if (isDead) {
+    if (blinkTime > 2.5f) {
         death.setFlip({(facingLeft), false});
-        spriteComponent->setSprite(death);
+        lastSprite = death;
+        invincible = true;
+        blinkTime -= deltaTime;
     }
+
+    spriteComponent->setSprite(lastSprite);
 }
+
+
 
 

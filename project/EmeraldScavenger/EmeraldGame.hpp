@@ -30,6 +30,7 @@ class EmeraldGame : public b2ContactListener {
 
     int levelCounter = 0;
     int livesCounter = 5;
+    int emeraldCounter = 0;
 
     SDLRenderer r;
     Box2DDebugDraw debugDraw;
@@ -40,11 +41,13 @@ class EmeraldGame : public b2ContactListener {
     shared_ptr<SpriteAtlas> spriteAtlas;
     shared_ptr<SpriteAtlas> enemiesAtlas;
     shared_ptr<SpriteAtlas> spriteAtlas_02;
-    shared_ptr<SpriteAtlas> scavangerAtlas;
+    shared_ptr<SpriteAtlas> scavengerAtlas;
+    shared_ptr<SpriteAtlas> uiAtlas;
     Sprite pauseSprite;
     shared_ptr<Level> level;
 
     vector<shared_ptr<GameObject>> gameObjectsList;
+    shared_ptr<vector<vec2>> levelEmeraldsList;
     map<b2Fixture *, PhysicsComponent *> physicsComponentMap;
 
     b2World *world = nullptr;
@@ -97,6 +100,8 @@ public:
 
     shared_ptr<GameObject> createGameObject();
 
+    void deleteGameObject(shared_ptr<GameObject> gameObject);
+
     static const vec2 windowSize;
     static const vec2 scale;
 
@@ -114,4 +119,3 @@ public:
     time_t rand_seed;
 
 };
-

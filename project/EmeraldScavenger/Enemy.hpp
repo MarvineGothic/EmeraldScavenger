@@ -68,7 +68,6 @@ private:
     std::vector<sre::Sprite> deadSprites;
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> characterPhysics;
-    shared_ptr<SpriteAnimationComponent> animationComponent;
     float physicsScale;
     bool isGrounded = false;
     bool isDead = false;

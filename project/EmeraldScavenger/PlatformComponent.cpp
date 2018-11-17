@@ -46,12 +46,12 @@ void PlatformComponent::initPlatform(std::shared_ptr<sre::SpriteAtlas> spriteAtl
     physicsComponent->setAutoUpdate(false);
     for (int i = 1; i < width; i++) {
         auto go = game->createGameObject();
-        auto spriteComponent = go->addComponent<SpriteComponent>();
+        spriteComponent = go->addComponent<SpriteComponent>();
         int spriteOffset = i == width - 1 ? 2 : 1; // select middle or right piece
-        auto sprite = spriteAtlas->get("tile ground.png");
+        sprite = spriteAtlas->get("tile ground.png");
         sprite.setScale(tileScale);
-        vec2 offset{tileSize / 2, tileSize / 2};
-        vec2 pos = offset + vec2{(x + i) * tileSize, y * tileSize};
+        //vec2 offset{tileSize / 2, tileSize / 2};
+        pos = offset + vec2{(x + i) * tileSize, y * tileSize};
         go->setPosition(pos);
         spriteComponent->setSprite(sprite);
         tiles.push_back(go);

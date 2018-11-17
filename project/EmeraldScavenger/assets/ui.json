@@ -1,0 +1,156 @@
+{"frames": [
+
+{
+	"filename": "buttonBlue.png",
+	"frame": {"x":0,"y":0,"w":222,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":222,"h":39},
+	"sourceSize": {"w":222,"h":39},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "buttonGreen.png",
+	"frame": {"x":0,"y":39,"w":222,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":222,"h":39},
+	"sourceSize": {"w":222,"h":39},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "buttonRed.png",
+	"frame": {"x":0,"y":78,"w":222,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":222,"h":39},
+	"sourceSize": {"w":222,"h":39},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "buttonYellow.png",
+	"frame": {"x":0,"y":117,"w":222,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":222,"h":39},
+	"sourceSize": {"w":222,"h":39},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "cursor.png",
+	"frame": {"x":222,"y":117,"w":30,"h":33},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":33},
+	"sourceSize": {"w":30,"h":33},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral0.png",
+	"frame": {"x":0,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral1.png",
+	"frame": {"x":19,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral2.png",
+	"frame": {"x":38,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral3.png",
+	"frame": {"x":57,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral4.png",
+	"frame": {"x":76,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral5.png",
+	"frame": {"x":95,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral6.png",
+	"frame": {"x":114,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral7.png",
+	"frame": {"x":133,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral8.png",
+	"frame": {"x":152,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeral9.png",
+	"frame": {"x":171,"y":156,"w":19,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
+	"sourceSize": {"w":19,"h":19},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "numeralX.png",
+	"frame": {"x":190,"y":156,"w":17,"h":17},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":17},
+	"sourceSize": {"w":17,"h":17},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "ui.png",
+	"format": "RGBA8888",
+	"size": {"w":256,"h":256},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:e0ec0772e01d41fb87de3b2fc6bbc177:470bf90fcf75966bf994219ea2c1a0ae:5b04aa198265472a3c5f56958d78e97b$"
+}
+}

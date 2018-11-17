@@ -27,9 +27,9 @@ enum class TileCollider {
 class Level {
     Level() = default;
 
-    int levelWidth, levelHeight;
-    vec2 startPosition, finishPosition;
-    EmeraldGame *game;
+    int levelWidth{}, levelHeight{};
+    vec2 startPosition{}, finishPosition{};
+    EmeraldGame *game{};
     shared_ptr<SpriteAtlas> spriteAtlas;
     shared_ptr<SpriteAtlas> enemiesAtlas;
 public:
@@ -56,15 +56,17 @@ public:
     shared_ptr<PlatformComponent> addWall(int x, int y, int startSpriteId, int height);
 
     shared_ptr<Enemy> addEnemy(vec2 position, Enemy::EnemyType enemyType);
-    
+
+    shared_ptr<GameObject> addEmerald(vec2 position);
+
     static constexpr float tileSize = 21;
 
     void generateLevel();
 
     void Procedural_level();
 
-    vec2 min;
-    vec2 max;
+    vec2 min{};
+    vec2 max{};
 
     int getWidth();
 

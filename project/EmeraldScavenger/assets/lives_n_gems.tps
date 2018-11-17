@@ -299,7 +299,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_gemCollected.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_gemCollected.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -312,7 +312,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_gemPieceUI.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_gemPieceUI.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -325,12 +325,12 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart0.png</key>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart1.png</key>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart2.png</key>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart3.png</key>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart4.png</key>
-            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart5.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart0.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart1.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart2.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart3.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart4.png</key>
+            <key type="filename">C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart5.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -346,14 +346,14 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_gemCollected.png</filename>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_gemPieceUI.png</filename>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart0.png</filename>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart1.png</filename>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart2.png</filename>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart3.png</filename>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart4.png</filename>
-            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/ui/spr_heart5.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_gemCollected.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_gemPieceUI.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart0.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart1.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart2.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart3.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart4.png</filename>
+            <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/uiAtlas/spr_heart5.png</filename>
             <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/door.png</filename>
             <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/dungeonBackground.png</filename>
             <filename>C:/Users/Admin/Downloads/descent-source/Descent/ProjectLumosity/Assets/grapple.png</filename>

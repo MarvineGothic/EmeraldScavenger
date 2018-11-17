@@ -17,7 +17,7 @@
 
 static const string platform = "Windows";
 #else
-static const std::string platform="Mac";
+static const std::string platform = "Mac";
 #include <sys/time.h>
 timeval macTime;
 auto currentTime = gettimeofday(&macTime, NULL);
@@ -42,15 +42,19 @@ EmeraldGame::EmeraldGame()
             .withFilterSampling(false)
             .build());
     enemiesAtlas = SpriteAtlas::create("enemiesSprites.json", Texture::create()
-              .withFile("enemiesSprites.png")
-              .withFilterSampling(false)
-              .build());
+            .withFile("enemiesSprites.png")
+            .withFilterSampling(false)
+            .build());
     spriteAtlas_02 = SpriteAtlas::create("gameSprites.json", Texture::create()
             .withFile("gameSprites.png")
             .withFilterSampling(false)
             .build());
-    scavangerAtlas = SpriteAtlas::create("scavangerStages.json", Texture::create()
+    scavengerAtlas = SpriteAtlas::create("scavangerStages.json", Texture::create()
             .withFile("scavangerStages.png")
+            .withFilterSampling(false)
+            .build());
+    uiAtlas = SpriteAtlas::create("ui.json", Texture::create()
+            .withFile("ui.png")
             .withFilterSampling(false)
             .build());
     level = Level::createDefaultLevel(this, spriteAtlas, enemiesAtlas);
@@ -135,19 +139,19 @@ void EmeraldGame::initPlayer(vec2 position) {
     player = createGameObject();
     player->name = "Player";
     auto playerSpriteComponent = player->addComponent<SpriteComponent>();
-    auto playerSpriteObj = scavangerAtlas->get("boy-idle.png");
+    auto playerSpriteObj = scavengerAtlas->get("boy-idle.png");
     playerSpriteObj.setPosition(position);
     playerSpriteObj.setScale(EmeraldGame::scale);
     playerSpriteComponent->setSprite(playerSpriteObj);
     auto playerComponent = player->addComponent<Player>();
     playerComponent->setSprites(
-            scavangerAtlas->get("boy-idle.png"),
-            scavangerAtlas->get("jump_upboy.png"),
-            scavangerAtlas->get("jump_fallboy.png"),
-            scavangerAtlas->get("frame-1_boy.png"),
-            scavangerAtlas->get("frame-2_boy.png"),
-            scavangerAtlas->get("frame-3_boy.png"),
-            scavangerAtlas->get("boy-hit.png")
+            scavengerAtlas->get("boy-idle.png"),
+            scavengerAtlas->get("jump_upboy.png"),
+            scavengerAtlas->get("jump_fallboy.png"),
+            scavengerAtlas->get("frame-1_boy.png"),
+            scavengerAtlas->get("frame-2_boy.png"),
+            scavengerAtlas->get("frame-3_boy.png"),
+            scavengerAtlas->get("boy-hit.png")
     );
     // set camera follow player:
     camera->setFollowObject(player, {windowSize * 0.5f});
@@ -214,11 +218,21 @@ void EmeraldGame::update(float time) {
     for (auto &gameObject : gameObjectsList) {
         gameObject->update(time);
     }
-    if (gameState == GameState::GetReady) {
-        if (livesCounter < 1) {
+    if (gameState == GameState::Running) {
+        if (player->getComponent<Player>()->lostLife) {
+            livesCounter--;
+            player->getComponent<Player>()->lostLife = false;
+            setGameState(GameState::GetReady);
+        }
+        if (livesCounter < 1)
             gameState = GameState::GameOver;
-        } else
+    }
+    if (gameState == GameState::GetReady) {
+        if (player->getComponent<Player>()->inPit) {
+            player->getComponent<Player>()->inPit = false;
             runGame();
+        }
+        setGameState(GameState::Running);
     }
 }
 
@@ -249,30 +263,39 @@ void EmeraldGame::render() {
         auto sprite = spriteAtlas_02->get("spr_gameOver.png");
         sprite.setPosition({0.0f, 0.0f});
         spriteBatchBuilder.addSprite(sprite);
-    }
-    if (gameState == GameState::Start) {
+    } else if (gameState == GameState::Start) {
         gameState = GameState::Ready;
         livesCounter = 5;
-    }
-    if (gameState == GameState::Ready) {
-        auto sprite = spriteAtlas_02->get("spr_gemPiece.png");
+        emeraldCounter = 0;
+    } else if (gameState == GameState::Ready) {
+        auto sprite = spriteAtlas->get("diamond blue.png");
         sprite.setPosition({0.0f, 0.0f});
         spriteBatchBuilder.addSprite(sprite);
-    }
-    if (gameState == GameState::Pause) {
+    } else if (gameState == GameState::Pause) {
         pauseSprite = spriteAtlas_02->get("spr_paused.png");
         pauseSprite.setPosition(pos);
         spriteBatchBuilder.addSprite(pauseSprite);
     }
 
-    // =================================== LIVES ==================================
-    // ========= by: Sergiy Isakov 05.11.18 05.07 =================================
+    // ======================== LIVES AND EMERALDS ==================================
+    // ===================== by: Sergiy Isakov 17.11.18 22.17 =======================
     if (gameState == GameState::Running || gameState == GameState::Pause) {
         auto livesSprite = spriteAtlas_02->get("spr_heart" + to_string(livesCounter) + ".png");
-        livesSprite.setPosition({pos.x - windowSize.x*0.45f, pos.y+ windowSize.y*0.45f});
-        livesSprite.setScale(EmeraldGame::scale);
+        livesSprite.setPosition({pos.x - windowSize.x * 0.4f, pos.y + windowSize.y * 0.45f});
+        livesSprite.setScale(EmeraldGame::scale * 1.5f);
         spriteBatchBuilder.addSprite(livesSprite);
+
+        auto emeraldSprite = spriteAtlas->get("diamond blue.png");
+        emeraldSprite.setScale(EmeraldGame::scale * 0.8f);
+        emeraldSprite.setPosition({pos.x + windowSize.x * 0.45f, pos.y + windowSize.y * 0.45f});
+        spriteBatchBuilder.addSprite(emeraldSprite);
+
+        auto emeraldNumber = uiAtlas->get("numeral" + to_string(emeraldCounter) + ".png");
+        emeraldNumber.setPosition({emeraldSprite.getPosition().x - emeraldNumber.getSpriteSize().x * 2.0f,
+                                   emeraldSprite.getPosition().y});
+        spriteBatchBuilder.addSprite(emeraldNumber);
     }
+    // ==============================================================================
 
     auto sb = spriteBatchBuilder.build();
     renderPass.draw(sb);
@@ -289,6 +312,10 @@ shared_ptr<GameObject> EmeraldGame::createGameObject() {
     auto obj = make_shared<GameObject>();
     gameObjectsList.push_back(obj);
     return obj;
+}
+
+void EmeraldGame::deleteGameObject(shared_ptr<GameObject> gameObject) {
+    gameObjectsList.erase(remove(gameObjectsList.begin(), gameObjectsList.end(), gameObject), gameObjectsList.end());
 }
 
 void EmeraldGame::updatePhysics() {
@@ -363,4 +390,6 @@ shared_ptr<Level> EmeraldGame::getLevel() {
 void EmeraldGame::setGameState(GameState newState) {
     this->gameState = newState;
 }
+
+
 

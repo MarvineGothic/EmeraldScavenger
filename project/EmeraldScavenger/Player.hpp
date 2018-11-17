@@ -38,16 +38,17 @@ public:
 
     void onCollisionEnd(PhysicsComponent *comp) override;
 
+    bool inPit = false;
+    bool lostLife = false;
+
 private:
     Sprite idle;
     Sprite jumpUp;
     Sprite fall;
-    Sprite run1;
-    Sprite run2;
-    Sprite run3;
     Sprite death;
-
+    Sprite lastSprite;
     vector<sre::Sprite> runningSprites;
+
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> characterPhysics;
 
@@ -56,9 +57,14 @@ private:
     int spriteIndex = 0;
     float distance = 0.0f;
     bool isGrounded = false;
-    bool isDead = false;
+
     float radius;
     bool left = false;
     bool right = false;
+    bool isJump = false;
     bool facingLeft = false;
+    bool invincible = false;
+    float blinkFreq = 0.1f;
+    float blinkDelta = 0.0f;
+    float blinkTime = 0.0f;
 };
