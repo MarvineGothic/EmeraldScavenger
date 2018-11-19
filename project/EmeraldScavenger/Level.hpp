@@ -28,10 +28,14 @@ class Level {
     Level() = default;
 
     int levelWidth{}, levelHeight{};
-    vec2 startPosition{}, finishPosition{};
+
+    static vec2 startPosition, finishPosition;
     EmeraldGame *game{};
     shared_ptr<SpriteAtlas> spriteAtlas;
     shared_ptr<SpriteAtlas> enemiesAtlas;
+
+    vector<vec2> emeralds;
+
 public:
     static shared_ptr<Level> createDefaultLevel(EmeraldGame *game,
                                                 shared_ptr<SpriteAtlas> spriteAtlas,
@@ -61,6 +65,10 @@ public:
 
     static constexpr float tileSize = 21;
 
+    void clearEmeralds();
+
+    void deleteEmerald(vec2 emeraldPos);
+
     void generateLevel();
 
     void Procedural_level();
@@ -72,7 +80,7 @@ public:
 
     int getHeight();
 
-    vec2 getStartPos();
+    static vec2 getStartPos();
 
-    vec2 getFinishPos();
+    static vec2 getFinishPos();
 };

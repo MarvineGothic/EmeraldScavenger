@@ -12,6 +12,8 @@
 #include "MovingPlatformComponent.hpp"
 #include "Enemy.hpp"
 
+vec2 Level::startPosition = {};
+vec2 Level::finishPosition = {};
 
 std::shared_ptr<Level> Level::createDefaultLevel(EmeraldGame *game,
                                                  std::shared_ptr<sre::SpriteAtlas> spriteAtlas,
@@ -32,18 +34,6 @@ void Level::makeLevel(int level) {
         case 1:
             this->level_01();
             break;
-        case 2:
-            this->level_02();
-            break;
-        case 3:
-            this->level_03();
-            break;
-        case 4:
-            this->level_04();
-            break;
-        case 5:
-            this->level_05();
-            break;
         default:
             this->generateLevel();
             break;
@@ -55,7 +45,7 @@ void Level::level_00() {
     int width = 205;
     int height = 51;
 
-    startPosition = {vec2{1.5, 2.5} * tileSize};
+    startPosition = vec2{1.5, 2.5} * tileSize;
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
@@ -88,22 +78,28 @@ void Level::level_00() {
     addEnemy({50, 5}, Enemy::EnemyType::Dragon);
 
     // add some emeralds:
-    // todo: stop rendering collected emeralds
+    // stop rendering collected emeralds
     //create a list of positions for emeralds and safe them to emeraldGame
     // when emerald is taken, position is deleted from the list
-    addEmerald({15, 1.5f});
-    addEmerald({25, 1.5f});
-    addEmerald({35, 1.5f});
-    addEmerald({45, 1.5f});
-    addEmerald({55, 1.5f});
-    addEmerald({65, 1.5f});
-    addEmerald({75, 1.5f});
-    addEmerald({85, 1.5f});
-    addEmerald({95, 1.5f});
-    addEmerald({105, 1.5f});
-    addEmerald({115, 1.5f});
-    addEmerald({125, 1.5f});
-
+    // don't forget to clean emeralds vector when level is finished
+    if (emeralds.empty()) {
+        emeralds.emplace_back(15, 1.5f);
+        emeralds.emplace_back(25, 1.5f);
+        emeralds.emplace_back(35, 1.5f);
+        emeralds.emplace_back(45, 1.5f);
+        emeralds.emplace_back(55, 1.5f);
+        emeralds.emplace_back(65, 1.5f);
+        emeralds.emplace_back(75, 1.5f);
+        emeralds.emplace_back(85, 1.5f);
+        emeralds.emplace_back(95, 1.5f);
+        emeralds.emplace_back(105, 1.5f);
+        emeralds.emplace_back(115, 1.5f);
+        emeralds.emplace_back(125, 1.5f);
+    }
+    // just add existing emeralds to EmeraldGame gameObjectsList
+    for (auto &emeraldPos : emeralds) {
+        addEmerald(emeraldPos);
+    }
 
     // add some more platforms
     addPlatform(15, 7, 2, 5, true);
@@ -131,7 +127,78 @@ void Level::level_00() {
 //todo: design levels:
 
 void Level::level_01() {
+    int width = 205;
+    int height = 51;
 
+    Level::startPosition = vec2{35.0, 2.5} * tileSize;
+    levelWidth = static_cast<int>((width + 1) * tileSize);
+    levelHeight = static_cast<int>(height * tileSize);
+    game->background.initDynamicBackground("background.png");
+
+    // start wall
+    addWall(0, 0, 2, height);
+    // floor
+    addPlatform(1, 0, 2, width - 200, false);
+    // gap = 5
+    addPlatform(10, 0, 2, width - 115, false);
+    // gap = 5
+    addPlatform(105, 0, 2, width - 105, false);
+    // ceil
+    addPlatform(1, height - 1, 2, width - 1, false);
+
+
+    auto movingPlatform = addPlatform(10, 3, 2, 5, true);
+    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent->setMovementStart({10, 3});
+    movingPlatformComponent->setMovementEnd({10, 10});
+
+    // add some enemies to the level
+    /*addEnemy({50, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({25, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({75, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({180, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({75, 10}, Enemy::EnemyType::AngryBird);
+    addEnemy({120, 5}, Enemy::EnemyType::Dragon);
+    addEnemy({30, 5}, Enemy::EnemyType::AngryBird);
+    addEnemy({50, 5}, Enemy::EnemyType::Dragon);*/
+
+    // add some emeralds:
+    // stop rendering collected emeralds
+    //create a list of positions for emeralds and safe them to emeraldGame
+    // when emerald is taken, position is deleted from the list
+    if (emeralds.empty()) {
+        emeralds.emplace_back(85, 1.5f);
+        emeralds.emplace_back(95, 1.5f);
+        emeralds.emplace_back(105, 1.5f);
+        emeralds.emplace_back(115, 1.5f);
+        emeralds.emplace_back(125, 1.5f);
+    }
+    // just add existing emeralds to EmeraldGame gameObjectsList
+    for (auto &emeraldPos : emeralds) {
+        addEmerald(emeraldPos);
+    }
+
+
+    // add some more platforms
+    addPlatform(15, 7, 2, 5, true);
+    addPlatform(20, 3, 2, 5, true);
+    addPlatform(25, 7, 2, 5, true);
+    addPlatform(30, 10, 2, 5, true);
+    addPlatform(35, 7, 2, 5, true);
+    addPlatform(40, 3, 2, 5, true);
+
+    addPlatform(35, 15, 2, 5, true);
+    addPlatform(40, 20, 2, 5, true);
+    addPlatform(45, 25, 2, 5, true);
+    addPlatform(50, 30, 2, 5, true);
+    addPlatform(55, 35, 2, 5, true);
+    addPlatform(60, 40, 2, 5, true);
+    addPlatform(65, 45, 2, 140, true);
+
+
+    addWall(125, 0, 2, 2);
+    // end wall
+    addWall(width, 0, 2, height);
 }
 
 void Level::level_02() {
@@ -182,10 +249,26 @@ void Level::Procedural_level() {
     // ceil
     addPlatform(0, height, 2, width, false);
 
-    startPosition = {vec2{1.5, 2.5} * Level::tileSize};
+    startPosition = vec2{1.5, 2.5} * Level::tileSize;
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
+
+    // add some emeralds:
+    // stop rendering collected emeralds
+    //create a list of positions for emeralds and safe them to emeraldGame
+    // when emerald is taken, position is deleted from the list
+    if (emeralds.empty()) {
+        emeralds.emplace_back(85, 1.5f);
+        emeralds.emplace_back(95, 1.5f);
+        emeralds.emplace_back(105, 1.5f);
+        emeralds.emplace_back(115, 1.5f);
+        emeralds.emplace_back(125, 1.5f);
+    }
+    // just add existing emeralds to EmeraldGame gameObjectsList
+    for (auto &emeraldPos : emeralds) {
+        addEmerald(emeraldPos);
+    }
 
     glm::vec2 min(0, -3);
     glm::vec2 max(5, 3);
@@ -245,7 +328,7 @@ shared_ptr<GameObject> Level::addEmerald(vec2 position) {
     auto emeraldSpriteComponent = emeraldObject->addComponent<SpriteComponent>();
     auto emeraldPhysicsComponent = emeraldObject->addComponent<PhysicsComponent>();
     auto emeraldSprite = spriteAtlas->get("diamond blue.png");
-    emeraldSprite.setScale(EmeraldGame::scale/2.0f);
+    emeraldSprite.setScale(EmeraldGame::scale / 2.0f);
     emeraldSpriteComponent->setSprite(emeraldSprite);
 
     emeraldObject->setPosition(position * tileSize);
@@ -267,12 +350,19 @@ int Level::getHeight() {
     return this->levelHeight;
 }
 
-vec2 Level::getStartPos() {
-    return this->startPosition;
-}
-
 vec2 Level::getFinishPos() {
-    return this->finishPosition;
+    return finishPosition;
 }
 
+vec2 Level::getStartPos() {
+    return startPosition;
+}
+
+void Level::clearEmeralds() {
+    this->emeralds.clear();
+}
+
+void Level::deleteEmerald(vec2 emeraldPos) {
+    emeralds.erase(remove(emeralds.begin(), emeralds.end(), emeraldPos / tileSize), emeralds.end());
+}
 

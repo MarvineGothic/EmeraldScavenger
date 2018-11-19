@@ -1,766 +1,264 @@
+{"frames": [
+
 {
-  "frames": [
-    {
-      "filename": "door.png",
-      "frame": {
-        "x": 0,
-        "y": 0,
-        "w": 56,
-        "h": 75
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 56,
-        "h": 75
-      },
-      "sourceSize": {
-        "w": 56,
-        "h": 75
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "dungeonBackground.png",
-      "frame": {
-        "x": 56,
-        "y": 0,
-        "w": 128,
-        "h": 128
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 128,
-        "h": 128
-      },
-      "sourceSize": {
-        "w": 128,
-        "h": 128
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "grapple.png",
-      "frame": {
-        "x": 184,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "grappple.png",
-      "frame": {
-        "x": 216,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "levelRestart.png",
-      "frame": {
-        "x": 248,
-        "y": 0,
-        "w": 210,
-        "h": 75
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 210,
-        "h": 75
-      },
-      "sourceSize": {
-        "w": 210,
-        "h": 75
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_gameOver.png",
-      "frame": {
-        "x": 458,
-        "y": 0,
-        "w": 526,
-        "h": 155
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 526,
-        "h": 155
-      },
-      "sourceSize": {
-        "w": 526,
-        "h": 155
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_gemCollected.png",
-      "frame": {
-        "x": 0,
-        "y": 155,
-        "w": 500,
-        "h": 500
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 500,
-        "h": 500
-      },
-      "sourceSize": {
-        "w": 500,
-        "h": 500
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_gemPiece.png",
-      "frame": {
-        "x": 500,
-        "y": 155,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_gemPieceUI.png",
-      "frame": {
-        "x": 564,
-        "y": 155,
-        "w": 48,
-        "h": 48
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 48,
-        "h": 48
-      },
-      "sourceSize": {
-        "w": 48,
-        "h": 48
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_heart0.png",
-      "frame": {
-        "x": 612,
-        "y": 155,
-        "w": 236,
-        "h": 34
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 236,
-        "h": 34
-      },
-      "sourceSize": {
-        "w": 236,
-        "h": 34
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_heart1.png",
-      "frame": {
-        "x": 0,
-        "y": 655,
-        "w": 236,
-        "h": 34
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 236,
-        "h": 34
-      },
-      "sourceSize": {
-        "w": 236,
-        "h": 34
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_heart2.png",
-      "frame": {
-        "x": 236,
-        "y": 655,
-        "w": 236,
-        "h": 34
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 236,
-        "h": 34
-      },
-      "sourceSize": {
-        "w": 236,
-        "h": 34
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_heart3.png",
-      "frame": {
-        "x": 472,
-        "y": 655,
-        "w": 236,
-        "h": 34
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 236,
-        "h": 34
-      },
-      "sourceSize": {
-        "w": 236,
-        "h": 34
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_heart4.png",
-      "frame": {
-        "x": 708,
-        "y": 655,
-        "w": 236,
-        "h": 34
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 236,
-        "h": 34
-      },
-      "sourceSize": {
-        "w": 236,
-        "h": 34
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_heart5.png",
-      "frame": {
-        "x": 0,
-        "y": 689,
-        "w": 236,
-        "h": 34
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 236,
-        "h": 34
-      },
-      "sourceSize": {
-        "w": 236,
-        "h": 34
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_ladder.png",
-      "frame": {
-        "x": 236,
-        "y": 689,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_lavaBlock.png",
-      "frame": {
-        "x": 300,
-        "y": 689,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_lavaBlockTop.png",
-      "frame": {
-        "x": 364,
-        "y": 689,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_paused.png",
-      "frame": {
-        "x": 428,
-        "y": 689,
-        "w": 531,
-        "h": 135
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 531,
-        "h": 135
-      },
-      "sourceSize": {
-        "w": 531,
-        "h": 135
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_stone.png",
-      "frame": {
-        "x": 959,
-        "y": 689,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_stoneBlockGrapple.png",
-      "frame": {
-        "x": 0,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_stoneGrassBottom.png",
-      "frame": {
-        "x": 64,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_stoneGrassLeft.png",
-      "frame": {
-        "x": 128,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_stoneGrassRight.png",
-      "frame": {
-        "x": 192,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_stoneGrassTop.png",
-      "frame": {
-        "x": 256,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_stoneMoss.png",
-      "frame": {
-        "x": 320,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_wood.png",
-      "frame": {
-        "x": 384,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_woodSideLeft.png",
-      "frame": {
-        "x": 448,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "spr_woodSideRight.png",
-      "frame": {
-        "x": 512,
-        "y": 824,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "torch-icon.png",
-      "frame": {
-        "x": 576,
-        "y": 824,
-        "w": 87,
-        "h": 87
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 87,
-        "h": 87
-      },
-      "sourceSize": {
-        "w": 87,
-        "h": 87
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    }
-  ],
-  "meta": {
-    "app": "https://www.codeandweb.com/texturepacker",
-    "version": "1.0",
-    "image": "gameSprites.png",
-    "format": "RGBA8888",
-    "size": {
-      "w": 1024,
-      "h": 1024
-    },
-    "scale": "1",
-    "smartupdate": "$TexturePacker:SmartUpdate:fb9d93c59ad041c6ecb51b8b686f0423:2c69935978e04da52d981ec8d45f52d4:438964980cb6b5877efd46c460fc51dc$"
-  }
+	"filename": "door.png",
+	"frame": {"x":0,"y":0,"w":56,"h":75},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":56,"h":75},
+	"sourceSize": {"w":56,"h":75},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "level.png",
+	"frame": {"x":56,"y":0,"w":531,"h":135},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":531,"h":135},
+	"sourceSize": {"w":531,"h":135},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "levelRestart.png",
+	"frame": {"x":587,"y":0,"w":210,"h":75},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":75},
+	"sourceSize": {"w":210,"h":75},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_door.png",
+	"frame": {"x":797,"y":0,"w":154,"h":188},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":154,"h":188},
+	"sourceSize": {"w":154,"h":188},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_doorOpen.png",
+	"frame": {"x":0,"y":188,"w":154,"h":188},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":154,"h":188},
+	"sourceSize": {"w":154,"h":188},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_gameOver.png",
+	"frame": {"x":154,"y":188,"w":526,"h":155},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":526,"h":155},
+	"sourceSize": {"w":526,"h":155},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_heart0.png",
+	"frame": {"x":680,"y":188,"w":236,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":34},
+	"sourceSize": {"w":236,"h":34},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_heart1.png",
+	"frame": {"x":0,"y":376,"w":236,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":34},
+	"sourceSize": {"w":236,"h":34},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_heart2.png",
+	"frame": {"x":236,"y":376,"w":236,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":34},
+	"sourceSize": {"w":236,"h":34},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_heart3.png",
+	"frame": {"x":472,"y":376,"w":236,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":34},
+	"sourceSize": {"w":236,"h":34},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_heart4.png",
+	"frame": {"x":708,"y":376,"w":236,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":34},
+	"sourceSize": {"w":236,"h":34},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_heart5.png",
+	"frame": {"x":0,"y":410,"w":236,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":34},
+	"sourceSize": {"w":236,"h":34},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_ladder.png",
+	"frame": {"x":236,"y":410,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_lavaBlock.png",
+	"frame": {"x":300,"y":410,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_lavaBlockTop.png",
+	"frame": {"x":364,"y":410,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_paused.png",
+	"frame": {"x":428,"y":410,"w":531,"h":135},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":531,"h":135},
+	"sourceSize": {"w":531,"h":135},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_stone.png",
+	"frame": {"x":959,"y":410,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_stoneBlockGrapple.png",
+	"frame": {"x":0,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_stoneGrassBottom.png",
+	"frame": {"x":64,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_stoneGrassLeft.png",
+	"frame": {"x":128,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_stoneGrassRight.png",
+	"frame": {"x":192,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_stoneGrassTop.png",
+	"frame": {"x":256,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_stoneMoss.png",
+	"frame": {"x":320,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_teamCakeLogo.png",
+	"frame": {"x":384,"y":545,"w":354,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":354,"h":400},
+	"sourceSize": {"w":354,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_wood.png",
+	"frame": {"x":738,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_woodSideLeft.png",
+	"frame": {"x":802,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "spr_woodSideRight.png",
+	"frame": {"x":866,"y":545,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "torch-icon.png",
+	"frame": {"x":930,"y":545,"w":87,"h":87},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":87},
+	"sourceSize": {"w":87,"h":87},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "gameSprites.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:2feb0f83e6f5c44a10432ba39a9c4651:e25c403c98482771b101d70cadbdf750:438964980cb6b5877efd46c460fc51dc$"
+}
 }

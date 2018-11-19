@@ -15,10 +15,9 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
     characterPhysics = gameObject->addComponent<PhysicsComponent>();
     accelerationSpeed = 1.00f;
     maximumVelocity = 2.0f;
-
     auto physicsScale = EmeraldGame::gameInstance->physicsScale;
     radius = 16 / physicsScale;
-    characterPhysics->initCircle(b2_dynamicBody, radius, vec2{1.5, 1.5} * Level::tileSize / physicsScale, 1);
+    characterPhysics->initCircle(b2_dynamicBody, radius, Level::getStartPos() / physicsScale, 1);
     //characterPhysics->getFixture()->SetRestitution(1);
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
@@ -107,6 +106,7 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
         characterPhysics->addImpulse(-characterPhysics->getLinearVelocity());
     }
     if (obj->name == "Emerald" && obj->getComponent<SpriteComponent>() != nullptr) {
+        EmeraldGame::gameInstance->level->deleteEmerald(obj->getPosition());
         obj->removeComponent(obj->getComponent<SpriteComponent>());
         if (EmeraldGame::gameInstance->emeraldCounter < 9)
             EmeraldGame::gameInstance->emeraldCounter++;

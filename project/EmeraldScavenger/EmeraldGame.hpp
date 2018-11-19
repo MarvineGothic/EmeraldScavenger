@@ -18,10 +18,12 @@ class PhysicsComponent;
 enum class GameState {
     Start,
     Pause,
+    Menu,
     GetReady,
     Ready,
     Running,
-    GameOver
+    GameOver,
+    NextLevel
 };
 
 class EmeraldGame : public b2ContactListener {
@@ -31,6 +33,7 @@ class EmeraldGame : public b2ContactListener {
     int levelCounter = 0;
     int livesCounter = 5;
     int emeraldCounter = 0;
+    float nextLevelDelta = 0.0f;
 
     SDLRenderer r;
     Box2DDebugDraw debugDraw;
@@ -38,9 +41,9 @@ class EmeraldGame : public b2ContactListener {
 
     shared_ptr<GameObject> player;
     shared_ptr<SideScrollingCamera> camera;
-    shared_ptr<SpriteAtlas> spriteAtlas;
+    shared_ptr<SpriteAtlas> obstaclesAtlas;
     shared_ptr<SpriteAtlas> enemiesAtlas;
-    shared_ptr<SpriteAtlas> spriteAtlas_02;
+    shared_ptr<SpriteAtlas> gameSpritesAtlas;
     shared_ptr<SpriteAtlas> scavengerAtlas;
     shared_ptr<SpriteAtlas> uiAtlas;
     Sprite pauseSprite;
@@ -64,7 +67,7 @@ class EmeraldGame : public b2ContactListener {
 
     void initLevel();
 
-    void initPlayer(vec2 position);
+    void initPlayer();
 
 
     void update(float time);
@@ -99,6 +102,10 @@ public:
     EmeraldGame();
 
     shared_ptr<GameObject> createGameObject();
+
+    void addGameObject(shared_ptr<GameObject> obj);
+
+    void addGameObjectsVector(vector<shared_ptr<GameObject>> objects);
 
     void deleteGameObject(shared_ptr<GameObject> gameObject);
 
