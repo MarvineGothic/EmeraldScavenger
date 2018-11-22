@@ -24,10 +24,15 @@ public:
 
     void update(float deltaTime) override;
 
+    void setSpeed(float speed);
+
 private:
     float totalTime = 0;
     vec2 movementStart = vec2(0, 0);
     vec2 movementEnd = vec2(0, 0);
     b2Body *body;
     std::shared_ptr<PlatformComponent> platformComponent;
+
+    float prev_total_mod = 0.0f;
+    float speed = 2.0f;
 };

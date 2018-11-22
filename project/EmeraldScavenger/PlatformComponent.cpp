@@ -81,9 +81,9 @@ void PlatformComponent::initWall(std::shared_ptr<sre::SpriteAtlas> spriteAtlas, 
 
     for (int i = 1; i < height; i++) {
         auto go = game->createGameObject();
-        auto spriteComponent = go->addComponent<SpriteComponent>();
+        spriteComponent = go->addComponent<SpriteComponent>();
         int spriteOffset = i == height - 1 ? 0 : 30; // select middle or right piece
-        auto sprite = spriteAtlas->get("brick_1.png");
+        sprite = spriteAtlas->get("brick_1.png");
         sprite.setScale(brickScale);
         vec2 offset{tileSize / 2, tileSize / 2};
         vec2 pos = offset + vec2{x * tileSize, (y + i) * tileSize};

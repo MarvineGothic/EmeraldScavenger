@@ -4,6 +4,8 @@
 #include <vector>
 #include <sre/SpriteAtlas.hpp>
 #include "Enemy.hpp"
+#include "Door.hpp"
+#include "CollectibleItem.hpp"
 
 using namespace std;
 using namespace sre;
@@ -29,17 +31,14 @@ class Level {
 
     int levelWidth{}, levelHeight{};
 
+    vec2 levelMin{}, levelMax{};
     static vec2 startPosition, finishPosition;
     EmeraldGame *game{};
-    shared_ptr<SpriteAtlas> spriteAtlas;
-    shared_ptr<SpriteAtlas> enemiesAtlas;
 
-    vector<vec2> emeralds;
+    vector<shared_ptr<CollectibleItem>> collectibles;
 
 public:
-    static shared_ptr<Level> createDefaultLevel(EmeraldGame *game,
-                                                shared_ptr<SpriteAtlas> spriteAtlas,
-                                                shared_ptr<SpriteAtlas> enemiesAtlas);
+    static shared_ptr<Level> createDefaultLevel(EmeraldGame *game);
 
     void makeLevel(int level);
 
@@ -61,20 +60,19 @@ public:
 
     shared_ptr<Enemy> addEnemy(vec2 position, Enemy::EnemyType enemyType);
 
-    shared_ptr<GameObject> addEmerald(vec2 position);
+    shared_ptr<CollectibleItem> addCollectible(vec2 position, string name);
+
+    shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit);
 
     static constexpr float tileSize = 21;
 
     void clearEmeralds();
 
-    void deleteEmerald(vec2 emeraldPos);
+    void deleteEmerald(shared_ptr<CollectibleItem> item);
 
     void generateLevel();
 
     void Procedural_level();
-
-    vec2 min{};
-    vec2 max{};
 
     int getWidth();
 

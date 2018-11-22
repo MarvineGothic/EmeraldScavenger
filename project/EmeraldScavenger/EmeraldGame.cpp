@@ -57,7 +57,7 @@ EmeraldGame::EmeraldGame()
             .withFile("ui.png")
             .withFilterSampling(false)
             .build());
-    level = Level::createDefaultLevel(this, obstaclesAtlas, enemiesAtlas);
+    level = Level::createDefaultLevel(this);
 
     //Get the current time in milliseconds and use it as a seed
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -205,6 +205,14 @@ void EmeraldGame::onKey(SDL_Event &event) {
                     gameState = GameState::Running;
                 }
                 break;
+            case SDLK_UP:
+                if(emeraldCounter==5 && player->getComponent<Player>()->exit){
+                    gameState = GameState::NextLevel;
+                    initGame();
+                    // increase level counter:
+                    levelCounter++;
+                    emeraldCounter = 0;
+                }
             default:
                 break;
         }
@@ -237,14 +245,6 @@ void EmeraldGame::update(float time) {
             initGame();
             levelCounter = 0;
             gameState = GameState::GameOver;
-        }
-        if (emeraldCounter == 5) {
-            gameState = GameState::NextLevel;
-            // init a game with a new level:
-            initGame();
-            // increase level counter:
-            levelCounter++;
-            emeraldCounter = 0;
         }
     } else if (gameState == GameState::NextLevel) {
         // animate a next level screen for some time:
@@ -291,7 +291,7 @@ void EmeraldGame::render() {
     } else if (gameState == GameState::Ready) {
         background.initStaticBackground("start.png");
     } else if (gameState == GameState::Pause) {
-        pauseSprite = gameSpritesAtlas->get("spr_paused.png");
+        auto pauseSprite = gameSpritesAtlas->get("spr_paused.png");
         pauseSprite.setPosition(pos);
         spriteBatchBuilder.addSprite(pauseSprite);
     } else if (gameState == GameState::NextLevel) {

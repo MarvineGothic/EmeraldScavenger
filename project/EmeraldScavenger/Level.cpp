@@ -11,19 +11,21 @@
 #include "PlatformComponent.hpp"
 #include "MovingPlatformComponent.hpp"
 #include "Enemy.hpp"
+#include "Door.hpp"
+#include "CollectibleItem.hpp"
 
 vec2 Level::startPosition = {};
 vec2 Level::finishPosition = {};
 
-std::shared_ptr<Level> Level::createDefaultLevel(EmeraldGame *game,
-                                                 std::shared_ptr<sre::SpriteAtlas> spriteAtlas,
-                                                 std::shared_ptr<sre::SpriteAtlas> enemiesAtlas) {
-    std::shared_ptr<Level> res = std::shared_ptr<Level>(new Level());
+shared_ptr<Level> Level::createDefaultLevel(EmeraldGame *game) {
+    shared_ptr<Level> res = shared_ptr<Level>(new Level());
     res->game = game;
-    res->spriteAtlas = std::move(spriteAtlas);
-    res->enemiesAtlas = std::move(enemiesAtlas);
-
     return res;
+}
+
+//clamps a value with a lower and upper bound
+float clamp(float n, float lower, float upper) {
+    return std::max(lower, std::min(n, upper));
 }
 
 void Level::makeLevel(int level) {
@@ -45,7 +47,8 @@ void Level::level_00() {
     int width = 205;
     int height = 51;
 
-    startPosition = vec2{1.5, 2.5} * tileSize;
+    startPosition = vec2{2.5, 2.4};
+    finishPosition = vec2{width - 2.5f, 2.4f};
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
@@ -67,6 +70,9 @@ void Level::level_00() {
     movingPlatformComponent->setMovementStart({10, 3});
     movingPlatformComponent->setMovementEnd({10, 10});
 
+    // doors:
+    addDoor(startPosition, true, false);
+    addDoor(finishPosition, false, true);
     // add some enemies to the level
     addEnemy({50, 2}, Enemy::EnemyType::Zombie);
     addEnemy({25, 2}, Enemy::EnemyType::Zombie);
@@ -77,29 +83,31 @@ void Level::level_00() {
     addEnemy({30, 5}, Enemy::EnemyType::AngryBird);
     addEnemy({50, 5}, Enemy::EnemyType::Dragon);
 
-    // add some emeralds:
-    // stop rendering collected emeralds
-    //create a list of positions for emeralds and safe them to emeraldGame
+    // add some collectibles:
+    // stop rendering collected collectibles
+    //create a list of positions for collectibles and safe them to emeraldGame
     // when emerald is taken, position is deleted from the list
-    // don't forget to clean emeralds vector when level is finished
-    if (emeralds.empty()) {
-        emeralds.emplace_back(15, 1.5f);
-        emeralds.emplace_back(25, 1.5f);
-        emeralds.emplace_back(35, 1.5f);
-        emeralds.emplace_back(45, 1.5f);
-        emeralds.emplace_back(55, 1.5f);
-        emeralds.emplace_back(65, 1.5f);
-        emeralds.emplace_back(75, 1.5f);
-        emeralds.emplace_back(85, 1.5f);
-        emeralds.emplace_back(95, 1.5f);
-        emeralds.emplace_back(105, 1.5f);
-        emeralds.emplace_back(115, 1.5f);
-        emeralds.emplace_back(125, 1.5f);
+    // don't forget to clean collectibles vector when level is finished
+
+    vector<shared_ptr<CollectibleItem>> temp;
+    if (collectibles.empty()) {
+        collectibles.emplace_back(addCollectible(vec2(15, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(25, 1.5f), "Pie"));
+        collectibles.emplace_back(addCollectible(vec2(95, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(105, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(115, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(200, 1.5f), "Emerald"));
+    } else {
+        for (auto &cItem : collectibles) {
+            temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+        }
+        collectibles.clear();
+        for (auto &cItem : temp) {
+            collectibles.emplace_back(cItem);
+        }
+        temp.clear();
     }
-    // just add existing emeralds to EmeraldGame gameObjectsList
-    for (auto &emeraldPos : emeralds) {
-        addEmerald(emeraldPos);
-    }
+
 
     // add some more platforms
     addPlatform(15, 7, 2, 5, true);
@@ -130,7 +138,8 @@ void Level::level_01() {
     int width = 205;
     int height = 51;
 
-    Level::startPosition = vec2{35.0, 2.5} * tileSize;
+    startPosition = vec2{200.0, height - 3.5};
+    finishPosition = vec2{width - 2.5f, 2.4f};
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
@@ -146,6 +155,9 @@ void Level::level_01() {
     // ceil
     addPlatform(1, height - 1, 2, width - 1, false);
 
+    // doors:
+    addDoor(startPosition, true, false);
+    addDoor(finishPosition, false, true);
 
     auto movingPlatform = addPlatform(10, 3, 2, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
@@ -162,20 +174,28 @@ void Level::level_01() {
     addEnemy({30, 5}, Enemy::EnemyType::AngryBird);
     addEnemy({50, 5}, Enemy::EnemyType::Dragon);*/
 
-    // add some emeralds:
-    // stop rendering collected emeralds
-    //create a list of positions for emeralds and safe them to emeraldGame
+    // add some collectibles:
+    // stop rendering collected collectibles
+    //create a list of positions for collectibles and safe them to emeraldGame
     // when emerald is taken, position is deleted from the list
-    if (emeralds.empty()) {
-        emeralds.emplace_back(85, 1.5f);
-        emeralds.emplace_back(95, 1.5f);
-        emeralds.emplace_back(105, 1.5f);
-        emeralds.emplace_back(115, 1.5f);
-        emeralds.emplace_back(125, 1.5f);
-    }
-    // just add existing emeralds to EmeraldGame gameObjectsList
-    for (auto &emeraldPos : emeralds) {
-        addEmerald(emeraldPos);
+    vector<shared_ptr<CollectibleItem>> temp;
+    if (collectibles.empty()) {
+        collectibles.emplace_back(addCollectible(vec2(25, 1.5f), "Pie"));
+        collectibles.emplace_back(addCollectible(vec2(75, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(85, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(95, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(105, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(115, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(200, 1.5f), "Emerald"));
+    }else {
+        for (auto &cItem : collectibles) {
+            temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+        }
+        collectibles.clear();
+        for (auto &cItem : temp) {
+            collectibles.emplace_back(cItem);
+        }
+        temp.clear();
     }
 
 
@@ -231,11 +251,6 @@ void Level::generateLevel() {
     Procedural_level();
 }
 
-//clamps a value with a lower and upper bound
-float clamp(float n, float lower, float upper) {
-    return std::max(lower, std::min(n, upper));
-}
-
 //Procedurally generates a level.
 void Level::Procedural_level() {
 
@@ -249,29 +264,29 @@ void Level::Procedural_level() {
     // ceil
     addPlatform(0, height, 2, width, false);
 
-    startPosition = vec2{1.5, 2.5} * Level::tileSize;
+    startPosition = vec2{1.5, 2.5};
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
     game->background.initDynamicBackground("background.png");
 
-    // add some emeralds:
-    // stop rendering collected emeralds
-    //create a list of positions for emeralds and safe them to emeraldGame
+    // add some collectibles:
+    // stop rendering collected collectibles
+    //create a list of positions for collectibles and safe them to emeraldGame
     // when emerald is taken, position is deleted from the list
-    if (emeralds.empty()) {
-        emeralds.emplace_back(85, 1.5f);
-        emeralds.emplace_back(95, 1.5f);
-        emeralds.emplace_back(105, 1.5f);
-        emeralds.emplace_back(115, 1.5f);
-        emeralds.emplace_back(125, 1.5f);
+    /*if (collectibles.empty()) {
+        collectibles[vec2(85, 1.5f)] = "Emerald";
+        collectibles[vec2(95, 1.5f)] = "Emerald";
+        collectibles[vec2(105, 1.5f)] = "Emerald";
+        collectibles[vec2(115, 1.5f)] = "Emerald";
+        collectibles[vec2(125, 1.5f)] = "Emerald";
     }
-    // just add existing emeralds to EmeraldGame gameObjectsList
-    for (auto &emeraldPos : emeralds) {
-        addEmerald(emeraldPos);
-    }
+    // just add existing collectibles to EmeraldGame gameObjectsList
+    for (auto &emeraldPos : collectibles) {
+        addCollectible(emeraldPos.first, emeraldPos.second);
+    }*/
 
-    glm::vec2 min(0, -3);
-    glm::vec2 max(5, 3);
+    levelMin = {0, -3};
+    levelMax = {5, 3};
 
     float floor = 1;
     float ceil = 15;
@@ -288,58 +303,58 @@ void Level::Procedural_level() {
         //int max_y = clamp(max.y, floor, ceil);
 
         int length = (rand() % 5) + 1;;
-        int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
-        int rand_y = clamp(static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y), floor,
-                           ceil);
+        int rand_x = static_cast<int>((rand() % (int) ((levelMax.x - levelMin.x) + 1)) + levelMin.x + prev_platform.x);
+        int rand_y = clamp(
+                static_cast<int>((rand() % (int) ((levelMax.y - levelMin.y) + 1)) + levelMin.y + prev_platform.y),
+                floor,
+                ceil);
         addPlatform(rand_x, rand_y, 2, length, true);
         prev_platform = glm::vec2(rand_x + length, rand_y);
         i++;
     }
 }
 
-std::shared_ptr<PlatformComponent> Level::addPlatform(int x, int y, int startSpriteId, int length, bool kinematic) {
+shared_ptr<PlatformComponent> Level::addPlatform(int x, int y, int startSpriteId, int length, bool kinematic) {
     auto gameObject = game->createGameObject();
     gameObject->name = "Platform";
     auto res = gameObject->addComponent<PlatformComponent>();
-    res->initPlatform(spriteAtlas, x, y, startSpriteId, length, kinematic);
+    res->initPlatform(EmeraldGame::gameInstance->obstaclesAtlas, x, y, startSpriteId, length, kinematic);
     return res;
 }
 
 
-std::shared_ptr<PlatformComponent> Level::addWall(int x, int y, int startSpriteId, int length) {
+shared_ptr<PlatformComponent> Level::addWall(int x, int y, int startSpriteId, int length) {
     auto gameObject = game->createGameObject();
     gameObject->name = "Wall";
     auto res = gameObject->addComponent<PlatformComponent>();
-    res->initWall(spriteAtlas, x, y, startSpriteId, length);
+    res->initWall(EmeraldGame::gameInstance->obstaclesAtlas, x, y, startSpriteId, length);
     return res;
 }
 
-std::shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
+
+shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
     auto gameObject = game->createGameObject();
     gameObject->name = "Enemy";
     auto res = gameObject->addComponent<Enemy>();
-    res->initEnemy(enemiesAtlas, pos, enemyType);
+    res->initEnemy(EmeraldGame::gameInstance->enemiesAtlas, pos, enemyType);
     return res;
 }
 
-shared_ptr<GameObject> Level::addEmerald(vec2 position) {
-    auto emeraldObject = game->createGameObject();
-    emeraldObject->name = "Emerald";
-    auto emeraldSpriteComponent = emeraldObject->addComponent<SpriteComponent>();
-    auto emeraldPhysicsComponent = emeraldObject->addComponent<PhysicsComponent>();
-    auto emeraldSprite = spriteAtlas->get("diamond blue.png");
-    emeraldSprite.setScale(EmeraldGame::scale / 2.0f);
-    emeraldSpriteComponent->setSprite(emeraldSprite);
+shared_ptr<Door> Level::addDoor(vec2 position, bool isOpen, bool isExit) {
+    auto doorObject = game->createGameObject();
+    doorObject->name = "Door";
+    auto door = doorObject->addComponent<Door>();
+    door->initDoor(position, isOpen, isExit);
+    return door;
+}
 
-    emeraldObject->setPosition(position * tileSize);
-
-    auto physicsScale = EmeraldGame::gameInstance->physicsScale;
-    emeraldPhysicsComponent->initCircle(b2_staticBody,
-                                        emeraldSprite.getSpriteSize().x / (physicsScale * tileSize),
-                                        position * tileSize / physicsScale,
-                                        1);
-    emeraldPhysicsComponent->setSensor(true);
-    return emeraldObject;
+shared_ptr<CollectibleItem> Level::addCollectible(vec2 position, string name) {
+    auto collectibleObject = game->createGameObject();
+    collectibleObject->name = name;
+    auto collectible = collectibleObject->addComponent<CollectibleItem>();
+    collectible->initCollectible(position, name);
+    collectible->gameObjectCopy = collectibleObject;
+    return collectible;
 }
 
 int Level::getWidth() {
@@ -351,18 +366,22 @@ int Level::getHeight() {
 }
 
 vec2 Level::getFinishPos() {
-    return finishPosition;
+    return finishPosition * tileSize;
 }
 
 vec2 Level::getStartPos() {
-    return startPosition;
+    return startPosition * tileSize;
 }
 
 void Level::clearEmeralds() {
-    this->emeralds.clear();
+    this->collectibles.clear();
 }
 
-void Level::deleteEmerald(vec2 emeraldPos) {
-    emeralds.erase(remove(emeralds.begin(), emeralds.end(), emeraldPos / tileSize), emeralds.end());
+void Level::deleteEmerald(shared_ptr<CollectibleItem> item) {
+    collectibles.erase(remove(collectibles.begin(), collectibles.end(), item), collectibles.end());
+    /*auto comp = find(collectibles.begin(), collectibles.end(), item);
+    if (comp != collectibles.end()) {
+        collectibles.erase(comp);
+    }*/
 }
 

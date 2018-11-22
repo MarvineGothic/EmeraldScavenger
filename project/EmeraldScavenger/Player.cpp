@@ -10,6 +10,7 @@
 #include "PhysicsComponent.hpp"
 #include "EmeraldGame.hpp"
 #include "SpriteComponent.hpp"
+#include "Door.hpp"
 
 Player::Player(GameObject *gameObject) : Component(gameObject) {
     characterPhysics = gameObject->addComponent<PhysicsComponent>();
@@ -18,7 +19,6 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
     auto physicsScale = EmeraldGame::gameInstance->physicsScale;
     radius = 16 / physicsScale;
     characterPhysics->initCircle(b2_dynamicBody, radius, Level::getStartPos() / physicsScale, 1);
-    //characterPhysics->getFixture()->SetRestitution(1);
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
     spriteComponent = gameObject->getComponent<SpriteComponent>();
@@ -103,18 +103,32 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
     if (!invincible && obj->name == "Enemy") {
         lostLife = true;
         blinkTime = 3.0f;
-        characterPhysics->addImpulse(-characterPhysics->getLinearVelocity());
+        vec2 pV = characterPhysics->getLinearVelocity();
+        characterPhysics->addImpulse({-pV.x, -pV.y * 0.1f});
     }
     if (obj->name == "Emerald" && obj->getComponent<SpriteComponent>() != nullptr) {
-        EmeraldGame::gameInstance->level->deleteEmerald(obj->getPosition());
+        EmeraldGame::gameInstance->level->deleteEmerald(obj->getComponent<CollectibleItem>());
         obj->removeComponent(obj->getComponent<SpriteComponent>());
-        if (EmeraldGame::gameInstance->emeraldCounter < 9)
+        if (EmeraldGame::gameInstance->emeraldCounter < 5)
             EmeraldGame::gameInstance->emeraldCounter++;
+    }
+    if (obj->name == "Pie" && obj->getComponent<SpriteComponent>() != nullptr) {
+        EmeraldGame::gameInstance->level->deleteEmerald(obj->getComponent<CollectibleItem>());
+        obj->removeComponent(obj->getComponent<SpriteComponent>());
+        if (EmeraldGame::gameInstance->livesCounter < 5) {
+            EmeraldGame::gameInstance->livesCounter++;
+        }
+    }
+    if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
+        exit = true;
     }
 }
 
 void Player::onCollisionEnd(PhysicsComponent *comp) {
-
+    auto obj = comp->getGameObject();
+    if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
+        exit = false;
+    }
 }
 
 float32
@@ -156,7 +170,6 @@ void Player::updateSprite(float deltaTime) {
         }
         if (blinkTime <= 0.0f && gameObject->getComponent<SpriteComponent>() == nullptr)
             invincible = false;
-
     }
     if (!invincible && gameObject->getComponent<SpriteComponent>() == nullptr) {
         gameObject->addComponent<SpriteComponent>();
@@ -201,7 +214,3 @@ void Player::updateSprite(float deltaTime) {
 
     spriteComponent->setSprite(lastSprite);
 }
-
-
-
-

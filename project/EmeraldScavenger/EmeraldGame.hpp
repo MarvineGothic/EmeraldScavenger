@@ -46,11 +46,9 @@ class EmeraldGame : public b2ContactListener {
     shared_ptr<SpriteAtlas> gameSpritesAtlas;
     shared_ptr<SpriteAtlas> scavengerAtlas;
     shared_ptr<SpriteAtlas> uiAtlas;
-    Sprite pauseSprite;
     shared_ptr<Level> level;
 
     vector<shared_ptr<GameObject>> gameObjectsList;
-    shared_ptr<vector<vec2>> levelEmeraldsList;
     map<b2Fixture *, PhysicsComponent *> physicsComponentMap;
 
     b2World *world = nullptr;
@@ -93,6 +91,10 @@ class EmeraldGame : public b2ContactListener {
     friend class Player;
 
     friend class Enemy;
+
+    friend class Door;
+
+    friend class CollectibleItem;
 
     friend class PlatformComponent;
 

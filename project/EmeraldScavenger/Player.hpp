@@ -40,6 +40,7 @@ public:
 
     bool inPit = false;
     bool lostLife = false;
+    bool exit = false;
 
 private:
     Sprite idle;

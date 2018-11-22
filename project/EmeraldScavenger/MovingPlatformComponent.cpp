@@ -10,26 +10,23 @@ MovingPlatformComponent::MovingPlatformComponent(GameObject *gameObject) : Compo
     platformComponent = gameObject->getComponent<PlatformComponent>();
 }
 
+float easeInOutQuad(float t) {
+    return t < 0.5 ? 2 * t * t : t * (4 - 2 * t) - 1;
+}
+
 void MovingPlatformComponent::update(float deltaTime) {
     totalTime += deltaTime;
 
-    movementStart.y += 0.01f;
+    float total_mod = fmod(totalTime, speed);
+    float t_val = easeInOutQuad(total_mod / speed);
 
-    platformComponent->moveTo(movementStart);
-    // todo replace with easing function
-    /*if (fmod(totalTime, 2) > 2) {
-        platformComponent->moveTo(movementEnd);
-    } else {
-        platformComponent->moveTo(movementStart);
-    }*/
-    /*body->SetAwake(true);
-    if (body->GetLinearVelocity().y <= 0 && body->GetPosition().y <= movementStart.y) {
-        b2Vec2 velocity(0, 100);
-        body->SetLinearVelocity(velocity);
-    } else if (body->GetLinearVelocity().y >= 0 && body->GetPosition().y >= movementEnd.y) {
-        b2Vec2 velocity(0, -100);
-        body->SetLinearVelocity(velocity);
-    }*/
+    if (prev_total_mod > total_mod) {
+        vec2 tmp = movementStart;
+        movementStart = movementEnd;
+        movementEnd = tmp;
+    }
+    platformComponent->moveTo(glm::mix(movementStart, movementEnd, t_val));
+    prev_total_mod = total_mod;
 }
 
 void MovingPlatformComponent::setMovementStart(vec2 pos) {
@@ -42,4 +39,8 @@ void MovingPlatformComponent::setMovementEnd(vec2 pos) {
 
 void MovingPlatformComponent::setBody(b2Body *body) {
     this->body = body;
+}
+
+void MovingPlatformComponent::setSpeed(float speed) {
+    this->speed = speed;
 }
