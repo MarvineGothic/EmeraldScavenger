@@ -27,7 +27,7 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
     enemyVelocity = 0.25f;
     
     //characterPhysics->getFixture()->SetRestitution(1);
-    
+    this->enemyType=enemyType;
 
     if (enemyType == EnemyType::Zombie) {
         radius = 10 / physicsScale;
@@ -58,7 +58,8 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    birdScale);
     } else {
         radius = 10 / physicsScale;
-        characterPhysics->initCircle(b2_kinematicBody, radius, position * Level::tileSize / physicsScale, 1);
+        characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        characterPhysics->setLinearVelocity({1,0});
         auto dragonSpriteObj = enemyAtlas->get("frame-1_dragon.png");
         dragonSpriteObj.setScale(dragonScale);
         flyingEnemy = true;
@@ -71,6 +72,7 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("frame-2_dragon.png"),
                    dragonScale);
     }
+    pos = characterPhysics->getPosition();
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
 }
@@ -87,6 +89,12 @@ void Enemy::update(float deltaTime) {
     
     isGrounded = false;
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
+    
+    // To keep dragon at same height while ignoring gravit
+    if (enemyType==EnemyType::Dragon) {
+        characterPhysics->addForce({characterPhysics->getLinearVelocity().x, 0});
+        characterPhysics->moveTo({characterPhysics->getPosition().x, pos.y});
+    }
 
     vec2 movement{0, 0};
     if (facingLeft) {
@@ -111,6 +119,7 @@ void Enemy::update(float deltaTime) {
     updateSprite(deltaTime);
 
     // ====================== Enemy DIES =======================
+    //TODO
 
 }
 
@@ -120,14 +129,19 @@ void Enemy::jump() {
 
 // On collision with any object enemy turns around
 void Enemy::onCollisionStart(PhysicsComponent *comp) {
-    if (comp->getGameObject()->name == "Wall") {
+    if (comp->getGameObject()->name == "Wall" && enemyType!=EnemyType::Dragon) {
         Sprite sprite = gameObject->getComponent<SpriteComponent>()->getSprite();
         sprite.setFlip({true, false});
         gameObject->getComponent<SpriteComponent>()->setSprite(sprite);
         facingLeft = !facingLeft;
     }
-    if (this->flyingEnemy) {
+    if (enemyType==EnemyType::AngryBird) {
         this->jump();
+    }
+    if (enemyType==EnemyType::Dragon) {
+        auto linearVelocity = characterPhysics->getLinearVelocity();
+        characterPhysics->setLinearVelocity({linearVelocity.x*-1,linearVelocity.y});
+        facingLeft = !facingLeft;
     }
 }
 
@@ -167,10 +181,12 @@ void Enemy::updateSprite(float deltaTime) {
     if (velocity.x == 0.0f) {
         move1.setFlip({(facingLeft), false});
         gameObject->getComponent<SpriteComponent>()->setSprite(move1);
-    } else if (distance > 0.06 || distance < -0.06) {
+    } else if (distance > 0.02 || distance < -0.02) {
         spriteIndex = (spriteIndex + 1) % movingSprites.size();
         Sprite movingSprite = movingSprites[spriteIndex];
-    if (distance > 0.06)
+        if (distance > 0.02 && enemyType!=EnemyType::Dragon)
+            movingSprite.setFlip({true, false});
+        else if (distance < -0.02 && enemyType==EnemyType::Dragon)
             movingSprite.setFlip({true, false});
         gameObject->getComponent<SpriteComponent>()->setSprite(movingSprite);
         distance = 0.0f;
