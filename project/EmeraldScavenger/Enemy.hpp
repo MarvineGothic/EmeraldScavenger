@@ -80,4 +80,6 @@ private:
     int spriteIndex = 0;
     float enemyVelocity;
     bool flyingEnemy = false;
+    EnemyType enemyType;
+    float timePassed = 0.0f;
 };
