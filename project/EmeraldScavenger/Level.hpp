@@ -42,17 +42,21 @@ public:
 
     void makeLevel(int level);
 
-    void level_00();
+    void level_intro();
 
-    void level_01();
+    void level_hub();
 
-    void level_02();
+    void level_phys();
 
-    void level_03();
+    void level_grav();
 
-    void level_04();
+    void level_proc();
 
-    void level_05();
+    void level_test();
+
+	void level_bonus_1();
+
+	void level_bonus_2();
 
     shared_ptr<PlatformComponent> addPlatform(int x, int y, int startSpriteId, int length, bool kinematic);
 
