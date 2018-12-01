@@ -37,19 +37,17 @@ void PlatformComponent::initPlatform(std::shared_ptr<sre::SpriteAtlas> spriteAtl
     spriteComponent->setSprite(sprite);
 
     physicsComponent = gameObject->addComponent<PhysicsComponent>();
-    //physicsComponent->getFixture()->SetFriction(1);
 
     pos.x += (width - 1) * 0.5f * tileSize;
     physicsComponent->initBox(kinematic ? b2_kinematicBody : b2_staticBody,
                               vec2{tileSize * width, tileSize} / physicsScale * 0.5f, pos / physicsScale, 0);
 
     physicsComponent->setAutoUpdate(false);
+    physicsComponent->getFixture()->SetFriction(0.5f);
     for (int i = 1; i < width; i++) {
         auto go = game->createGameObject();
         spriteComponent = go->addComponent<SpriteComponent>();
         int spriteOffset = i == width - 1 ? 2 : 1; // select middle or right piece
-        sprite = spriteAtlas->get("tile ground.png");
-        sprite.setScale(tileScale);
         //vec2 offset{tileSize / 2, tileSize / 2};
         pos = offset + vec2{(x + i) * tileSize, y * tileSize};
         go->setPosition(pos);

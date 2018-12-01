@@ -213,6 +213,11 @@ void EmeraldGame::onKey(SDL_Event &event) {
                     levelCounter++;
                     emeraldCounter = 0;
                 }
+                break;
+            case SDLK_ESCAPE:
+                initGame();
+                gameState = GameState::Start;
+                break;
             default:
                 break;
         }
@@ -424,6 +429,14 @@ shared_ptr<Level> EmeraldGame::getLevel() {
 
 void EmeraldGame::setGameState(GameState newState) {
     this->gameState = newState;
+}
+
+int EmeraldGame::getEmeraldCounter() {
+    return emeraldCounter;
+}
+
+shared_ptr<SpriteAtlas> EmeraldGame::getGameSpriteAtlas() {
+    return gameSpritesAtlas;
 }
 
 

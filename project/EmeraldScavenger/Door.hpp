@@ -8,7 +8,7 @@
 
 #include <memory>
 #include "Component.hpp"
-#include "SpriteComponent.hpp"
+#include "Entity.hpp"
 
 using namespace std;
 using namespace sre;
@@ -25,8 +25,8 @@ public:
 
     bool isExit = false;
 
-    shared_ptr<SpriteComponent> doorSpriteComponent;
-    shared_ptr<PhysicsComponent> doorPhysicsComponent;
+    shared_ptr<SpriteComponent> spriteComponent;
+    shared_ptr<PhysicsComponent> physicsComponent;
 
     void update(float deltaTime) override;
 

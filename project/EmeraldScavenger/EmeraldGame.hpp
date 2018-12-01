@@ -30,7 +30,7 @@ class EmeraldGame : public b2ContactListener {
     const float physicsScale = 100;
     bool doDebugDraw = false;
 
-    int levelCounter = 4;
+    int levelCounter = 0;
     int livesCounter = 5;
     int emeraldCounter = 0;
     float nextLevelDelta = 0.0f;
@@ -88,11 +88,15 @@ class EmeraldGame : public b2ContactListener {
 
     friend class Level;
 
+    friend class Entity;
+
     friend class Player;
 
     friend class Enemy;
 
     friend class Door;
+
+    //friend class Rock;
 
     friend class CollectibleItem;
 
@@ -124,6 +128,10 @@ public:
     static constexpr float32 timeStep = 1.0f / 60.0f;
 
     shared_ptr<Level> getLevel();
+
+    int getEmeraldCounter();
+
+    shared_ptr<SpriteAtlas> getGameSpriteAtlas();
 
     time_t rand_seed;
 

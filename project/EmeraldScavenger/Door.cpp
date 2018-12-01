@@ -10,10 +10,10 @@
 #include "PhysicsComponent.hpp"
 
 Door::Door(GameObject *gameObject) : Component(gameObject) {
-    doorSpriteComponent = gameObject->addComponent<SpriteComponent>();
-    doorPhysicsComponent = gameObject->addComponent<PhysicsComponent>();
-    open = EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_doorOpen.png");
-    close = EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_door.png");
+    spriteComponent = gameObject->addComponent<SpriteComponent>();
+    physicsComponent = gameObject->addComponent<PhysicsComponent>();
+    open = EmeraldGame::gameInstance->getGameSpriteAtlas()->get("spr_doorOpen.png");
+    close = EmeraldGame::gameInstance->getGameSpriteAtlas()->get("spr_door.png");
     open.setScale(EmeraldGame::scale * 1.5f);
     close.setScale(EmeraldGame::scale * 1.5f);
 
@@ -21,28 +21,28 @@ Door::Door(GameObject *gameObject) : Component(gameObject) {
 }
 
 void Door::openDoor() {
-    doorSpriteComponent->setSprite(open);
+    spriteComponent->setSprite(open);
 }
 
 void Door::closeDoor() {
-    doorSpriteComponent->setSprite(close);
+    spriteComponent->setSprite(close);
 }
 
 void Door::update(float deltaTime) {
-    if (EmeraldGame::gameInstance->emeraldCounter == 5 && isExit)
-        doorSpriteComponent->setSprite(open);
+    if (EmeraldGame::gameInstance->getEmeraldCounter() == 5 && isExit)
+        spriteComponent->setSprite(open);
 }
 
 void Door::initDoor(vec2 pos, bool isOpen, bool isExit) {
     this->isExit = isExit;
-    if (isOpen)doorSpriteComponent->setSprite(open);
-    else doorSpriteComponent->setSprite(close);
+    if (isOpen)spriteComponent->setSprite(open);
+    else spriteComponent->setSprite(close);
 
-    doorPhysicsComponent->initBox(b2_staticBody,
+    physicsComponent->initBox(b2_staticBody,
                                   vec2(close.getSpriteSize()) /
                                   (physicsScale * Level::tileSize * (EmeraldGame::scale * 1.5f)),
                                   pos * Level::tileSize / physicsScale,
                                   1);
-    doorPhysicsComponent->setSensor(true);
+    physicsComponent->setSensor(true);
     gameObject->setPosition(vec2{pos.x, pos.y} * Level::tileSize);
 }

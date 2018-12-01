@@ -11,6 +11,34 @@ using namespace sre;
 using namespace glm;
 
 class Player : public Component, public b2RayCastCallback {
+    float physicsScale;
+
+    Sprite idle;
+    Sprite jumpUp;
+    Sprite fall;
+    Sprite death;
+    Sprite lastSprite;
+    vector<sre::Sprite> runningSprites;
+
+    shared_ptr<SpriteComponent> spriteComponent;
+    shared_ptr<PhysicsComponent> characterPhysics;
+
+    float accelerationSpeed;
+    float maximumVelocity;
+    int spriteIndex = 0;
+    float distance = 0.0f;
+    bool isGrounded = false;
+
+    float radius;
+    bool left = false;
+    bool right = false;
+    bool isJump = false;
+    bool facingLeft = false;
+    bool invincible = false;
+    bool spaceKey = false;
+    float blinkFreq = 0.1f;
+    float blinkDelta = 0.0f;
+    float blinkTime = 0.0f;
 public:
     explicit Player(GameObject *gameObject);
 
@@ -42,30 +70,4 @@ public:
     bool lostLife = false;
     bool exit = false;
 
-private:
-    Sprite idle;
-    Sprite jumpUp;
-    Sprite fall;
-    Sprite death;
-    Sprite lastSprite;
-    vector<sre::Sprite> runningSprites;
-
-    shared_ptr<SpriteComponent> spriteComponent;
-    shared_ptr<PhysicsComponent> characterPhysics;
-
-    float accelerationSpeed;
-    float maximumVelocity;
-    int spriteIndex = 0;
-    float distance = 0.0f;
-    bool isGrounded = false;
-
-    float radius;
-    bool left = false;
-    bool right = false;
-    bool isJump = false;
-    bool facingLeft = false;
-    bool invincible = false;
-    float blinkFreq = 0.1f;
-    float blinkDelta = 0.0f;
-    float blinkTime = 0.0f;
 };

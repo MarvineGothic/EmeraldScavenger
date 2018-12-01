@@ -6,6 +6,7 @@
 #include "Enemy.hpp"
 #include "Door.hpp"
 #include "CollectibleItem.hpp"
+#include "Rock.hpp"
 
 using namespace std;
 using namespace sre;
@@ -54,9 +55,9 @@ public:
 
     void level_test();
 
-	void level_bonus_1();
+    void level_bonus_1();
 
-	void level_bonus_2();
+    void level_bonus_2();
 
     shared_ptr<PlatformComponent> addPlatform(int x, int y, int startSpriteId, int length, bool kinematic);
 
@@ -67,6 +68,16 @@ public:
     shared_ptr<CollectibleItem> addCollectible(vec2 position, string name);
 
     shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit);
+
+    shared_ptr<Rock> Level::addRock(vec2 position, Sprite sprite, vec2 scale,
+                                    float restitution,
+                                    float friction,
+                                    float density);
+
+    shared_ptr<Rock> Level::addBrick(vec2 position, Sprite sprite, vec2 scale,
+                                    float restitution,
+                                    float friction,
+                                    float density);
 
     static constexpr float tileSize = 21;
 

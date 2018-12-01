@@ -16,11 +16,12 @@ Player::Player(GameObject *gameObject) : Component(gameObject) {
     characterPhysics = gameObject->addComponent<PhysicsComponent>();
     accelerationSpeed = 1.00f;
     maximumVelocity = 2.0f;
-    auto physicsScale = EmeraldGame::gameInstance->physicsScale;
+    physicsScale = EmeraldGame::gameInstance->physicsScale;
     radius = 16 / physicsScale;
     characterPhysics->initCircle(b2_dynamicBody, radius, Level::getStartPos() / physicsScale, 1);
     characterPhysics->fixRotation();
     characterPhysics->getFixture()->SetFriction(1);
+    characterPhysics->getFixture()->SetDensity(0.1f);
     spriteComponent = gameObject->getComponent<SpriteComponent>();
     lastSprite = idle;
 }
@@ -29,8 +30,12 @@ bool Player::onKey(SDL_Event &event) {
 
     switch (event.key.keysym.sym) {
         case SDLK_SPACE: {
-            if (isGrounded && event.type == SDL_KEYDOWN) { // prevents double jump
+            if (isGrounded && event.type == SDL_KEYDOWN && !spaceKey) {
                 isJump = true;
+                spaceKey = true;
+            }
+            if (event.type == SDL_KEYUP) {
+                spaceKey = false;
             }
         }
             break;
@@ -68,7 +73,7 @@ void Player::update(float deltaTime) {
             movement.x++;
             facingLeft = false;
         }
-        if (isJump) jump();
+        if (isJump)jump();
     }
     // ====================== PLAYER VELOCITY =====================
 
@@ -92,8 +97,8 @@ void Player::update(float deltaTime) {
 }
 
 void Player::jump() {
-    characterPhysics->addImpulse({0, 0.4f});
     isJump = false;
+    characterPhysics->addImpulse({0, 0.4f});
 }
 
 void Player::onCollisionStart(PhysicsComponent *comp) {
