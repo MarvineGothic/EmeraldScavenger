@@ -60,7 +60,7 @@ void Level::level_intro() {
 
     startPosition = vec2{1.5, 1.5};
     finishPosition = vec2{width - 2.5f, 2.4f};
-	emeraldsNeeded = 3;
+	emeraldsNeeded = 1;
 
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
@@ -114,7 +114,7 @@ void Level::level_intro() {
 
     //addCollectible({ 175, 2 }, "diamond");
 
-    addDoor(finishPosition, true, true, 1);
+    addDoor(finishPosition, false, true, 1);
 
     addWall(width, 0, 2, height); //End wall
 
@@ -127,10 +127,6 @@ void Level::level_intro() {
 	vector<shared_ptr<CollectibleItem>> temp;
 	if (collectibles.empty()) {
 		collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 8, 1.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 11, 1.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 14, 1.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 17, 1.5f), "Emerald"));
 	}
 	else {
 		for (auto &cItem : collectibles) {
@@ -174,10 +170,11 @@ void Level::level_hub() {
 
     game->background.initDynamicBackground("background.png");
 
-    int width = 25;
-    int height = 30;
+    int width = 50;
+    int height = 50;
 
-    startPosition = vec2{1.5, 2.5};
+    startPosition = vec2{6.5, 2.5};
+	emeraldsNeeded = 0;
 
     vec2 levelMin = {width, 0};
     vec2 levelMax = {width, height};
@@ -186,26 +183,38 @@ void Level::level_hub() {
     levelHeight = static_cast<int>(height * tileSize);
 
     // start wall
-    addWall(0, 5, 2, height - 10);
-    // floor
-    addPlatform(0, 0, 2, width, false);
+    addWall(5, 0, 2, height - 10);
+	// end wall
+	addWall(width - 5, 0, 2, height - 10);
+	// floor
+    addPlatform(0, 0, 2, width + 1, false);
     // ceil
     addPlatform(0, height, 2, width, false);
-    // end wall
-    addWall(width, 5, 2, height - 10);
+
+	addPlatform(1, height - 10, 2, 5, false);
+	addPlatform(width - 5, height - 10, 2, 5, false);
+	addWall(0, height - 10, 2, 10);
+	addWall(width, height - 10, 2, 10);
+
+	addDoor(vec2{ 3.5f, 2.4f }, true, false, 1);
+	addDoor(vec2{ 7.5f, 2.4f }, true, true, 0);
+	addDoor(vec2{ width - 2.5f, 2.4f }, true, false, 1);
+	addDoor(vec2{ width - 6.5f, 2.4f }, true, true, 4);
+	addDoor(vec2{ 2.5f, (width - 10) + 2.4f }, true, true, 2);
+	addDoor(vec2{ width - 1.5f, (width - 10) + 2.4f }, true, true, 3);
 
     //Elevator 1
-    auto movingPlatform = addPlatform(1, 5, 2, 5, true);
+    auto movingPlatform = addPlatform(6, 5, 2, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent->setMovementStart({1, 5});
-    movingPlatformComponent->setMovementEnd({1, height - 5});
+    movingPlatformComponent->setMovementStart({6, 5});
+    movingPlatformComponent->setMovementEnd({6, height - 5});
     movingPlatformComponent->setSpeed(10);
 
-    //Elevator 1
-    auto movingPlatform2 = addPlatform(width - 5, 5, 2, 5, true);
+    //Elevator 2
+    auto movingPlatform2 = addPlatform(width - 10, 5, 2, 5, true);
     auto movingPlatformComponent2 = movingPlatform2->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent2->setMovementStart({width - 5, 5});
-    movingPlatformComponent2->setMovementEnd({width - 5, height - 5});
+    movingPlatformComponent2->setMovementStart({width - 10, 5});
+    movingPlatformComponent2->setMovementEnd({width - 10, height - 5});
     movingPlatformComponent2->setSpeed(10);
 
 }
@@ -215,7 +224,9 @@ void Level::level_grav() {
     game->background.initDynamicBackground("background.png");
 
     int width = 40;
-    int height = 200;
+    int height = 100;
+
+	emeraldsNeeded = 3;
 
     startPosition = vec2{width - 1.5, 2.5};
 
@@ -227,21 +238,49 @@ void Level::level_grav() {
     //end wall
     addWall(width, 5, 2, height - 5);
     //Middle wall
-    addWall(glm::floor(width / 2), 15, 2, height - 15);
+    addWall(glm::floor(width / 2), 15, 2, height - 30);
     // ceil
     addPlatform(0, height, 2, width, false);
     // floor
     addPlatform(0, 0, 2, width, false);
+
+	//Elevator 1
+	auto movingPlatform = addPlatform(glm::floor(width / 2) - 5, 2, 2, 5, true);
+	auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+	movingPlatformComponent->setMovementEnd({ glm::floor(width / 2) - 5, 2 });
+	movingPlatformComponent->setMovementStart({ glm::floor(width / 2) - 5, height - 10 });
+	movingPlatformComponent->setSpeed(10);
+
+	addDoor(vec2{ startPosition.x , 2.4f }, false, true, 1);
+
+	vector<shared_ptr<CollectibleItem>> temp;
+	if (collectibles.empty()) {
+		collectibles.emplace_back(addCollectible(vec2(glm::floor(width / 2) + 4, 15.0f), "Emerald"));
+		collectibles.emplace_back(addCollectible(vec2(width - 3, 15.0f), "Emerald"));
+		collectibles.emplace_back(addCollectible(vec2(glm::floor(((glm::floor(width / 2) + 4) + (width - 3)) / 2), 15.0f), "Emerald"));
+	}
+	else {
+		for (auto &cItem : collectibles) {
+			temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+		}
+		collectibles.clear();
+		for (auto &cItem : temp) {
+			collectibles.emplace_back(cItem);
+		}
+		temp.clear();
+	}
 }
 
 void Level::level_phys() {
 
     game->background.initDynamicBackground("background.png");
 
+	emeraldsNeeded = 1;
+
     int width = 50;
     int height = 50;
 
-    startPosition = vec2{1.5, 2.5};
+    startPosition = vec2{2.5, 2.5};
 
     vec2 levelMin = {width + width, height - 5};
     vec2 levelMax = {width, height};
@@ -257,6 +296,8 @@ void Level::level_phys() {
     addPlatform(0, height, 2, width, false);
     // floor
     addPlatform(0, 0, 2, width, false);
+
+	addDoor(vec2{ startPosition.x , 2.4f }, false, true, 1);
 }
 
 //clamps a value with a lower and upper bound
@@ -271,12 +312,16 @@ void Level::level_proc() {
 
 	int width = 200;
 	int height = 30;
+	emeraldsNeeded = 1;
 
-	startPosition = vec2{ 1.5, 2.5 };
+	startPosition = vec2{ 2.5, 2.5 };
+	addDoor(vec2{ startPosition.x , 2.4f }, false, true, 1);
 
 	levelWidth = static_cast<int>((width + 1) * tileSize);
 	levelHeight = static_cast<int>(height * tileSize);
 
+	// start wall
+	addWall(0, 0, 2, height);
 	// end wall
 	addWall(width, 0, 2, height);
 	// floor
@@ -335,6 +380,29 @@ void Level::level_proc() {
 		prev_platform = glm::vec2(rand_x + length, rand_y);
 	}
 	addPlatform(width - 20, 0, 2, 20, false);
+
+	vector<shared_ptr<CollectibleItem>> temp;
+	if (collectibles.empty()) {
+		collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
+	}
+	else {
+		for (auto &cItem : collectibles) {
+			temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+		}
+		collectibles.clear();
+		for (auto &cItem : temp) {
+			collectibles.emplace_back(cItem);
+		}
+		temp.clear();
+	}
+
+	//Elevator
+	auto movingPlatform = addPlatform(width - 15, 2, 2, 5, true);
+	auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+	movingPlatformComponent->setMovementStart({ width - 22, 5 });
+	movingPlatformComponent->setMovementEnd({ width - 22, ceil });
+	movingPlatformComponent->setSpeed(4);
+
 }
 
 void Level::level_test() {

@@ -126,7 +126,7 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
     }
     if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
         exit = true;
-		EmeraldGame::levelCounter = obj->getComponent<Door>()->level;
+		EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
     }
 }
 

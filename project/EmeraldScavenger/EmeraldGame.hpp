@@ -107,7 +107,8 @@ class EmeraldGame : public b2ContactListener {
 public:
     EmeraldGame();
 
-	static int levelCounter;
+	static int currentLevel;
+	static int nextLevel;
 
     shared_ptr<GameObject> createGameObject();
 
