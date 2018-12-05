@@ -8,6 +8,7 @@
 #include "GameObject.hpp"
 #include "EmeraldGame.hpp"
 #include "PhysicsComponent.hpp"
+#include "Level.hpp"
 
 Door::Door(GameObject *gameObject) : Component(gameObject) {
     spriteComponent = gameObject->addComponent<SpriteComponent>();
@@ -29,11 +30,11 @@ void Door::closeDoor() {
 }
 
 void Door::update(float deltaTime) {
-    if (EmeraldGame::gameInstance->getEmeraldCounter() == 5 && isExit)
+    if (EmeraldGame::gameInstance->getEmeraldCounter() >= Level::getEmeraldsNeeded() && isExit)
         spriteComponent->setSprite(open);
 }
 
-void Door::initDoor(vec2 pos, bool isOpen, bool isExit) {
+void Door::initDoor(vec2 pos, bool isOpen, bool isExit, int level) {
     this->isExit = isExit;
     if (isOpen)spriteComponent->setSprite(open);
     else spriteComponent->setSprite(close);
@@ -44,5 +45,6 @@ void Door::initDoor(vec2 pos, bool isOpen, bool isExit) {
                                   pos * Level::tileSize / physicsScale,
                                   1);
     physicsComponent->setSensor(true);
+	this->level = level;
     gameObject->setPosition(vec2{pos.x, pos.y} * Level::tileSize);
 }

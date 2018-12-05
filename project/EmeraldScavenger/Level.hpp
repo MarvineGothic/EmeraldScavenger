@@ -34,6 +34,7 @@ class Level {
 
     vec2 levelMin{}, levelMax{};
     static vec2 startPosition, finishPosition;
+	static int emeraldsNeeded;
     EmeraldGame *game{};
 
     vector<shared_ptr<CollectibleItem>> collectibles;
@@ -67,7 +68,7 @@ public:
 
     shared_ptr<CollectibleItem> addCollectible(vec2 position, string name);
 
-    shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit);
+    shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit, int level);
 
     shared_ptr<Rock> Level::addRock(vec2 position, Sprite sprite, vec2 scale,
                                     float restitution,
@@ -96,4 +97,6 @@ public:
     static vec2 getStartPos();
 
     static vec2 getFinishPos();
+
+	static int getEmeraldsNeeded();
 };

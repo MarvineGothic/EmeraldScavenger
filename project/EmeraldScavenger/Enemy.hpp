@@ -32,6 +32,7 @@ public:
         Zombie,
         Dragon,
         AngryBird,
+		Boulder,
     };
 
     void updateSprite(float deltaTime);
@@ -82,4 +83,5 @@ private:
     bool flyingEnemy = false;
     EnemyType enemyType;
     float timePassed = 0.0f;
+	float rotation = 0.0f;
 };

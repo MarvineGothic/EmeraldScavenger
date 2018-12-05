@@ -24,6 +24,7 @@ auto currentTime = gettimeofday(&macTime, NULL);
 auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 #endif
 
+int EmeraldGame::levelCounter = 0;
 const vec2 EmeraldGame::windowSize(800, 600);
 const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
@@ -206,11 +207,11 @@ void EmeraldGame::onKey(SDL_Event &event) {
                 }
                 break;
             case SDLK_UP:
-                if(emeraldCounter==5 && player->getComponent<Player>()->exit){
+                if(emeraldCounter>=Level::getEmeraldsNeeded() && player->getComponent<Player>()->exit){
                     gameState = GameState::NextLevel;
                     initGame();
                     // increase level counter:
-                    levelCounter++;
+                    //levelCounter++;
                     emeraldCounter = 0;
                 }
                 break;
@@ -261,6 +262,7 @@ void EmeraldGame::update(float time) {
         }
     } else if (gameState == GameState::Start) {
         gameState = GameState::Ready;
+		background.initStaticBackground("start.png");
         level->clearEmeralds();
         livesCounter = 5;
         emeraldCounter = 0;
@@ -292,9 +294,7 @@ void EmeraldGame::render() {
     if (gameState == GameState::GameOver) {
         auto sprite = gameSpritesAtlas->get("spr_gameOver.png");
         sprite.setPosition({0.0f, 0.0f});
-        spriteBatchBuilder.addSprite(sprite);
-    } else if (gameState == GameState::Ready) {
-        background.initStaticBackground("start.png");
+		spriteBatchBuilder.addSprite(sprite);
     } else if (gameState == GameState::Pause) {
         auto pauseSprite = gameSpritesAtlas->get("spr_paused.png");
         pauseSprite.setPosition(pos);

@@ -30,8 +30,8 @@ class EmeraldGame : public b2ContactListener {
     const float physicsScale = 100;
     bool doDebugDraw = false;
 
-    int levelCounter = 0;
-    int livesCounter = 5;
+    //int levelCounter = 5;
+	int livesCounter = 5;
     int emeraldCounter = 0;
     float nextLevelDelta = 0.0f;
 
@@ -106,6 +106,8 @@ class EmeraldGame : public b2ContactListener {
 
 public:
     EmeraldGame();
+
+	static int levelCounter;
 
     shared_ptr<GameObject> createGameObject();
 
