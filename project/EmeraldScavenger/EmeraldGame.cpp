@@ -24,7 +24,7 @@ auto currentTime = gettimeofday(&macTime, NULL);
 auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 #endif
 
-int EmeraldGame::currentLevel = 1;
+int EmeraldGame::currentLevel = 0;
 int EmeraldGame::nextLevel = 1;
 const vec2 EmeraldGame::windowSize(800, 600);
 const vec2 EmeraldGame::scale(0.2f, 0.2f);

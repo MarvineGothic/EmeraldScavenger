@@ -30,7 +30,6 @@ class EmeraldGame : public b2ContactListener {
     const float physicsScale = 100;
     bool doDebugDraw = false;
 
-    //int levelCounter = 5;
 	int livesCounter = 5;
     int emeraldCounter = 0;
     float nextLevelDelta = 0.0f;
