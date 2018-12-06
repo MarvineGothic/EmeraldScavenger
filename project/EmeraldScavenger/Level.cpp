@@ -17,16 +17,21 @@
 vec2 Level::startPosition = {};
 vec2 Level::finishPosition = {};
 
+
 shared_ptr<Level> Level::createDefaultLevel(EmeraldGame *game) {
     shared_ptr<Level> res = shared_ptr<Level>(new Level());
     res->game = game;
+    // platform sprites:
+    res->ground = EmeraldGame::gameInstance->obstaclesAtlas->get("tile ground.png");
+    res->brick = EmeraldGame::gameInstance->obstaclesAtlas->get("brick_1.png");
+    res->moss = EmeraldGame::gameInstance->obstaclesAtlas->get("moss_tile.png");
     return res;
 }
 
 void Level::makeLevel(int level) {
     switch (level) {
         case 0:
-            this->level_intro();
+            this->level_bonus_0();
             break;
         case 1:
             this->level_hub();
@@ -43,105 +48,24 @@ void Level::makeLevel(int level) {
         case 5:
             this->level_test();
             break;
+        case 6:
+            this->level_bonus_0();
+            break;
+        case 7:
+            this->level_bonus_1();
+            break;
+        case 8:
+            this->level_bonus_2();
+            break;
         default:
             this->level_test();
             break;
     }
 }
 
-
 void Level::level_intro() {
 
-    game->background.initDynamicBackground("background.png");
-
-    int width = 200;
-    int height = 30;
-
-    startPosition = vec2{1.5, 1.5};
-    finishPosition = vec2{width - 2.5f, 2.4f};
-
-    levelWidth = static_cast<int>((width + 1) * tileSize);
-    levelHeight = static_cast<int>(height * tileSize);
-
-    game->background.initDynamicBackground("background.png");
-
-    // start wall
-    addWall(0, 0, 2, height);
-
-    // ceil
-    addPlatform(0, height, 2, width, false);
-
-    // floor (part 1)
-    addPlatform(1, 0, 2, 130, false);
-
-    // add some more platforms
-    addPlatform(15, 4, 2, 5, false);
-    addPlatform(23, 8, 2, 5, false);
-    addPlatform(31, 12, 2, 5, false);
-    addWall(35, 0, 2, 12);
-    addPlatform(36, 5, 2, 9, false);
-    addPlatform(36, 7, 2, 1, false);
-    addWall(45, 0, 2, 12);
-    addPlatform(45, 12, 2, 5, false);
-    addPlatform(59, 12, 2, 5, false);
-    addWall(64, 12, 2, 6);
-    addPlatform(64, 18, 2, 17, false);
-    addWall(69, 19, 2, 5);
-    addWall(80, 0, 2, 18); //Put the following enemies on the platform with no movement
-    /*
-    addEnemy({ 75, 24 }, Enemy::EnemyType::AngryBird);
-    addEnemy({ 75, 19 }, Enemy::EnemyType::Zombie);
-    */
-
-    addEnemy({100, 2}, Enemy::EnemyType::Zombie);
-    addEnemy({110, 10}, Enemy::EnemyType::Dragon);
-    addEnemy({120, 2}, Enemy::EnemyType::AngryBird);
-
-    //Add some spikes here (at x = 125)
-
-
-    addPlatform(135, 0, 2, 10, false); //Floor (part 2)
-
-    auto movingPlatform = addPlatform(150, 3, 2, 5, true);
-    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent->setMovementStart({150, 3});
-    movingPlatformComponent->setMovementEnd({160, 3});
-    movingPlatformComponent->setSpeed(3);
-
-    addPlatform(170, 0, 2, width - 170, false); //Floor (part 3)
-
-    //addCollectible({ 175, 2 }, "diamond");
-
-    addDoor(finishPosition, true, true);
-
-    addWall(width, 0, 2, height); //End wall
-
-    // add rock
-    addRock(vec2{2.5, 1.5}, EmeraldGame::gameInstance->enemiesAtlas->get("frame-1_zombie_idle.png"),
-            EmeraldGame::scale * 2.5f,
-            0.2f, 0.5f, 1);
-    // add Brick
-    addBrick(vec2{5, 2.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_stoneGrassTop.png"),
-             EmeraldGame::scale *2.5f,
-             0.2f, 1, 1);
-
-    /*
-    auto movingPlatform = addPlatform(10, 3, 2, 5, true);
-    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent->setMovementStart({ 10, 3 });
-    movingPlatformComponent->setMovementEnd({ 10, 10 });
-    // add some enemies to the level
-    addEnemy({ 50, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 25, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 75, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 100, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 75, 10 }, Enemy::EnemyType::AngryBird);
-    addEnemy({ 100, 5 }, Enemy::EnemyType::Dragon);
-    addEnemy({ 30, 5 }, Enemy::EnemyType::AngryBird);
-    addEnemy({ 50, 5 }, Enemy::EnemyType::Dragon);
-*/
 }
-
 //todo: design levels:
 void Level::level_hub() {
 
@@ -159,23 +83,23 @@ void Level::level_hub() {
     levelHeight = static_cast<int>(height * tileSize);
 
     // start wall
-    addWall(0, 5, 2, height - 10);
+    addWall(0, 5, ground, height - 10);
     // floor
-    addPlatform(0, 0, 2, width, false);
+    addPlatform(0, 0, ground, width, false);
     // ceil
-    addPlatform(0, height, 2, width, false);
+    addPlatform(0, height, ground, width, false);
     // end wall
-    addWall(width, 5, 2, height - 10);
+    addWall(width, 5, brick, height - 10);
 
     //Elevator 1
-    auto movingPlatform = addPlatform(1, 5, 2, 5, true);
+    auto movingPlatform = addPlatform(1, 5, ground, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({1, 5});
     movingPlatformComponent->setMovementEnd({1, height - 5});
     movingPlatformComponent->setSpeed(10);
 
     //Elevator 1
-    auto movingPlatform2 = addPlatform(width - 5, 5, 2, 5, true);
+    auto movingPlatform2 = addPlatform(width - 5, 5, ground, 5, true);
     auto movingPlatformComponent2 = movingPlatform2->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent2->setMovementStart({width - 5, 5});
     movingPlatformComponent2->setMovementEnd({width - 5, height - 5});
@@ -196,15 +120,15 @@ void Level::level_grav() {
     levelHeight = static_cast<int>(height * tileSize);
 
     // start wall
-    addWall(0, 0, 2, height);
+    addWall(0, 0, brick, height);
     //end wall
-    addWall(width, 5, 2, height - 5);
+    addWall(width, 5, brick, height - 5);
     //Middle wall
-    addWall(glm::floor(width / 2), 15, 2, height - 15);
+    addWall(glm::floor(width / 2), 15, brick, height - 15);
     // ceil
-    addPlatform(0, height, 2, width, false);
+    addPlatform(0, height, ground, width, false);
     // floor
-    addPlatform(0, 0, 2, width, false);
+    addPlatform(0, 0, ground, width, false);
 
 }
 
@@ -224,13 +148,13 @@ void Level::level_phys() {
     levelHeight = static_cast<int>(height * tileSize);
 
     // start wall
-    addWall(0, 5, 2, height - 5);
+    addWall(0, 5, brick, height - 5);
     //end wall
-    addWall(width, 0, 2, height);
+    addWall(width, 0, brick, height);
     // ceil
-    addPlatform(0, height, 2, width, false);
+    addPlatform(0, height, ground, width, false);
     // floor
-    addPlatform(0, 0, 2, width, false);
+    addPlatform(0, 0, ground, width, false);
 }
 
 //clamps a value with a lower and upper bound
@@ -256,11 +180,11 @@ void Level::level_proc() {
     levelHeight = static_cast<int>(height * tileSize);
 
     // end wall
-    addWall(width, 0, 2, height);
+    addWall(width, 0, brick, height);
     // floor
-    addPlatform(0, 0, 2, 10, false);
+    addPlatform(0, 0, ground, 10, false);
     // ceil
-    addPlatform(0, height, 2, width, false);
+    addPlatform(0, height, ground, width, false);
 
     //Defines how far apart platforms are allowed to be
     glm::vec2 min(2, -5);
@@ -287,7 +211,7 @@ void Level::level_proc() {
     float wall_r = 200;
 
     //Initial platform that starts chain
-    addPlatform(15, 5, 2, 5, false);
+    addPlatform(15, 5, ground, 5, false);
     glm::vec2 prev_platform = glm::vec2(15 + 5, 5);
 
     /*
@@ -308,10 +232,10 @@ void Level::level_proc() {
         int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
         int rand_y = clamp(static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y), floor,
                            ceil);
-        addPlatform(rand_x, rand_y, 2, length, false);
+        addPlatform(rand_x, rand_y, ground, length, false);
         prev_platform = glm::vec2(rand_x + length, rand_y);
     }
-    addPlatform(width - 20, 0, 2, 20, false);
+    addPlatform(width - 20, 0, ground, 20, false);
 }
 
 void Level::level_test() {
@@ -332,10 +256,10 @@ void Level::level_test() {
     //addPlatform(0, 0, 2, width - 0, false);
 
     // start wall
-    addWall(0, 0, 2, height);
+    addWall(0, 0, brick, height);
 
     // ceil
-    addPlatform(0, height, 2, width, false);
+    addPlatform(0, height, ground, width, false);
 
     /*
     // floor
@@ -346,14 +270,14 @@ void Level::level_test() {
     addPlatform(101, 0, 2, width - (101), false);
     */
 
-    addPlatform(0, 0, 2, width, false);
+    addPlatform(0, 0, ground, width, false);
 
     //addPlatform(105, 0, 2, width  - 105, false);
 
     // ceil
     //addPlatform(1, height, 2, width - 1, false);
 
-    auto movingPlatform = addPlatform(10, 3, 2, 5, true);
+    auto movingPlatform = addPlatform(10, 3, ground, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({10, 3});
     movingPlatformComponent->setMovementEnd({10, 10});
@@ -369,26 +293,144 @@ void Level::level_test() {
     addEnemy({50, 5}, Enemy::EnemyType::Dragon);
 
     // add some more platforms
-    addPlatform(15, 7, 2, 5, true);
-    addPlatform(20, 3, 2, 5, true);
-    addPlatform(25, 7, 2, 5, true);
-    addPlatform(30, 10, 2, 5, true);
-    addPlatform(35, 7, 2, 5, true);
-    addPlatform(40, 3, 2, 5, true);
+    addPlatform(15, 7, ground, 5, true);
+    addPlatform(20, 3, ground, 5, true);
+    addPlatform(25, 7, ground, 5, true);
+    addPlatform(30, 10, ground, 5, true);
+    addPlatform(35, 7, ground, 5, true);
+    addPlatform(40, 3, ground, 5, true);
 
     /*
-    addPlatform(35, 1015, 2, 5, true);
-    addPlatform(40, 1020, 2, 5, true);
-    addPlatform(45, 1025, 2, 5, true);
-    addPlatform(50, 1030, 2, 5, true);
-    addPlatform(55, 1035, 2, 5, true);
-    addPlatform(60, 1040, 2, 5, true);
-    addPlatform(65, 1045, 2, 140, true);
+    addPlatform(35, 1015, ground, 5, true);
+    addPlatform(40, 1020, ground, 5, true);
+    addPlatform(45, 1025, ground, 5, true);
+    addPlatform(50, 1030, ground, 5, true);
+    addPlatform(55, 1035, ground, 5, true);
+    addPlatform(60, 1040, ground, 5, true);
+    addPlatform(65, 1045, ground, 140, true);
     */
 
-    addWall(125, 0, 2, 2);
+    addWall(125, 0, brick, 2);
     // end wall
     //addWall(width, 0, 2, height);
+}
+
+void Level::level_bonus_0() {
+
+    int width = 150;
+    int height = 50;
+    levelWidth = static_cast<int>((width + 1) * tileSize);
+    levelHeight = static_cast<int>(height * tileSize);
+    game->background.initDynamicBackground("background.png");
+
+    startPosition = vec2{2.5, 47.5};
+    addDoor(startPosition, true, false);
+    finishPosition = vec2{12.5, 47.5};
+    addDoor(finishPosition, false, true);
+
+    // start wall
+    addWall(0, 0, brick, height); // 1w
+    addWall(10, 40, brick, 20); // 2w
+    addWall(10, 15, brick, 17); //3w
+    addWall(10, 5, brick, 6);   //4w
+
+    //
+    addWall(35, 5, brick, 35); //5w
+    //
+    addWall(45, 35, brick, 10); //6w
+
+    // ceil
+    addPlatform(0, height, ground, width, false);
+
+    // stairs
+    addPlatform(1, 45, ground, 5, false);  //1
+    addPlatform(5, 40, ground, 5, false); //2
+    addPlatform(1, 35, ground, 5, false);  //3
+    addPlatform(5, 30, ground, 5, false);  //4
+    addPlatform(1, 25, ground, 5, false);  //5
+    addPlatform(5, 20, ground, 5, false);  //6
+    addPlatform(1, 15, ground, 5, false);  //7
+    addPlatform(5, 10, ground, 5, false); //8
+    addPlatform(1, 5, ground, 5, false);   //9
+
+    addPlatform(11, 45, ground, 39, false);  //10
+    addPlatform(11, 40, ground, 29, false);  //11
+    addPlatform(11, 30, ground, 19, false);    //12
+    addPlatform(40, 35, ground, 5, false);    //13
+    addPlatform(36, 30, ground, width - 41, false);    //14
+    addPlatform(11, 20 , ground, 5, false);    //15
+    addPlatform(11, 5, ground, 29, false);    //16
+
+    auto movingPlatform = addPlatform(45, 8, ground, 5, true);
+    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent->setMovementStart({45, 8});
+    movingPlatformComponent->setMovementEnd({45, 25});
+    movingPlatformComponent->setSpeed(3);
+
+    addPlatform(50, 25, ground, width - 50, false);    //17
+    addPlatform(50, 10, ground, 5, false);    //18
+
+    movingPlatform = addPlatform(55, 10, ground, 5, true);
+    movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent->setMovementStart({55, 10});
+    movingPlatformComponent->setMovementEnd({80, 10});
+    movingPlatformComponent->setSpeed(10);
+
+    addPlatform(70, 5, ground, 5, false);    //19
+    addPlatform(85, 10, ground, 5, false);    //20
+    addPlatform(90, 5, ground, 5, false);    //21
+
+
+    movingPlatform = addPlatform(105, 3, ground, 5, true);
+    movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent->setMovementStart({105, 3});
+    movingPlatformComponent->setMovementEnd({125, 3});
+    movingPlatformComponent->setSpeed(10);
+
+    addPlatform(50, 40, ground, 5, false);    //22
+    addPlatform(55, 35, ground, 5, false);    //23
+
+    // floor
+    addPlatform(1, 0, ground, 50, false);
+    addPlatform(95, 0, ground, 10, false);
+    addPlatform(130, 0, ground, width-130, false);
+
+
+    vector<shared_ptr<CollectibleItem>> temp;
+    if (collectibles.empty()) {
+        collectibles.emplace_back(addCollectible(vec2(13, 42.5), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(13, 22.5), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(72.5, 7.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(135, 2.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(145, 2.5f), "Pie"));
+        collectibles.emplace_back(addCollectible(vec2(70, 32.5f), "Emerald"));
+    } else {
+        for (auto &cItem : collectibles) {
+            temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+        }
+        collectibles.clear();
+        for (auto &cItem : temp) {
+            collectibles.emplace_back(cItem);
+        }
+        temp.clear();
+    }
+    // add Brick
+    addBrick(vec2{13, 32.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_stoneGrassTop.png"),
+             EmeraldGame::scale * 5.0f, 0.8f, 1, 1);
+
+
+    addEnemy({100, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({110, 10}, Enemy::EnemyType::Dragon);
+    addEnemy({120, 2}, Enemy::EnemyType::AngryBird);
+
+    //Add some spikes here (at x = 125)
+
+    addWall(width, 0, brick, height); //End wall
+
+    // add rock
+    /*addRock(vec2{2.5, 1.5}, EmeraldGame::gameInstance->enemiesAtlas->get("frame-1_zombie_idle.png"),
+            EmeraldGame::scale * 2.5f,
+            0.2f, 0.5f, 1);*/
 }
 
 void Level::level_bonus_1() {
@@ -403,18 +445,18 @@ void Level::level_bonus_1() {
     game->background.initDynamicBackground("background.png");
 
     // start wall
-    addWall(0, 0, 2, height);
+    addWall(0, 0, brick, height);
     // floor
-    addPlatform(1, 0, 2, width - 200, false);
+    addPlatform(1, 0, ground, width - 200, false);
     // gap = 5
-    addPlatform(10, 0, 2, width - 115, false);
+    addPlatform(10, 0, ground, width - 115, false);
     // gap = 5
-    addPlatform(105, 0, 2, width - 105, false);
+    addPlatform(105, 0, ground, width - 105, false);
     // ceil
-    addPlatform(1, height - 1, 2, width - 1, false);
+    addPlatform(1, height - 1, ground, width - 1, false);
 
 
-    auto movingPlatform = addPlatform(10, 3, 2, 5, true);
+    auto movingPlatform = addPlatform(10, 3, ground, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({10, 3});
     movingPlatformComponent->setMovementEnd({10, 10});
@@ -459,25 +501,25 @@ void Level::level_bonus_1() {
 
 
     // add some more platforms
-    addPlatform(15, 7, 2, 5, true);
-    addPlatform(20, 3, 2, 5, true);
-    addPlatform(25, 7, 2, 5, true);
-    addPlatform(30, 10, 2, 5, true);
-    addPlatform(35, 7, 2, 5, true);
-    addPlatform(40, 3, 2, 5, true);
+    addPlatform(15, 7, ground, 5, true);
+    addPlatform(20, 3, ground, 5, true);
+    addPlatform(25, 7, ground, 5, true);
+    addPlatform(30, 10, ground, 5, true);
+    addPlatform(35, 7, ground, 5, true);
+    addPlatform(40, 3, ground, 5, true);
 
-    addPlatform(35, 15, 2, 5, true);
-    addPlatform(40, 20, 2, 5, true);
-    addPlatform(45, 25, 2, 5, true);
-    addPlatform(50, 30, 2, 5, true);
-    addPlatform(55, 35, 2, 5, true);
-    addPlatform(60, 40, 2, 5, true);
-    addPlatform(65, 45, 2, 140, true);
+    addPlatform(35, 15, ground, 5, true);
+    addPlatform(40, 20, ground, 5, true);
+    addPlatform(45, 25, ground, 5, true);
+    addPlatform(50, 30, ground, 5, true);
+    addPlatform(55, 35, ground, 5, true);
+    addPlatform(60, 40, ground, 5, true);
+    addPlatform(65, 45, ground, 140, true);
 
 
-    addWall(125, 0, 2, 2);
+    addWall(125, 0, brick, 2);
     // end wall
-    addWall(width, 0, 2, height);
+    addWall(width, 0, brick, height);
 
 }
 
@@ -494,21 +536,21 @@ void Level::level_bonus_2() {
     game->background.initDynamicBackground("background.png");
 
     // start wall
-    addWall(0, 0, 2, height);
+    addWall(0, 0, brick, height);
     // floor
-    addPlatform(1, 0, 2, width - 200, false);
+    addPlatform(1, 0, ground, width - 200, false);
     // gap = 5
-    addPlatform(10, 0, 2, width - 115, false);
+    addPlatform(10, 0, ground, width - 115, false);
     // gap = 5
-    addPlatform(105, 0, 2, width - 105, false);
+    addPlatform(105, 0, ground, width - 105, false);
     // ceil
-    addPlatform(1, height - 1, 2, width - 1, false);
+    addPlatform(1, height - 1, ground, width - 1, false);
 
     // doors:
     addDoor(startPosition, true, false);
     addDoor(finishPosition, false, true);
 
-    auto movingPlatform = addPlatform(10, 3, 2, 5, true);
+    auto movingPlatform = addPlatform(10, 3, ground, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({10, 3});
     movingPlatformComponent->setMovementEnd({10, 10});
@@ -549,29 +591,29 @@ void Level::level_bonus_2() {
 
 
     // add some more platforms
-    addPlatform(15, 7, 2, 5, true);
-    addPlatform(20, 3, 2, 5, true);
-    addPlatform(25, 7, 2, 5, true);
-    addPlatform(30, 10, 2, 5, true);
-    addPlatform(35, 7, 2, 5, true);
-    addPlatform(40, 3, 2, 5, true);
+    addPlatform(15, 7, ground, 5, true);
+    addPlatform(20, 3, ground, 5, true);
+    addPlatform(25, 7, ground, 5, true);
+    addPlatform(30, 10, ground, 5, true);
+    addPlatform(35, 7, ground, 5, true);
+    addPlatform(40, 3, ground, 5, true);
 
-    addPlatform(35, 15, 2, 5, true);
-    addPlatform(40, 20, 2, 5, true);
-    addPlatform(45, 25, 2, 5, true);
-    addPlatform(50, 30, 2, 5, true);
-    addPlatform(55, 35, 2, 5, true);
-    addPlatform(60, 40, 2, 5, true);
-    addPlatform(65, 45, 2, 140, true);
+    addPlatform(35, 15, ground, 5, true);
+    addPlatform(40, 20, ground, 5, true);
+    addPlatform(45, 25, ground, 5, true);
+    addPlatform(50, 30, ground, 5, true);
+    addPlatform(55, 35, ground, 5, true);
+    addPlatform(60, 40, ground, 5, true);
+    addPlatform(65, 45, ground, 140, true);
 
 
-    addWall(125, 0, 2, 2);
+    addWall(125, 0, brick, 2);
     // end wall
-    addWall(width, 0, 2, height);
+    addWall(width, 0, brick, height);
 }
 
 void Level::generateLevel() {
-    auto movingPlatform = addPlatform(10, 3, 2, 5, true);
+    auto movingPlatform = addPlatform(10, 3, ground, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatform->getPhysicsComponent()->setLinearVelocity({0, 100});
     b2Body *body = movingPlatform->getPhysicsComponent()->getBody();
@@ -583,20 +625,20 @@ void Level::generateLevel() {
     level_proc();
 }
 
-shared_ptr<PlatformComponent> Level::addPlatform(int x, int y, int startSpriteId, int length, bool kinematic) {
+shared_ptr<PlatformComponent> Level::addPlatform(int x, int y, Sprite sprite, int length, bool kinematic) {
     auto gameObject = game->createGameObject();
     gameObject->name = "Platform";
     auto res = gameObject->addComponent<PlatformComponent>();
-    res->initPlatform(EmeraldGame::gameInstance->obstaclesAtlas, x, y, startSpriteId, length, kinematic);
+    res->initPlatform(x, y, sprite, length, kinematic);
     return res;
 }
 
 
-shared_ptr<PlatformComponent> Level::addWall(int x, int y, int startSpriteId, int length) {
+shared_ptr<PlatformComponent> Level::addWall(int x, int y, Sprite sprite, int length) {
     auto gameObject = game->createGameObject();
     gameObject->name = "Wall";
     auto res = gameObject->addComponent<PlatformComponent>();
-    res->initWall(EmeraldGame::gameInstance->obstaclesAtlas, x, y, startSpriteId, length);
+    res->initWall(x, y, sprite, length);
     return res;
 }
 

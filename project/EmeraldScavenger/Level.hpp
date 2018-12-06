@@ -32,8 +32,8 @@ class Level {
 
     int levelWidth{}, levelHeight{};
 
-    vec2 levelMin{}, levelMax{};
     static vec2 startPosition, finishPosition;
+    Sprite ground, brick, moss;
     EmeraldGame *game{};
 
     vector<shared_ptr<CollectibleItem>> collectibles;
@@ -55,13 +55,14 @@ public:
 
     void level_test();
 
+    void level_bonus_0();
     void level_bonus_1();
 
     void level_bonus_2();
 
-    shared_ptr<PlatformComponent> addPlatform(int x, int y, int startSpriteId, int length, bool kinematic);
+    shared_ptr<PlatformComponent> addPlatform(int x, int y, Sprite sprite, int length, bool kinematic);
 
-    shared_ptr<PlatformComponent> addWall(int x, int y, int startSpriteId, int height);
+    shared_ptr<PlatformComponent> addWall(int x, int y, Sprite sprite, int height);
 
     shared_ptr<Enemy> addEnemy(vec2 position, Enemy::EnemyType enemyType);
 
@@ -69,12 +70,12 @@ public:
 
     shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit);
 
-    shared_ptr<Rock> Level::addRock(vec2 position, Sprite sprite, vec2 scale,
+    shared_ptr<Rock> addRock(vec2 position, Sprite sprite, vec2 scale,
                                     float restitution,
                                     float friction,
                                     float density);
 
-    shared_ptr<Rock> Level::addBrick(vec2 position, Sprite sprite, vec2 scale,
+    shared_ptr<Rock> addBrick(vec2 position, Sprite sprite, vec2 scale,
                                     float restitution,
                                     float friction,
                                     float density);

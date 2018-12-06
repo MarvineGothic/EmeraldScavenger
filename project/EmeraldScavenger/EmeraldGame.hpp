@@ -48,6 +48,7 @@ class EmeraldGame : public b2ContactListener {
     shared_ptr<SpriteAtlas> uiAtlas;
     shared_ptr<Level> level;
 
+	Sprite gameOverSprite, pauseSprite, levelSprite, levelNumberSprite;
     vector<shared_ptr<GameObject>> gameObjectsList;
     map<b2Fixture *, PhysicsComponent *> physicsComponentMap;
 

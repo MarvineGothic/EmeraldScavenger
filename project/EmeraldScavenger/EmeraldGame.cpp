@@ -59,6 +59,13 @@ EmeraldGame::EmeraldGame()
             .build());
     level = Level::createDefaultLevel(this);
 
+	// init sprites
+	gameOverSprite = gameSpritesAtlas->get("spr_gameOver.png");
+	gameOverSprite.setPosition({ 0.0f, 0.0f });
+	pauseSprite = gameSpritesAtlas->get("spr_paused.png");
+	levelSprite = gameSpritesAtlas->get("level.png");
+	levelSprite.setPosition({ -50.0f, 0.0f });
+
     //Get the current time in milliseconds and use it as a seed
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     SYSTEMTIME windowsTime;
@@ -260,6 +267,7 @@ void EmeraldGame::update(float time) {
             runGame();
         }
     } else if (gameState == GameState::Start) {
+		background.initStaticBackground("start.png");
         gameState = GameState::Ready;
         level->clearEmeralds();
         livesCounter = 5;
@@ -290,19 +298,12 @@ void EmeraldGame::render() {
     // ================================ RENDER GAME STATES ============================
     // ======================= by: Sergiy Isakov 02 - 03.11.18 ========================
     if (gameState == GameState::GameOver) {
-        auto sprite = gameSpritesAtlas->get("spr_gameOver.png");
-        sprite.setPosition({0.0f, 0.0f});
-        spriteBatchBuilder.addSprite(sprite);
-    } else if (gameState == GameState::Ready) {
-        background.initStaticBackground("start.png");
-    } else if (gameState == GameState::Pause) {
-        auto pauseSprite = gameSpritesAtlas->get("spr_paused.png");
-        pauseSprite.setPosition(pos);
+        spriteBatchBuilder.addSprite(gameOverSprite);
+    }  else if (gameState == GameState::Pause) {
+		pauseSprite.setPosition(pos);
         spriteBatchBuilder.addSprite(pauseSprite);
     } else if (gameState == GameState::NextLevel) {
-        auto sprite = gameSpritesAtlas->get("level.png");
-        sprite.setPosition({-50.0f, 0.0f});
-        spriteBatchBuilder.addSprite(sprite);
+        spriteBatchBuilder.addSprite(levelSprite);
         auto levelNumber = uiAtlas->get("numeral" + to_string(levelCounter) + ".png");
         levelNumber.setScale({2.0f, 2.0f});
         levelNumber.setPosition({100.0f, 5.0f});
