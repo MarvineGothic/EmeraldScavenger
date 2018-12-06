@@ -33,6 +33,8 @@ class Level {
     int levelWidth{}, levelHeight{};
 
     static vec2 startPosition, finishPosition;
+
+	static int emeraldsNeeded;
     Sprite ground, brick, moss;
     EmeraldGame *game{};
 
@@ -68,7 +70,7 @@ public:
 
     shared_ptr<CollectibleItem> addCollectible(vec2 position, string name);
 
-    shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit);
+    shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit, int level);
 
     shared_ptr<Rock> addRock(vec2 position, Sprite sprite, vec2 scale,
                                     float restitution,
@@ -97,4 +99,6 @@ public:
     static vec2 getStartPos();
 
     static vec2 getFinishPos();
+
+	static int getEmeraldsNeeded();
 };

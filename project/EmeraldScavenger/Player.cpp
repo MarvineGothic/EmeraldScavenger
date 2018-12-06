@@ -114,7 +114,7 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
     if (obj->name == "Emerald" && obj->getComponent<SpriteComponent>() != nullptr) {
         EmeraldGame::gameInstance->level->deleteEmerald(obj->getComponent<CollectibleItem>());
         obj->removeComponent(obj->getComponent<SpriteComponent>());
-        if (EmeraldGame::gameInstance->emeraldCounter < 5)
+        if (EmeraldGame::gameInstance->emeraldCounter < Level::getEmeraldsNeeded())
             EmeraldGame::gameInstance->emeraldCounter++;
     }
     if (obj->name == "Pie" && obj->getComponent<SpriteComponent>() != nullptr) {
@@ -126,6 +126,7 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
     }
     if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
         exit = true;
+		EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
     }
 }
 

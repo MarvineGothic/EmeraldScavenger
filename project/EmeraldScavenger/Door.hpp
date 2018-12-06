@@ -24,13 +24,14 @@ public:
     explicit Door(GameObject *gameObject);
 
     bool isExit = false;
+	int level;
 
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> physicsComponent;
 
     void update(float deltaTime) override;
 
-    void initDoor(vec2 pos, bool isOpen, bool isExit);
+    void initDoor(vec2 pos, bool isOpen, bool isExit, int level);
 
     void openDoor();
 
