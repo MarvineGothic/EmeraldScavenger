@@ -15,10 +15,13 @@ class PlatformComponent : public Component {
 public:
     explicit PlatformComponent(GameObject *gameObject);
 
-    void initPlatform(shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int width,
+    void initPlatform(int x,
+                      int y,
+                      Sprite sprite,
+                      int width,
                       bool kinematic);
 
-    void initWall(shared_ptr<sre::SpriteAtlas> spriteAtlas, int x, int y, int startSpriteId, int height);
+    void initWall(int x, int y, Sprite sprite, int height);
 
     void moveTo(vec2 tilePos);
 
@@ -27,7 +30,7 @@ public:
     vec2 getPosition();
 
     shared_ptr<PhysicsComponent> getPhysicsComponent();
-    
+
     static const vec2 tileScale;
     static const vec2 brickScale;
 
