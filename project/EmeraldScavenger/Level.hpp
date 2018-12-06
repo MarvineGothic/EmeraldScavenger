@@ -21,84 +21,84 @@ class PlatformComponent;
 class Enemy;
 
 enum class TileCollider {
-    Block,
-    BlockHalf,
-    Incline,
-    Decline
+	Block,
+	BlockHalf,
+	Incline,
+	Decline
 };
 
 class Level {
-    Level() = default;
+	Level() = default;
 
-    int levelWidth{}, levelHeight{};
+	int levelWidth{}, levelHeight{};
 
-    static vec2 startPosition, finishPosition;
+	static vec2 startPosition, finishPosition;
 
 	static int emeraldsNeeded;
-    Sprite ground, brick, moss;
-    EmeraldGame *game{};
+	Sprite ground, brick, moss;
+	EmeraldGame *game{};
 
-    vector<shared_ptr<CollectibleItem>> collectibles;
+	vector<shared_ptr<CollectibleItem>> collectibles;
 
 public:
-    static shared_ptr<Level> createDefaultLevel(EmeraldGame *game);
+	static shared_ptr<Level> createDefaultLevel(EmeraldGame *game);
 
-    void makeLevel(int level);
+	void makeLevel(int level);
 
-    void level_intro();
+	void level_intro();
 
-    void level_hub();
+	void level_hub();
 
-    void level_phys();
+	void level_phys();
 
-    void level_grav();
+	void level_grav();
 
-    void level_proc();
+	void level_proc();
 
-    void level_test();
+	void level_test();
 
-    void level_bonus_0();
-    void level_bonus_1();
+	void level_bonus_0();
+	void level_bonus_1();
 
-    void level_bonus_2();
+	void level_bonus_2();
 
-    shared_ptr<PlatformComponent> addPlatform(int x, int y, Sprite sprite, int length, bool kinematic);
+	shared_ptr<PlatformComponent> addPlatform(int x, int y, Sprite sprite, int length, bool kinematic);
 
-    shared_ptr<PlatformComponent> addWall(int x, int y, Sprite sprite, int height);
+	shared_ptr<PlatformComponent> addWall(int x, int y, Sprite sprite, int height);
 
-    shared_ptr<Enemy> addEnemy(vec2 position, Enemy::EnemyType enemyType);
+	shared_ptr<Enemy> addEnemy(vec2 position, Enemy::EnemyType enemyType);
 
-    shared_ptr<CollectibleItem> addCollectible(vec2 position, string name);
+	shared_ptr<CollectibleItem> addCollectible(vec2 position, string name);
 
-    shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit, int level);
+	shared_ptr<Door> addDoor(vec2 position, bool isOpen, bool isExit, int level);
 
-    shared_ptr<Rock> addRock(vec2 position, Sprite sprite, vec2 scale,
-                                    float restitution,
-                                    float friction,
-                                    float density);
+	shared_ptr<Rock> addRock(vec2 position, Sprite sprite, vec2 scale,
+		float restitution,
+		float friction,
+		float density);
 
-    shared_ptr<Rock> addBrick(vec2 position, Sprite sprite, vec2 scale,
-                                    float restitution,
-                                    float friction,
-                                    float density);
+	shared_ptr<Rock> addBrick(vec2 position, Sprite sprite, vec2 scale,
+		float restitution,
+		float friction,
+		float density);
 
-    static constexpr float tileSize = 21;
+	static constexpr float tileSize = 21;
 
-    void clearEmeralds();
+	void clearEmeralds();
 
-    void deleteEmerald(shared_ptr<CollectibleItem> item);
+	void deleteEmerald(shared_ptr<CollectibleItem> item);
 
-    void generateLevel();
+	void generateLevel();
 
-    void Procedural_level();
+	void Procedural_level();
 
-    int getWidth();
+	int getWidth();
 
-    int getHeight();
+	int getHeight();
 
-    static vec2 getStartPos();
+	static vec2 getStartPos();
 
-    static vec2 getFinishPos();
+	static vec2 getFinishPos();
 
 	static int getEmeraldsNeeded();
 };
