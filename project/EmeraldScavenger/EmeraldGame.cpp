@@ -24,6 +24,8 @@ auto currentTime = gettimeofday(&macTime, NULL);
 auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 #endif
 
+int EmeraldGame::currentLevel = 0;
+int EmeraldGame::nextLevel = 1;
 const vec2 EmeraldGame::windowSize(800, 600);
 const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
@@ -37,6 +39,38 @@ EmeraldGame::EmeraldGame()
             .withSdlWindowFlags(SDL_WINDOW_OPENGL)
             .withVSync(useVsync);
 
+    //Get the current time in milliseconds and use it as a seed
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    SYSTEMTIME windowsTime;
+    GetSystemTime(&windowsTime);
+    auto time_ms = (windowsTime.wSecond * 1000) + windowsTime.wMilliseconds;
+#endif
+    int rand_seed = (time_t) time_ms;
+    printf("Random seed: %ld\n", rand_seed);
+    srand(rand_seed);
+
+    initAssets();
+    initGame();
+
+    if (gameState != GameState::Pause) {
+        // setup callback functions
+        r.keyEvent = [&](SDL_Event &e) {
+            onKey(e);
+        };
+        r.frameUpdate = [&](float deltaTime) {
+            update(deltaTime);
+        };
+        r.frameRender = [&]() {
+            render();
+        };
+        // start game loop
+        r.startEventLoop();
+    }
+}
+
+// ============================================ INIT FUNCTIONS =========================================================
+
+void EmeraldGame::initAssets() {
     obstaclesAtlas = SpriteAtlas::create("obstacles.json", Texture::create()
             .withFile("obstacles.png")
             .withFilterSampling(false)
@@ -59,35 +93,18 @@ EmeraldGame::EmeraldGame()
             .build());
     level = Level::createDefaultLevel(this);
 
-    //Get the current time in milliseconds and use it as a seed
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-    SYSTEMTIME windowsTime;
-    GetSystemTime(&windowsTime);
-    auto time_ms = (windowsTime.wSecond * 1000) + windowsTime.wMilliseconds;
-#endif
-    int rand_seed = (time_t) time_ms;
-    printf("Random seed: %ld\n", rand_seed);
-    srand(rand_seed);
+    // init sprites
+    gameOverSprite = gameSpritesAtlas->get("spr_gameOver.png");
+    gameOverSprite.setPosition({0.0f, 0.0f});
+    pauseSprite = gameSpritesAtlas->get("spr_paused.png");
+    levelSprite = gameSpritesAtlas->get("level.png");
+    levelSprite.setPosition({-50.0f, 0.0f});
+    emeraldSprite = obstaclesAtlas->get("diamond blue.png");
+    emeraldSprite.setScale(EmeraldGame::scale * 0.8f);
 
-    initGame();
-
-    if (gameState != GameState::Pause) {
-        // setup callback functions
-        r.keyEvent = [&](SDL_Event &e) {
-            onKey(e);
-        };
-        r.frameUpdate = [&](float deltaTime) {
-            update(deltaTime);
-        };
-        r.frameRender = [&]() {
-            render();
-        };
-        // start game loop
-        r.startEventLoop();
-    }
+    assetManager = AssetManager::instance();
+    audioManager = AudioManager::instance();
 }
-
-// ============================================ INIT FUNCTIONS =========================================================
 
 void EmeraldGame::initGame() {
     if (world != nullptr) { // deregister call backlistener to avoid getting callbacks when recreating the world
@@ -132,7 +149,7 @@ void EmeraldGame::initPhysics() {
 }
 
 void EmeraldGame::initLevel() {
-    level->makeLevel(levelCounter);
+    level->makeLevel(currentLevel);
 }
 
 void EmeraldGame::initPlayer() {
@@ -173,8 +190,10 @@ void EmeraldGame::onKey(SDL_Event &event) {
         switch (event.key.keysym.sym) {
             // when game-over - any button lead to start menu
             case SDLK_a:
-                if (gameState == GameState::GameOver)
+                if (gameState == GameState::GameOver) {
                     gameState = GameState::Start;
+                    audioManager->playSFX("menuBeep.wav");
+                }
                 break;
 
             case SDLK_z:
@@ -193,6 +212,8 @@ void EmeraldGame::onKey(SDL_Event &event) {
             case SDLK_SPACE:
                 if (gameState == GameState::Ready) {
                     gameState = GameState::NextLevel;
+                    audioManager->pauseMusic();
+                    audioManager->playSFX("menuBeep.wav");
                     // init a game with a new level:
                     initGame();
                 }
@@ -201,20 +222,25 @@ void EmeraldGame::onKey(SDL_Event &event) {
             case SDLK_p:
                 if (gameState == GameState::Running) {
                     gameState = GameState::Pause;
+                    audioManager->playSFX("menuBeep.wav");
                 } else if (gameState == GameState::Pause) {
                     gameState = GameState::Running;
+                    audioManager->playSFX("menuBeep.wav");
                 }
                 break;
             case SDLK_UP:
-                if(emeraldCounter==5 && player->getComponent<Player>()->exit){
+                if (emeraldCounter >= Level::getEmeraldsNeeded() && player->getComponent<Player>()->exit) {
+                    if (emeraldCounter != 0)
+                        audioManager->playMusic("finish.mp3", 4, 0);
                     gameState = GameState::NextLevel;
+                    currentLevel = nextLevel;
                     initGame();
                     // increase level counter:
-                    levelCounter++;
                     emeraldCounter = 0;
                 }
                 break;
             case SDLK_ESCAPE:
+                audioManager->playSFX("menuBeep.wav");
                 initGame();
                 gameState = GameState::Start;
                 break;
@@ -248,8 +274,9 @@ void EmeraldGame::update(float time) {
         }
         if (livesCounter < 1) {
             initGame();
-            levelCounter = 0;
+            currentLevel = 0;
             gameState = GameState::GameOver;
+            audioManager->playSFX("gameOver.mp3");
         }
     } else if (gameState == GameState::NextLevel) {
         // animate a next level screen for some time:
@@ -260,11 +287,15 @@ void EmeraldGame::update(float time) {
             runGame();
         }
     } else if (gameState == GameState::Start) {
+        audioManager->playMusic("bgmusic.mp3", 4);
         gameState = GameState::Ready;
+        background.initStaticBackground("start.png");
         level->clearEmeralds();
         livesCounter = 5;
         emeraldCounter = 0;
     }
+
+
     // ==============================================================================
 }
 
@@ -290,20 +321,13 @@ void EmeraldGame::render() {
     // ================================ RENDER GAME STATES ============================
     // ======================= by: Sergiy Isakov 02 - 03.11.18 ========================
     if (gameState == GameState::GameOver) {
-        auto sprite = gameSpritesAtlas->get("spr_gameOver.png");
-        sprite.setPosition({0.0f, 0.0f});
-        spriteBatchBuilder.addSprite(sprite);
-    } else if (gameState == GameState::Ready) {
-        background.initStaticBackground("start.png");
+        spriteBatchBuilder.addSprite(gameOverSprite);
     } else if (gameState == GameState::Pause) {
-        auto pauseSprite = gameSpritesAtlas->get("spr_paused.png");
         pauseSprite.setPosition(pos);
         spriteBatchBuilder.addSprite(pauseSprite);
     } else if (gameState == GameState::NextLevel) {
-        auto sprite = gameSpritesAtlas->get("level.png");
-        sprite.setPosition({-50.0f, 0.0f});
-        spriteBatchBuilder.addSprite(sprite);
-        auto levelNumber = uiAtlas->get("numeral" + to_string(levelCounter) + ".png");
+        spriteBatchBuilder.addSprite(levelSprite);
+        auto levelNumber = uiAtlas->get("numeral" + to_string(currentLevel) + ".png");
         levelNumber.setScale({2.0f, 2.0f});
         levelNumber.setPosition({100.0f, 5.0f});
         spriteBatchBuilder.addSprite(levelNumber);
@@ -317,8 +341,6 @@ void EmeraldGame::render() {
         livesSprite.setScale(EmeraldGame::scale * 1.5f);
         spriteBatchBuilder.addSprite(livesSprite);
 
-        auto emeraldSprite = obstaclesAtlas->get("diamond blue.png");
-        emeraldSprite.setScale(EmeraldGame::scale * 0.8f);
         emeraldSprite.setPosition({pos.x + windowSize.x * 0.45f, pos.y + windowSize.y * 0.45f});
         spriteBatchBuilder.addSprite(emeraldSprite);
 
@@ -438,6 +460,5 @@ int EmeraldGame::getEmeraldCounter() {
 shared_ptr<SpriteAtlas> EmeraldGame::getGameSpriteAtlas() {
     return gameSpritesAtlas;
 }
-
 
 

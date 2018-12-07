@@ -92,11 +92,13 @@ void Player::update(float deltaTime) {
     if (this->getGameObject()->getPosition().y <= 0) {
         inPit = true;
         lostLife = true;
+        EmeraldGame::gameInstance->audioManager->playSFX("inPit.wav", 8);
     }
 
 }
 
 void Player::jump() {
+    EmeraldGame::gameInstance->audioManager->playSFX("jump.wav", 8);
     isJump = false;
     characterPhysics->addImpulse({0, 0.4f});
 }
@@ -110,12 +112,14 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
         blinkTime = 3.0f;
         vec2 pV = characterPhysics->getLinearVelocity();
         characterPhysics->addImpulse({-pV.x, -pV.y * 0.1f});
+        EmeraldGame::gameInstance->audioManager->playSFX("lostLife.wav", 8);
     }
     if (obj->name == "Emerald" && obj->getComponent<SpriteComponent>() != nullptr) {
         EmeraldGame::gameInstance->level->deleteEmerald(obj->getComponent<CollectibleItem>());
         obj->removeComponent(obj->getComponent<SpriteComponent>());
-        if (EmeraldGame::gameInstance->emeraldCounter < 5)
+        if (EmeraldGame::gameInstance->emeraldCounter < Level::getEmeraldsNeeded())
             EmeraldGame::gameInstance->emeraldCounter++;
+        EmeraldGame::gameInstance->audioManager->playSFX("emeraldPickUp.wav");
     }
     if (obj->name == "Pie" && obj->getComponent<SpriteComponent>() != nullptr) {
         EmeraldGame::gameInstance->level->deleteEmerald(obj->getComponent<CollectibleItem>());
@@ -123,9 +127,11 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
         if (EmeraldGame::gameInstance->livesCounter < 5) {
             EmeraldGame::gameInstance->livesCounter++;
         }
+        EmeraldGame::gameInstance->audioManager->playSFX("lifeUp.wav");
     }
     if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
         exit = true;
+        EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
     }
 }
 

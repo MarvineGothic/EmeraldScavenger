@@ -56,7 +56,7 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("1.png"),
                    enemyAtlas->get("2.png"),
                    birdScale);
-    } else {
+    } else if (enemyType == EnemyType::Dragon){
         radius = 10 / physicsScale;
         characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
         characterPhysics->setLinearVelocity({1,0});
@@ -72,9 +72,44 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("frame-2_dragon.png"),
                    dragonScale);
     }
-    pos = characterPhysics->getPosition();
-    characterPhysics->fixRotation();
-    characterPhysics->getFixture()->SetFriction(1);
+	else {
+		radius = 10 / physicsScale;
+		characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+		characterPhysics->setLinearVelocity({ 1,0 });
+		auto boulderSpriteObj = enemyAtlas->get("frame-1_dragon.png");
+		boulderSpriteObj.setScale(dragonScale);
+		flyingEnemy = false;
+		spriteComponent->setSprite(boulderSpriteObj);
+		setSprites(enemyAtlas->get("frame-1_dragon.png"),
+			enemyAtlas->get("frame-2_dragon.png"),
+			enemyAtlas->get("frame-3_dragon.png"),
+			enemyAtlas->get("frame-4_dragon.png"),
+			enemyAtlas->get("frame-1_dragon.png"),
+			enemyAtlas->get("frame-2_dragon.png"),
+			dragonScale);
+		enemyVelocity = 25.0f;
+		vec2 movement{ 0, 0 };
+		if (facingLeft) {
+			movement.x = movement.x - enemyVelocity;
+		}
+		else {
+			movement.x = movement.x + enemyVelocity;
+		}
+		float accelerationSpeed = 0.01f;
+		characterPhysics->addImpulse(movement * accelerationSpeed);
+
+		pos = characterPhysics->getPosition();
+		characterPhysics->getFixture()->SetFriction(0.25);
+		characterPhysics->fixRotation();
+		//characterPhysics->getBody()->SetTransform();
+		//characterPhysics->getBody()->ApplyAngularImpulse(5, true);
+		characterPhysics->getFixture()->SetRestitution(0.4);
+	}
+	if (!(enemyType == EnemyType::Boulder)) {
+		pos = characterPhysics->getPosition();
+		characterPhysics->fixRotation();
+		characterPhysics->getFixture()->SetFriction(1);
+	}
 }
 
 
@@ -90,7 +125,7 @@ void Enemy::update(float deltaTime) {
     isGrounded = false;
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
     
-    // To keep dragon at same height while ignoring gravit
+    // To keep dragon at same height while ignoring gravity
     if (enemyType==EnemyType::Dragon) {
         characterPhysics->addForce({characterPhysics->getLinearVelocity().x, 0});
         characterPhysics->moveTo({characterPhysics->getPosition().x, pos.y});
@@ -106,18 +141,22 @@ void Enemy::update(float deltaTime) {
     b2Body *body = characterPhysics->getBody();
 
     // ====================== Enemy VELOCITY =====================
-    float accelerationSpeed = 0.01f;
-    characterPhysics->addImpulse(movement * accelerationSpeed);
-    float maximumVelocity = enemyVelocity;
-    auto linearVelocity = characterPhysics->getLinearVelocity();
-    float currentVelocity = linearVelocity.x;
-    if (abs(currentVelocity) > maximumVelocity) {
-        linearVelocity.x = sign(linearVelocity.x) * maximumVelocity;
-        characterPhysics->setLinearVelocity(linearVelocity);
-    }
-
-    updateSprite(deltaTime);
-
+	if (!(enemyType == EnemyType::Boulder)) {
+		float accelerationSpeed = 0.01f;
+		characterPhysics->addImpulse(movement * accelerationSpeed);
+		float maximumVelocity = enemyVelocity;
+		auto linearVelocity = characterPhysics->getLinearVelocity();
+		float currentVelocity = linearVelocity.x;
+		if (abs(currentVelocity) > maximumVelocity) {
+			linearVelocity.x = sign(linearVelocity.x) * maximumVelocity;
+			characterPhysics->setLinearVelocity(linearVelocity);
+		}
+		updateSprite(deltaTime);
+	}
+	else {
+		rotation -= characterPhysics->getBody()->GetLinearVelocity().x;
+		gameObject->setRotation(rotation);
+	}
     // ====================== Enemy DIES =======================
     //TODO
 
@@ -143,6 +182,9 @@ void Enemy::onCollisionStart(PhysicsComponent *comp) {
         characterPhysics->setLinearVelocity({linearVelocity.x*-1,linearVelocity.y});
         facingLeft = !facingLeft;
     }
+	if (enemyType == EnemyType::Boulder) {
+	
+	}
 }
 
 void Enemy::onCollisionEnd(PhysicsComponent *comp) {
