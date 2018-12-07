@@ -30,21 +30,26 @@ void Door::closeDoor() {
 }
 
 void Door::update(float deltaTime) {
-    if (EmeraldGame::gameInstance->getEmeraldCounter() >= Level::getEmeraldsNeeded() && isExit)
+    if (EmeraldGame::gameInstance->getEmeraldCounter() >= Level::getEmeraldsNeeded() && isExit && !Level::doorIsOpen) {
         spriteComponent->setSprite(open);
+        EmeraldGame::gameInstance->audioManager->playSFX("doorOpen.flac", 8);
+        Level::doorIsOpen = true;
+    }
 }
 
 void Door::initDoor(vec2 pos, bool isOpen, bool isExit, int level) {
     this->isExit = isExit;
-    if (isOpen)spriteComponent->setSprite(open);
-    else spriteComponent->setSprite(close);
+    if (isOpen) {
+        spriteComponent->setSprite(open);
+        Level::doorIsOpen = true;
+    } else spriteComponent->setSprite(close);
 
     physicsComponent->initBox(b2_staticBody,
-                                  vec2(close.getSpriteSize()) /
-                                  (physicsScale * Level::tileSize * (EmeraldGame::scale * 1.5f)),
-                                  pos * Level::tileSize / physicsScale,
-                                  1);
+                              vec2(close.getSpriteSize()) /
+                              (physicsScale * Level::tileSize * (EmeraldGame::scale * 1.5f)),
+                              pos * Level::tileSize / physicsScale,
+                              1);
     physicsComponent->setSensor(true);
-	this->level = level;
+    this->level = level;
     gameObject->setPosition(vec2{pos.x, pos.y} * Level::tileSize);
 }

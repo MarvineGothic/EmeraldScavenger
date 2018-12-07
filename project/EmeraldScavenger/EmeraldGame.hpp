@@ -1,5 +1,6 @@
 #include "sre/SDLRenderer.hpp"
 #include "sre/SpriteAtlas.hpp"
+#include "SDL_mixer.h"
 #include <vector>
 #include "Box2D/Dynamics/b2World.h"
 #include "GameObject.hpp"
@@ -8,6 +9,8 @@
 #include "Level.hpp"
 #include "BirdMovementComponent.hpp"
 #include "Background.hpp"
+#include "AssetManager.hpp"
+#include "AudioManager.hpp"
 
 using namespace std;
 using namespace sre;
@@ -47,11 +50,17 @@ class EmeraldGame : public b2ContactListener {
     shared_ptr<SpriteAtlas> uiAtlas;
     shared_ptr<Level> level;
 
-    Sprite gameOverSprite, pauseSprite, levelSprite, levelNumberSprite;
+    Sprite gameOverSprite, pauseSprite, levelSprite, emeraldSprite;
+
     vector<shared_ptr<GameObject>> gameObjectsList;
     map<b2Fixture *, PhysicsComponent *> physicsComponentMap;
 
     b2World *world = nullptr;
+
+    AssetManager *assetManager;
+    AudioManager *audioManager;
+
+    void initAssets();
 
     void initGame();
 
