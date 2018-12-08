@@ -141,6 +141,6 @@ public:
 
     time_t rand_seed;
 
-	static bool introCleared, physCleared, gravCleared, procCleared;
+	static bool introCleared, physCleared, gravCleared, procCleared, bonusCleared;
 
 };

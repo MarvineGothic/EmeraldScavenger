@@ -31,7 +31,9 @@ vec2 EmeraldGame::nextStartPosition = vec2{ NULL, NULL };
 const vec2 EmeraldGame::windowSize(800, 600);
 const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
-bool EmeraldGame::introCleared = false, EmeraldGame::physCleared = false, EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false;
+bool EmeraldGame::introCleared = false, EmeraldGame::physCleared = false,
+	EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false,
+	EmeraldGame::bonusCleared = false;
 
 EmeraldGame::EmeraldGame()
 	: debugDraw(physicsScale) {
@@ -187,6 +189,9 @@ void EmeraldGame::completedLevel(int level) {
 		break;
 	case 4: 
 		procCleared = true;
+		break;
+	case 8:
+		bonusCleared = true;
 		break;
 	default: 
 		break;
