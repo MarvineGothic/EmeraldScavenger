@@ -25,13 +25,14 @@ public:
 
     bool isExit = false;
 	int level;
+	vec2 nextLevelStartPosition;
 
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> physicsComponent;
 
     void update(float deltaTime) override;
 
-    void initDoor(vec2 pos, bool isOpen, bool isExit, int level);
+    void initDoor(vec2 pos, bool isOpen, bool isExit, int level, vec2 nextLevelStartPosition);
 
     void openDoor();
 

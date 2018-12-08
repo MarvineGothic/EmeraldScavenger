@@ -26,9 +26,12 @@ auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 
 int EmeraldGame::currentLevel = 0;
 int EmeraldGame::nextLevel = 1;
+vec2 EmeraldGame::currentStartPosition = vec2{ NULL, NULL };
+vec2 EmeraldGame::nextStartPosition = vec2{ NULL, NULL };
 const vec2 EmeraldGame::windowSize(800, 600);
 const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
+bool EmeraldGame::introCleared = false, EmeraldGame::physCleared = false, EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false;
 
 EmeraldGame::EmeraldGame()
 	: debugDraw(physicsScale) {
@@ -59,7 +62,12 @@ EmeraldGame::EmeraldGame()
 		.withFile("ui.png")
 		.withFilterSampling(false)
 		.build());
+	platformerArtAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
+		.withFile("platformer-art-deluxe.png")
+		.withFilterSampling(false)
+		.build());
 	level = Level::createDefaultLevel(this);
+	//Level::setStartPos(vec2{ 1.5,1.5 });
 
 	// init sprites
 	gameOverSprite = gameSpritesAtlas->get("spr_gameOver.png");
@@ -166,6 +174,25 @@ void EmeraldGame::initPlayer() {
 	camera->setFollowObject(player, { windowSize * 0.5f });
 }
 
+void EmeraldGame::completedLevel(int level) {
+	switch (level) {
+	case 0: 
+		introCleared = true;
+		break;
+	case 2: 
+		gravCleared = true;
+		break;
+	case 3: 
+		physCleared = true;
+		break;
+	case 4: 
+		procCleared = true;
+		break;
+	default: 
+		break;
+	}
+}
+
 // ============================================ GAME LOOP FUNCTIONS ====================================================
 void EmeraldGame::onKey(SDL_Event &event) {
 	if (gameState != GameState::Pause)
@@ -219,7 +246,9 @@ void EmeraldGame::onKey(SDL_Event &event) {
 		case SDLK_UP:
 			if (emeraldCounter >= Level::getEmeraldsNeeded() && player->getComponent<Player>()->exit) {
 				gameState = GameState::NextLevel;
+				completedLevel(currentLevel);
 				currentLevel = nextLevel;
+				currentStartPosition = nextStartPosition;
 				initGame();
 				// increase level counter:
 				//levelCounter++;
