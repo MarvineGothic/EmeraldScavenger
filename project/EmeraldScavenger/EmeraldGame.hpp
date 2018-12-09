@@ -48,6 +48,7 @@ class EmeraldGame : public b2ContactListener {
     shared_ptr<SpriteAtlas> gameSpritesAtlas;
     shared_ptr<SpriteAtlas> scavengerAtlas;
     shared_ptr<SpriteAtlas> uiAtlas;
+	shared_ptr<SpriteAtlas> platformerArtAtlas;
     shared_ptr<Level> level;
 
     Sprite gameOverSprite, pauseSprite, levelSprite, emeraldSprite;
@@ -80,6 +81,8 @@ class EmeraldGame : public b2ContactListener {
     void update(float time);
 
     void render();
+
+	void completedLevel(int level);
 
     void onKey(SDL_Event &event);
 
@@ -116,8 +119,8 @@ class EmeraldGame : public b2ContactListener {
 public:
     EmeraldGame();
 
-    static int currentLevel;
-    static int nextLevel;
+    static int currentLevel, nextLevel;
+	static vec2 currentStartPosition, nextStartPosition;
 
     shared_ptr<GameObject> createGameObject();
 
@@ -146,5 +149,7 @@ public:
     shared_ptr<SpriteAtlas> getGameSpriteAtlas();
 
     time_t rand_seed;
+
+	static bool introCleared, physCleared, gravCleared, procCleared, bonusCleared;
 
 };

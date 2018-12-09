@@ -71,22 +71,36 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("frame-1_dragon.png"),
                    enemyAtlas->get("frame-2_dragon.png"),
                    dragonScale);
+    } else if (enemyType == EnemyType::SpikeMonster){
+        radius = 5 / physicsScale;
+        enemyVelocity = 0.0f;
+        characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        auto spikeSpriteObj = enemyAtlas->get("spike monster A.png");
+        spikeSpriteObj.setScale(birdScale);
+        spriteComponent->setSprite(spikeSpriteObj);
+        setSprites(enemyAtlas->get("spike monster B.png"),
+                   enemyAtlas->get("spike monster B.png"),
+                   enemyAtlas->get("spike monster B.png"),
+                   enemyAtlas->get("spike monster A.png"),
+                   enemyAtlas->get("spike monster A.png"),
+                   enemyAtlas->get("spike monster A.png"),
+                   birdScale);
     }
 	else {
 		radius = 10 / physicsScale;
 		characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
 		characterPhysics->setLinearVelocity({ 1,0 });
-		auto boulderSpriteObj = enemyAtlas->get("frame-1_dragon.png");
+		auto boulderSpriteObj = enemyAtlas->get("spike monster A.png");
 		boulderSpriteObj.setScale(dragonScale);
 		flyingEnemy = false;
 		spriteComponent->setSprite(boulderSpriteObj);
-		setSprites(enemyAtlas->get("frame-1_dragon.png"),
-			enemyAtlas->get("frame-2_dragon.png"),
-			enemyAtlas->get("frame-3_dragon.png"),
-			enemyAtlas->get("frame-4_dragon.png"),
-			enemyAtlas->get("frame-1_dragon.png"),
-			enemyAtlas->get("frame-2_dragon.png"),
-			dragonScale);
+        setSprites(enemyAtlas->get("spike monster B.png"),
+                   enemyAtlas->get("spike monster B.png"),
+                   enemyAtlas->get("spike monster B.png"),
+                   enemyAtlas->get("spike monster A.png"),
+                   enemyAtlas->get("spike monster A.png"),
+                   enemyAtlas->get("spike monster A.png"),
+                   birdScale);
 		enemyVelocity = 25.0f;
 		vec2 movement{ 0, 0 };
 		if (facingLeft) {
@@ -163,7 +177,13 @@ void Enemy::update(float deltaTime) {
 }
 
 void Enemy::jump() {
-    characterPhysics->addImpulse({0, 0.25f});
+    auto world = EmeraldGame::gameInstance->world;
+    if (world->GetGravity().y < 0) {
+        characterPhysics->addImpulse({0, 0.25f});
+    } else {
+        characterPhysics->addImpulse({0, -0.25f});
+    }
+    
 }
 
 // On collision with any object enemy turns around
@@ -238,5 +258,15 @@ void Enemy::updateSprite(float deltaTime) {
         spriteIndex = (spriteIndex + 1) % deadSprites.size();
         Sprite deadSprite = deadSprites[spriteIndex];
         gameObject->getComponent<SpriteComponent>()->setSprite(deadSprite);
+    }
+    
+    // Flips sprite for gravity room
+    auto world = EmeraldGame::gameInstance->world;
+    if (world->GetGravity().y > 0) {
+        auto lastSprite = gameObject->getComponent<SpriteComponent>()->getSprite();
+        lastSprite.setFlip({false, true});
+        if (facingLeft)
+            lastSprite.setFlip({true, true});
+        gameObject->getComponent<SpriteComponent>()->setSprite(lastSprite);
     }
 }

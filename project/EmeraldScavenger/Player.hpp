@@ -27,6 +27,7 @@ class Player : public Component, public b2RayCastCallback {
     float maximumVelocity;
     int spriteIndex = 0;
     float distance = 0.0f;
+    float posY = 0.0f;
     bool isGrounded = false;
 
     float radius;

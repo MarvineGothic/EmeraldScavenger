@@ -26,9 +26,14 @@ auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 
 int EmeraldGame::currentLevel = 0;
 int EmeraldGame::nextLevel = 1;
+vec2 EmeraldGame::currentStartPosition = vec2{ NULL, NULL };
+vec2 EmeraldGame::nextStartPosition = vec2{ NULL, NULL };
 const vec2 EmeraldGame::windowSize(800, 600);
 const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
+bool EmeraldGame::introCleared = false, EmeraldGame::physCleared = false,
+	EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false,
+	EmeraldGame::bonusCleared = false;
 
 EmeraldGame::EmeraldGame()
         : debugDraw(physicsScale) {
@@ -91,6 +96,10 @@ void EmeraldGame::initAssets() {
             .withFile("ui.png")
             .withFilterSampling(false)
             .build());
+    platformerArtAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
+		        .withFile("platformer-art-deluxe.png")
+		        .withFilterSampling(false)
+		        .build());
     level = Level::createDefaultLevel(this);
 
     // init sprites
@@ -174,6 +183,28 @@ void EmeraldGame::initPlayer() {
     camera->setFollowObject(player, {windowSize * 0.5f});
 }
 
+void EmeraldGame::completedLevel(int level) {
+	switch (level) {
+	case 0: 
+		introCleared = true;
+		break;
+	case 2: 
+		gravCleared = true;
+		break;
+	case 3: 
+		physCleared = true;
+		break;
+	case 4: 
+		procCleared = true;
+		break;
+	case 8:
+		bonusCleared = true;
+		break;
+	default: 
+		break;
+	}
+}
+
 // ============================================ GAME LOOP FUNCTIONS ====================================================
 void EmeraldGame::onKey(SDL_Event &event) {
     if (gameState != GameState::Pause)
@@ -233,9 +264,10 @@ void EmeraldGame::onKey(SDL_Event &event) {
                     if (emeraldCounter != 0)
                         audioManager->playMusic("finish.mp3", 4, 0);
                     gameState = GameState::NextLevel;
+                    completedLevel(currentLevel);
+				            currentStartPosition = nextStartPosition;
                     currentLevel = nextLevel;
                     initGame();
-                    // increase level counter:
                     emeraldCounter = 0;
                 }
                 break;
@@ -278,6 +310,35 @@ void EmeraldGame::update(float time) {
             gameState = GameState::GameOver;
             audioManager->playSFX("gameOver.mp3");
         }
+        // ==========================    CHANGES GRAVITY    =============================
+        // ========================== by: Eimantas Urbutis  =============================
+        if (currentLevel == 2) {
+            float gravity = - 9.8;
+            if (player->position.x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 && player->position.y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                gravity = (300 / sqrt(player->position.y));
+                world = EmeraldGame::gameInstance->world;
+                world->SetGravity(b2Vec2(0.0f, gravity));
+                printf("Current grav: %f\n", world->GetGravity().y);
+            } else {
+                printf("Current player position: %f\n", player->position.y);
+                gravity = (-150 / sqrt(player->position.y));
+                world = EmeraldGame::gameInstance->world;
+                world->SetGravity(b2Vec2(0.0f, gravity));
+                printf("Current gravity: %f\n", world->GetGravity().y);
+            }
+            for (auto &go : gameObjectsList) {
+                if (go->getPosition().x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 && go->position.y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                    if (go->getComponent<SpriteComponent>()) {
+                        if (go->name != "Player" && go->name != "Enemy" && go->getPosition().y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                            auto currentSprite = go->getComponent<SpriteComponent>()->getSprite();
+                            currentSprite.setFlip({false, true});
+                            go->getComponent<SpriteComponent>()->setSprite(currentSprite);
+                        }
+                    }
+                }
+            }
+        }
+	}
     } else if (gameState == GameState::NextLevel) {
         // animate a next level screen for some time:
         nextLevelDelta += time;
@@ -294,9 +355,6 @@ void EmeraldGame::update(float time) {
         livesCounter = 5;
         emeraldCounter = 0;
     }
-
-
-    // ==============================================================================
 }
 
 void EmeraldGame::render() {

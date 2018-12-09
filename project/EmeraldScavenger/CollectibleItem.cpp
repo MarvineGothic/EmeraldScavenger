@@ -35,7 +35,6 @@ void CollectibleItem::initCollectible(vec2 pos, string name) {
                                                 pos * Level::tileSize / physicsScale,
                                                 1);
     }
-
     gameObject->setPosition(pos * Level::tileSize);
     collectiblePhysicsComponent->setSensor(true);
 }
