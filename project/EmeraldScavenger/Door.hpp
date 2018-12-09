@@ -24,8 +24,10 @@ public:
     explicit Door(GameObject *gameObject);
 
     bool isExit = false;
-	int level;
-	vec2 nextLevelStartPosition;
+
+	  int level;
+    
+	  vec2 nextLevelStartPosition;
 
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> physicsComponent;

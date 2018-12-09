@@ -6,7 +6,7 @@ file(GLOB EmeraldScavenger
         )
 
 # Compile cpp files
-add_executable(EmeraldScavenger ${EmeraldScavenger} Enemy.hpp Door.cpp Door.hpp CollectibleItem.cpp CollectibleItem.hpp Entity.cpp Entity.hpp)
+add_executable(EmeraldScavenger ${EmeraldScavenger} Enemy.hpp Door.cpp Door.hpp CollectibleItem.cpp CollectibleItem.hpp Entity.cpp Entity.hpp AssetManager.cpp AssetManager.hpp AudioManager.cpp AudioManager.hpp)
 target_link_libraries(EmeraldScavenger ${all_libs})
 
 # copy files to dest
@@ -22,6 +22,19 @@ file(COPY
         assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png
         assets/gameSprites.json assets/gameSprites.png
         assets/ui.json assets/ui.png
+        assets/sounds/bgmusic.mp3
+        assets/sounds/finish.mp3
+        assets/sounds/emeraldPickup.wav
+        assets/sounds/lavaBurn.wav
+        assets/sounds/menuBeep.wav
+        assets/sounds/rockSlide.wav
+        assets/sounds/gameOver.mp3
+        assets/sounds/lostLife.wav
+        assets/sounds/doorOpen.flac
+        assets/sounds/lifeUp.wav
+        assets/sounds/glassbell.wav
+        assets/sounds/jump.wav
+        assets/sounds/inPit.wav
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
 file(COPY
 	assets/fence_background.png
@@ -35,6 +48,20 @@ file(COPY
         assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png
         assets/gameSprites.json assets/gameSprites.png
         assets/ui.json assets/ui.png
+        assets/sounds/bgmusic.mp3
+        assets/sounds/finish.mp3
+        assets/sounds/emeraldPickup.wav
+        assets/sounds/lavaBurn.wav
+        assets/sounds/menuBeep.wav
+        assets/sounds/rockSlide.wav
+        assets/sounds/gameOver.mp3
+        assets/sounds/gameOver.mp3
+        assets/sounds/lostLife.wav
+        assets/sounds/doorOpen.flac
+        assets/sounds/lifeUp.wav
+        assets/sounds/glassbell.wav
+        assets/sounds/jump.wav
+        assets/sounds/inPit.wav
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 
 IF (WIN32)
