@@ -33,6 +33,7 @@ public:
         Dragon,
         AngryBird,
 		Boulder,
+        SpikeMonster,
     };
 
     void updateSprite(float deltaTime);

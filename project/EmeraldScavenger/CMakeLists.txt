@@ -11,6 +11,8 @@ target_link_libraries(EmeraldScavenger ${all_libs})
 
 # copy files to dest
 file(COPY
+	assets/fence_background.png
+	assets/gravity_background.png
         assets/background.png
         assets/start.png
         assets/fireSprites.json assets/fireSprites.png
@@ -22,6 +24,8 @@ file(COPY
         assets/ui.json assets/ui.png
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
 file(COPY
+	assets/fence_background.png
+	assets/gravity_background.png
         assets/background.png
         assets/start.png
         assets/fireSprites.json assets/fireSprites.png

@@ -280,13 +280,12 @@ void Level::level_hub() {
 }
 
 void Level::level_grav() {
-
-    game->background.initDynamicBackground("background.png");
-
+    game->background.initDynamicBackground("gravity_background.png");
+    
     int width = 40;
     int height = 100;
 
-	emeraldsNeeded = 3;
+	emeraldsNeeded = 4;
 
 	startPosition = EmeraldGame::currentStartPosition;
 	if (startPosition == vec2{ NULL , NULL }) {
@@ -301,27 +300,74 @@ void Level::level_grav() {
     //end wall
     addWall(width, 0, brick, height);
     //Middle wall
-    addWall(static_cast<int>(glm::floor(width / 2)), 15, brick, height - 30);
-
+    addWall(static_cast<int>(glm::floor(width / 2)), 15, brick, height - 20);
+    //Right bottom wall
+    addPlatform(glm::floor(width / 2), 15, ground, 9, false);
+    addPlatform(glm::floor(width) - 9, 15, ground, 9, false);
     // ceil
-    addPlatform(0, height, ground, width, false);
+    addPlatform(0, height-1, ground, width, false);
     // floor
     addPlatform(0, 0, ground, width, false);
-
+    
+    // enemies
+    addEnemy(vec2(glm::floor(width / 2) - 3, 56.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(glm::floor(width / 2) - 1, 90.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(glm::floor(width / 2) + 4, 90.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(glm::floor(width / 2) - 3, 25.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(glm::floor(width / 2) - 2, 50.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(glm::floor(width / 2) - 4, 75.0f), Enemy::EnemyType::Dragon);
+  
 	//Elevator 1
 	auto movingPlatform = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
 	auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
 	movingPlatformComponent->setMovementEnd({ glm::floor(width / 2) - 5, 2 });
-	movingPlatformComponent->setMovementStart({ glm::floor(width / 2) - 5, height - 10 });
-	movingPlatformComponent->setSpeed(10);
-
+	movingPlatformComponent->setMovementStart({ glm::floor(width / 2) - 5, 10 });
+	movingPlatformComponent->setSpeed(5);
+    
+    //Static Platforms
+    addPlatform(glm::floor(width / 2) - 17, 15, ground, 5, false);
+    addPlatform(glm::floor(width / 2) - 5, 22, ground, 5, false);
+    addPlatform(glm::floor(width / 2) - 18, 30, ground, 3, false);
+    addPlatform(glm::floor(width / 2) - 3, 39, ground, 2, false);
+    addPlatform(glm::floor(width / 2) - 17, 49, ground, 3, false);
+    addPlatform(glm::floor(width / 2) - 4, 60, ground, 3, false);
+    addPlatform(glm::floor(width / 2) - 16, 72, ground, 3, false);
+    addPlatform(glm::floor(width / 2) - 5, 85, ground, 4, false);
+    addPlatform(glm::floor(width / 2) - 5, 95, ground, 4, false);
+    //Reverse gravity platforms
+    addPlatform(glm::floor(width / 2) + 5, 94, ground, 3, false);
+    //Elevator 2
+    auto movingPlatform2 = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
+    auto movingPlatformComponent2 = movingPlatform2->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent2->setMovementEnd({ glm::floor(width / 2) +8, 90 });
+    movingPlatformComponent2->setMovementStart({ glm::floor(width / 2) +10, 78 });
+    movingPlatformComponent2->setSpeed(5);
+    addPlatform(glm::floor(width / 2) + 15, 78, ground, 4, false);
+    //Elevator 3
+    auto movingPlatform3 = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
+    auto movingPlatformComponent3 = movingPlatform3->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent3->setMovementEnd({ glm::floor(width / 2) +9, 76 });
+    movingPlatformComponent3->setMovementStart({ glm::floor(width / 2) +2, 58 });
+    movingPlatformComponent3->setSpeed(5);
+    addPlatform(glm::floor(width / 2), 58, ground, 2, false);
+    //Elevator 4
+    auto movingPlatform4 = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
+    auto movingPlatformComponent4 = movingPlatform4->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent4->setMovementEnd({ glm::floor(width / 2) +4, 57 });
+    movingPlatformComponent4->setMovementStart({ glm::floor(width / 2) +15, 30 });
+    movingPlatformComponent4->setSpeed(5);
+    addPlatform(glm::floor(width / 2) + 10, 25, ground, 5, false);
+    addPlatform(glm::floor(width / 2) + 5, 22, ground, 5, false);
+    addPlatform(glm::floor(width / 2) + 10, 18, ground, 5, false);
+    
 	addDoor(vec2{ startPosition.x , 2.4f }, false, true, 1, vec2{ 2.5f, (50 - 10) + 2.4f }); //Top-left hub world door
 
 	vector<shared_ptr<CollectibleItem>> temp;
 	if (collectibles.empty()) {
-		collectibles.emplace_back(addCollectible(vec2(glm::floor(width / 2) + 4, 15.0f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 3, 15.0f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(glm::floor(((glm::floor(width / 2) + 4) + (width - 3)) / 2), 15.0f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(glm::floor(width / 2) + 11, 23), "Emerald"));
+		collectibles.emplace_back(addCollectible(vec2(glm::floor(width / 2) - 3, 97), "Emerald"));
+		collectibles.emplace_back(addCollectible(vec2(width - 3, 14.0f), "Emerald"));
+		collectibles.emplace_back(addCollectible(vec2(glm::floor(((glm::floor(width / 2) + 4) + (width - 3)) / 2), 14.0f), "Emerald"));
 	}
 	else {
 		for (auto &cItem : collectibles) {
@@ -943,9 +989,14 @@ shared_ptr<PlatformComponent> Level::addWall(int x, int y, Sprite sprite, int le
 
 shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
     auto gameObject = game->createGameObject();
-    gameObject->name = "Enemy";
     auto res = gameObject->addComponent<Enemy>();
-    res->initEnemy(EmeraldGame::gameInstance->enemiesAtlas, pos, enemyType);
+    if (enemyType==Enemy::EnemyType::Boulder) {
+        gameObject->name = "Boulder";
+        res->initEnemy(EmeraldGame::gameInstance->obstaclesAtlas, pos, enemyType);
+    } else {
+        gameObject->name = "Enemy";
+        res->initEnemy(EmeraldGame::gameInstance->enemiesAtlas, pos, enemyType);
+    }
     return res;
 }
 

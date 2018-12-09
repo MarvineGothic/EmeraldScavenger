@@ -297,6 +297,34 @@ void EmeraldGame::update(float time) {
 			currentLevel = 0;
 			gameState = GameState::GameOver;
 		}
+        // ==========================    CHANGES GRAVITY    =============================
+        // ========================== by: Eimantas Urbutis  =============================
+        if (currentLevel == 2) {
+            float gravity = - 9.8;
+            if (player->position.x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 && player->position.y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                gravity = (300 / sqrt(player->position.y));
+                world = EmeraldGame::gameInstance->world;
+                world->SetGravity(b2Vec2(0.0f, gravity));
+                printf("Current grav: %f\n", world->GetGravity().y);
+            } else {
+                printf("Current player position: %f\n", player->position.y);
+                gravity = (-150 / sqrt(player->position.y));
+                world = EmeraldGame::gameInstance->world;
+                world->SetGravity(b2Vec2(0.0f, gravity));
+                printf("Current gravity: %f\n", world->GetGravity().y);
+            }
+            for (auto &go : gameObjectsList) {
+                if (go->getPosition().x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 && go->position.y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                    if (go->getComponent<SpriteComponent>()) {
+                        if (go->name != "Player" && go->name != "Enemy" && go->getPosition().y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                            auto currentSprite = go->getComponent<SpriteComponent>()->getSprite();
+                            currentSprite.setFlip({false, true});
+                            go->getComponent<SpriteComponent>()->setSprite(currentSprite);
+                        }
+                    }
+                }
+            }
+        }
 	}
 	else if (gameState == GameState::NextLevel) {
 		// animate a next level screen for some time:
@@ -315,6 +343,7 @@ void EmeraldGame::update(float time) {
 		livesCounter = 5;
 		emeraldCounter = 0;
 	}
+    
 	// ==============================================================================
 }
 

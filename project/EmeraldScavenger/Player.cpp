@@ -98,7 +98,12 @@ void Player::update(float deltaTime) {
 
 void Player::jump() {
     isJump = false;
-    characterPhysics->addImpulse({0, 0.4f});
+    auto world = EmeraldGame::gameInstance->world;
+    if (world->GetGravity().y < 0) {
+        characterPhysics->addImpulse({0, 0.4f});
+    } else {
+        characterPhysics->addImpulse({0, -0.4f});
+    }
 }
 
 void Player::onCollisionStart(PhysicsComponent *comp) {
@@ -187,7 +192,12 @@ void Player::updateSprite(float deltaTime) {
     auto velocity = characterPhysics->getLinearVelocity();
     // ================================ PLAYER SPRITES ANIMATION ==============================
     // =========================== by: Sergiy Isakov 05.11.18 05:07 ======================
-
+    auto world = EmeraldGame::gameInstance->world;
+    if (world->GetGravity().y > 5 || velocity.y * deltaTime == posY) {
+        isGrounded= true;
+    }
+    posY = velocity.y * deltaTime;
+        
     if (isGrounded) {
         distance += velocity.x * deltaTime;
         if (velocity.x == 0.0f) {
@@ -220,4 +230,11 @@ void Player::updateSprite(float deltaTime) {
     }
 
     spriteComponent->setSprite(lastSprite);
+    // Flips sprite for gravity room
+    if (world->GetGravity().y > 0) {
+        lastSprite.setFlip({false, true});
+        if (facingLeft)
+            lastSprite.setFlip({true, true});
+        spriteComponent->setSprite(lastSprite);
+    }
 }
