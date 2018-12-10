@@ -10,7 +10,8 @@
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 static const std::string platform="Windows";
 #else
-static const std::string platform="Mac";
+static const std::string platform="Windows";
+//static const std::string platform="Mac";
 #endif
 
 SideScrollingCamera::SideScrollingCamera(GameObject *gameObject)

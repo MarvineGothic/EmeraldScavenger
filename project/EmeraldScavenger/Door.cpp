@@ -53,8 +53,6 @@ void Door::initDoor(vec2 pos, bool isOpen, bool isExit, int level, vec2 nextLeve
 
 	this->level = level;
 	this->nextLevelStartPosition = nextLevelStartPosition;
-=======
-    //this->level = level;
 
     gameObject->setPosition(vec2{pos.x, pos.y} * Level::tileSize);
 }

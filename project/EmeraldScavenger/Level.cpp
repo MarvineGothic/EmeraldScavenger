@@ -138,9 +138,6 @@ void Level::level_intro() {
 
 
 	addDoor(finishPosition, false, true, 1, vec2{6.5, 2.5}); //Hub-world bottom-left door
-=======
-    //addDoor(finishPosition, Level::doorIsOpen, true, 1);
-
 
     addWall(width, 0, brick, height); //End wall
 
@@ -200,16 +197,11 @@ void Level::level_hub() {
     int width = 50;
     int height = 50;
 
-
 	startPosition = EmeraldGame::currentStartPosition;
 	if (startPosition == vec2{ NULL , NULL }) {
 		startPosition = vec2{ 6.5, 2.5 };
 	}
 	emeraldsNeeded = 0;
-=======
-    //startPosition = vec2{6.5, 2.5};
-    //emeraldsNeeded = 0;
-
 
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
@@ -371,7 +363,7 @@ void Level::level_grav() {
     movingPlatformComponent4->setMovementEnd({ glm::floor(width / 2) +4, 57 });
     movingPlatformComponent4->setMovementStart({ glm::floor(width / 2) +15, 30 });
     movingPlatformComponent4->setSpeed(5);
-    addPlatform(glm::floor(width / 2) + 10, 25, ground, 5, false);
+    addPlatform(glm::floor(width / 2) + 10, 26, ground, 5, false);
     addPlatform(glm::floor(width / 2) + 5, 22, ground, 5, false);
     addPlatform(glm::floor(width / 2) + 10, 18, ground, 5, false);
     

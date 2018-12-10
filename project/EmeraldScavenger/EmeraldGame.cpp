@@ -338,7 +338,6 @@ void EmeraldGame::update(float time) {
                 }
             }
         }
-	}
     } else if (gameState == GameState::NextLevel) {
         // animate a next level screen for some time:
         nextLevelDelta += time;

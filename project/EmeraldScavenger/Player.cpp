@@ -139,8 +139,6 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
 
 		EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
 		EmeraldGame::nextStartPosition = obj->getComponent<Door>()->nextLevelStartPosition;
-=======
-        //EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
 
     }
 }
@@ -206,7 +204,7 @@ void Player::updateSprite(float deltaTime) {
         isGrounded= true;
     }
     posY = velocity.y * deltaTime;
-        
+    
     if (isGrounded) {
         distance += velocity.x * deltaTime;
         if (velocity.x == 0.0f) {
