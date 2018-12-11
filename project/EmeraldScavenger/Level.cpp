@@ -1,5 +1,7 @@
 #include <utility>
 
+#include <utility>
+
 //
 // Created by Morten Nobel-Jørgensen on 11/3/17.
 //
@@ -66,24 +68,25 @@ void Level::makeLevel(int level) {
 }
 
 void Level::level_intro() {
+    doorIsOpen = false;
     game->background.initDynamicBackground("background.png");
     EmeraldGame::gameInstance->audioManager->playMusic("bgMusic.mp3", 4);
 
     int width = 200;
     int height = 30;
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL}) {
-		startPosition = vec2{ 1.5, 1.5 };
-		//startPosition = finishPosition;
-	}
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{1.5, 1.5};
+        //startPosition = finishPosition;
+    }
     finishPosition = vec2{width - 2.5f, 2.4f};
     emeraldsNeeded = 1;
 
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
 
-	//addFlag(vec2{ 5,5 }, false);
+    //addFlag(vec2{ 5,5 }, false);
 
     // start wall
     addWall(0, 0, brick, height);
@@ -102,11 +105,11 @@ void Level::level_intro() {
     addPlatform(36, 5, ground, 9, false);
     addPlatform(36, 7, ground, 1, false);
     addWall(45, 0, brick, 12);
-	addPlatform(45, 12, ground, 5, false);
-	addWall(49, 0, brick, 12);
-	addPlatform(50, 5, ground, 9, false);
-	addPlatform(50, 7, ground, 1, false);
-	addWall(59, 0, brick, 12);
+    addPlatform(45, 12, ground, 5, false);
+    addWall(49, 0, brick, 12);
+    addPlatform(50, 5, ground, 9, false);
+    addPlatform(50, 7, ground, 1, false);
+    addWall(59, 0, brick, 12);
     addPlatform(59, 12, ground, 5, false);
     addWall(64, 12, brick, 5);
     addPlatform(64, 17, ground, 17, false);
@@ -137,7 +140,7 @@ void Level::level_intro() {
     //addCollectible({ 175, 2 }, "diamond");
 
 
-	addDoor(finishPosition, false, true, 1, vec2{6.5, 2.5}); //Hub-world bottom-left door
+    addDoor(finishPosition, false, true, 1, vec2{6.5, 2.5}); //Hub-world bottom-left door
 
     addWall(width, 0, brick, height); //End wall
 
@@ -163,11 +166,11 @@ void Level::level_intro() {
     }
 
     // add rock
-    addRock(vec2{2.5, 1.5}, EmeraldGame::gameInstance->enemiesAtlas->get("frame-1_zombie_idle.png"),
+    addRock(vec2{5.5, 5.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("meteorGrey_big1.png"),
             EmeraldGame::scale * 2.5f,
             0.2f, 0.5f, 1);
     // add Brick
-    addBrick(vec2{5, 2.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_stoneGrassTop.png"),
+    addBrick(vec2{5, 2.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_wood.png"),
              EmeraldGame::scale * 2.5f,
              0.2f, 1, 1);
 
@@ -191,17 +194,18 @@ void Level::level_intro() {
 
 //todo: design levels:
 void Level::level_hub() {
+    doorIsOpen = false;
     EmeraldGame::gameInstance->audioManager->playMusic("gravitySoundtrack.mp3", 4);
     game->background.initDynamicBackground("background.png");
 
     int width = 50;
     int height = 50;
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ 6.5, 2.5 };
-	}
-	emeraldsNeeded = 0;
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{6.5, 2.5};
+    }
+    emeraldsNeeded = 0;
 
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
@@ -216,26 +220,26 @@ void Level::level_hub() {
     addPlatform(0, height, ground, width, false);
 
 
-	addPlatform(15, height - 10, ground, width - 29, false);
+    addPlatform(15, height - 10, ground, width - 29, false);
 
-	addPlatform(1, height - 10, ground, 5, false);
-	addPlatform(width - 5, height - 10, ground, 5, false);
-	addWall(0, height - 10, brick, 10);
-	addWall(width, height - 10, brick, 10);
+    addPlatform(1, height - 10, ground, 5, false);
+    addPlatform(width - 5, height - 10, ground, 5, false);
+    addWall(0, height - 10, brick, 10);
+    addWall(width, height - 10, brick, 10);
 
-	addDoor(vec2{ 3.5f, 2.4f }, true, false, 1, vec2{NULL, NULL});
-	addDoor(vec2{ 7.5f, 2.4f }, true, true, 0, vec2{ 200 - 2.5f, 2.4f }); //intro level's finishPosition
-	addFlag(vec2{ 7.6f, 4.75f }, EmeraldGame::introCleared);
+    addDoor(vec2{3.5f, 2.4f}, true, false, 1, vec2{NULL, NULL});
+    addDoor(vec2{7.5f, 2.4f}, true, true, 0, vec2{200 - 2.5f, 2.4f}); //intro level's finishPosition
+    addFlag(vec2{7.6f, 4.75f}, EmeraldGame::introCleared);
 
-	addDoor(vec2{ width - 2.5f, 2.4f }, true, false, 1, vec2{NULL, NULL});
-	addDoor(vec2{ width - 6.5f, 2.4f }, true, true, 4, vec2{2.5, 2.5}); //procedural level's startPosition
-	addFlag(vec2{ width - 6.4f, 4.75f }, EmeraldGame::procCleared);
+    addDoor(vec2{width - 2.5f, 2.4f}, true, false, 1, vec2{NULL, NULL});
+    addDoor(vec2{width - 6.5f, 2.4f}, true, true, 4, vec2{2.5, 2.5}); //procedural level's startPosition
+    addFlag(vec2{width - 6.4f, 4.75f}, EmeraldGame::procCleared);
 
-	addDoor(vec2{ 2.5f, (height - 10) + 2.4f }, true, true, 2, vec2{40-1.5, 2.5}); //gravity level's startPosition;
-	addFlag(vec2{ 2.6f, (height - 10) + 4.75f }, EmeraldGame::gravCleared);
+    addDoor(vec2{2.5f, (height - 10) + 2.4f}, true, true, 2, vec2{40 - 1.5, 2.5}); //gravity level's startPosition;
+    addFlag(vec2{2.6f, (height - 10) + 4.75f}, EmeraldGame::gravCleared);
 
-	addDoor(vec2{ width - 1.5f, (height - 10) + 2.4f }, true, true, 3, vec2{2.5, 2.5}); //physics level's startPosition
-	addFlag(vec2{ width - 1.4f, (height - 10) + 4.75f }, EmeraldGame::physCleared);
+    addDoor(vec2{width - 1.5f, (height - 10) + 2.4f}, true, true, 3, vec2{2.5, 2.5}); //physics level's startPosition
+    addFlag(vec2{width - 1.4f, (height - 10) + 4.75f}, EmeraldGame::physCleared);
 
     //Elevator 1
     auto movingPlatform = addPlatform(6, 5, ground, 5, true);
@@ -252,53 +256,54 @@ void Level::level_hub() {
     movingPlatformComponent->setMovementStart({width - 10, height - 10});
     movingPlatformComponent->setSpeed(5);
 
-	/*
-	addFlag(vec2{ width / 2 - 3, 5 }, EmeraldGame::introCleared);
-	addFlag(vec2{ width / 2 - 1, 5 }, EmeraldGame::gravCleared);
-	addFlag(vec2{ width / 2 + 1, 5 }, EmeraldGame::physCleared);
-	addFlag(vec2{ width / 2 + 3, 5 }, EmeraldGame::procCleared);
-	*/
-	
-	addFlag(vec2{ width/2 - 3, 4.8 }, EmeraldGame::introCleared);
-	addFlag(vec2{ width/2 - 1, 4.8 }, EmeraldGame::gravCleared);
-	addFlag(vec2{ width / 2 + 1, 4.8 }, EmeraldGame::physCleared);
-	addFlag(vec2{ width / 2 + 3, 4.8 }, EmeraldGame::procCleared);
+    /*
+    addFlag(vec2{ width / 2 - 3, 5 }, EmeraldGame::introCleared);
+    addFlag(vec2{ width / 2 - 1, 5 }, EmeraldGame::gravCleared);
+    addFlag(vec2{ width / 2 + 1, 5 }, EmeraldGame::physCleared);
+    addFlag(vec2{ width / 2 + 3, 5 }, EmeraldGame::procCleared);
+    */
 
-	bool finalDoorIsOpen = EmeraldGame::introCleared && EmeraldGame::gravCleared && EmeraldGame::physCleared && EmeraldGame::procCleared;
-	addDoor(vec2{ width / 2 , 2.4f }, finalDoorIsOpen, finalDoorIsOpen, 6, vec2{ 2.5 , 47.5 });
+    addFlag(vec2{width / 2 - 3, 4.8}, EmeraldGame::introCleared);
+    addFlag(vec2{width / 2 - 1, 4.8}, EmeraldGame::gravCleared);
+    addFlag(vec2{width / 2 + 1, 4.8}, EmeraldGame::physCleared);
+    addFlag(vec2{width / 2 + 3, 4.8}, EmeraldGame::procCleared);
 
-	if (EmeraldGame::bonusCleared) {
-		vector<shared_ptr<CollectibleItem>> temp;
-		if (collectibles.empty()) {
-			collectibles.emplace_back(addCollectible(vec2(width/2, height - 5), "Emerald"));
-		}
-		else {
-			for (auto &cItem : collectibles) {
-				temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
-			}
-			collectibles.clear();
-			for (auto &cItem : temp) {
-				collectibles.emplace_back(cItem);
-			}
-			temp.clear();
-		}
-	}
+    bool finalDoorIsOpen = EmeraldGame::introCleared && EmeraldGame::gravCleared && EmeraldGame::physCleared &&
+                           EmeraldGame::procCleared;
+    addDoor(vec2{width / 2, 2.4f}, finalDoorIsOpen, finalDoorIsOpen, 6, vec2{2.5, 47.5});
+
+    if (EmeraldGame::bonusCleared) {
+        vector<shared_ptr<CollectibleItem>> temp;
+        if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
+            collectibles.emplace_back(addCollectible(vec2(width / 2, height - 5), "Emerald"));
+        } else {
+            for (auto &cItem : collectibles) {
+                temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+            }
+            collectibles.clear();
+            for (auto &cItem : temp) {
+                collectibles.emplace_back(cItem);
+            }
+            temp.clear();
+        }
+    }
 }
 
 void Level::level_grav() {
+    doorIsOpen = false;
     EmeraldGame::gameInstance->audioManager->playMusic("gravitySoundtrack.mp3", 4);
     game->background.initDynamicBackground("gravity_background.png");
-    
+
     int width = 40;
     int height = 100;
 
 
-	emeraldsNeeded = 4;
+    emeraldsNeeded = 4;
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ width - 1.5, 2.5 };
-	}
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{width - 1.5, 2.5};
+    }
 
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
@@ -308,90 +313,91 @@ void Level::level_grav() {
     //end wall
     addWall(width, 0, brick, height);
     //Middle wall
-    addWall(static_cast<int>(glm::floor(width / 2)), 15, brick, height - 20);
+    addWall(static_cast<int>(floor(width / 2)), 15, brick, height - 20);
     //Right bottom wall
-    addPlatform(glm::floor(width / 2), 15, ground, 9, false);
-    addPlatform(glm::floor(width) - 9, 15, ground, 9, false);
+    addPlatform(static_cast<int>(floor(width / 2)), 15, ground, 9, false);
+    addPlatform(static_cast<int>(floor(width) - 9), 15, ground, 9, false);
     // ceil
-    addPlatform(0, height-1, ground, width, false);
+    addPlatform(0, height - 1, ground, width, false);
     // floor
     addPlatform(0, 0, ground, width, false);
-    
-    // enemies
-    addEnemy(vec2(glm::floor(width / 2) - 3, 56.0f), Enemy::EnemyType::Dragon);
-    addEnemy(vec2(glm::floor(width / 2) - 1, 90.0f), Enemy::EnemyType::Dragon);
-    addEnemy(vec2(glm::floor(width / 2) + 4, 90.0f), Enemy::EnemyType::Dragon);
-    addEnemy(vec2(glm::floor(width / 2) - 3, 25.0f), Enemy::EnemyType::Dragon);
-    addEnemy(vec2(glm::floor(width / 2) - 2, 50.0f), Enemy::EnemyType::Dragon);
-    addEnemy(vec2(glm::floor(width / 2) - 4, 75.0f), Enemy::EnemyType::Dragon);
-  
-	//Elevator 1
-	auto movingPlatform = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
-	auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-	movingPlatformComponent->setMovementEnd({ glm::floor(width / 2) - 5, 2 });
-	movingPlatformComponent->setMovementStart({ glm::floor(width / 2) - 5, 10 });
-	movingPlatformComponent->setSpeed(5);
-    
-    //Static Platforms
-    addPlatform(glm::floor(width / 2) - 17, 15, ground, 5, false);
-    addPlatform(glm::floor(width / 2) - 5, 22, ground, 5, false);
-    addPlatform(glm::floor(width / 2) - 18, 30, ground, 3, false);
-    addPlatform(glm::floor(width / 2) - 3, 39, ground, 2, false);
-    addPlatform(glm::floor(width / 2) - 17, 49, ground, 3, false);
-    addPlatform(glm::floor(width / 2) - 4, 60, ground, 3, false);
-    addPlatform(glm::floor(width / 2) - 16, 72, ground, 3, false);
-    addPlatform(glm::floor(width / 2) - 5, 85, ground, 4, false);
-    addPlatform(glm::floor(width / 2) - 5, 95, ground, 4, false);
-    //Reverse gravity platforms
-    addPlatform(glm::floor(width / 2) + 5, 94, ground, 3, false);
-    //Elevator 2
-    auto movingPlatform2 = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
-    auto movingPlatformComponent2 = movingPlatform2->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent2->setMovementEnd({ glm::floor(width / 2) +8, 90 });
-    movingPlatformComponent2->setMovementStart({ glm::floor(width / 2) +10, 78 });
-    movingPlatformComponent2->setSpeed(5);
-    addPlatform(glm::floor(width / 2) + 15, 78, ground, 4, false);
-    //Elevator 3
-    auto movingPlatform3 = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
-    auto movingPlatformComponent3 = movingPlatform3->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent3->setMovementEnd({ glm::floor(width / 2) +9, 76 });
-    movingPlatformComponent3->setMovementStart({ glm::floor(width / 2) +2, 58 });
-    movingPlatformComponent3->setSpeed(5);
-    addPlatform(glm::floor(width / 2), 58, ground, 2, false);
-    //Elevator 4
-    auto movingPlatform4 = addPlatform(static_cast<int>(glm::floor(width / 2) - 5), 2, ground, 5, true);
-    auto movingPlatformComponent4 = movingPlatform4->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent4->setMovementEnd({ glm::floor(width / 2) +4, 57 });
-    movingPlatformComponent4->setMovementStart({ glm::floor(width / 2) +15, 30 });
-    movingPlatformComponent4->setSpeed(5);
-    addPlatform(glm::floor(width / 2) + 10, 26, ground, 5, false);
-    addPlatform(glm::floor(width / 2) + 5, 22, ground, 5, false);
-    addPlatform(glm::floor(width / 2) + 10, 18, ground, 5, false);
-    
-	addDoor(vec2{ startPosition.x , 2.4f }, false, true, 1, vec2{ 2.5f, (50 - 10) + 2.4f }); //Top-left hub world door
 
-	vector<shared_ptr<CollectibleItem>> temp;
-	if (collectibles.empty()) {
-        collectibles.emplace_back(addCollectible(vec2(glm::floor(width / 2) + 11, 23), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(glm::floor(width / 2) - 3, 97), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 3, 14.0f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(glm::floor(((glm::floor(width / 2) + 4) + (width - 3)) / 2), 14.0f), "Emerald"));
-	}
-	else {
-		for (auto &cItem : collectibles) {
-			temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
-		}
-		collectibles.clear();
-		for (auto &cItem : temp) {
-			collectibles.emplace_back(cItem);
-		}
-		temp.clear();
-	}
+    // enemies
+    addEnemy(vec2(floor(width / 2) - 3, 56.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(floor(width / 2) - 1, 90.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(floor(width / 2) + 4, 90.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(floor(width / 2) - 3, 25.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(floor(width / 2) - 2, 50.0f), Enemy::EnemyType::Dragon);
+    addEnemy(vec2(floor(width / 2) - 4, 75.0f), Enemy::EnemyType::Dragon);
+
+    //Elevator 1
+    auto movingPlatform = addPlatform(static_cast<int>(floor(width / 2) - 5), 2, ground, 5, true);
+    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent->setMovementEnd({floor(width / 2) - 5, 2});
+    movingPlatformComponent->setMovementStart({floor(width / 2) - 5, 10});
+    movingPlatformComponent->setSpeed(5);
+
+    //Static Platforms
+    addPlatform(floor(width / 2) - 17, 15, ground, 5, false);
+    addPlatform(floor(width / 2) - 5, 22, ground, 5, false);
+    addPlatform(floor(width / 2) - 18, 30, ground, 3, false);
+    addPlatform(floor(width / 2) - 3, 39, ground, 2, false);
+    addPlatform(floor(width / 2) - 17, 49, ground, 3, false);
+    addPlatform(floor(width / 2) - 4, 60, ground, 3, false);
+    addPlatform(floor(width / 2) - 16, 72, ground, 3, false);
+    addPlatform(floor(width / 2) - 5, 85, ground, 4, false);
+    addPlatform(floor(width / 2) - 5, 95, ground, 4, false);
+    //Reverse gravity platforms
+    addPlatform(floor(width / 2) + 5, 94, ground, 3, false);
+    //Elevator 2
+    auto movingPlatform2 = addPlatform(static_cast<int>(floor(width / 2) - 5), 2, ground, 5, true);
+    auto movingPlatformComponent2 = movingPlatform2->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent2->setMovementEnd({floor(width / 2) + 8, 90});
+    movingPlatformComponent2->setMovementStart({floor(width / 2) + 10, 78});
+    movingPlatformComponent2->setSpeed(5);
+    addPlatform(floor(width / 2) + 15, 78, ground, 4, false);
+    //Elevator 3
+    auto movingPlatform3 = addPlatform(static_cast<int>(floor(width / 2) - 5), 2, ground, 5, true);
+    auto movingPlatformComponent3 = movingPlatform3->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent3->setMovementEnd({floor(width / 2) + 9, 76});
+    movingPlatformComponent3->setMovementStart({floor(width / 2) + 2, 58});
+    movingPlatformComponent3->setSpeed(5);
+    addPlatform(floor(width / 2), 58, ground, 2, false);
+    //Elevator 4
+    auto movingPlatform4 = addPlatform(static_cast<int>(floor(width / 2) - 5), 2, ground, 5, true);
+    auto movingPlatformComponent4 = movingPlatform4->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent4->setMovementEnd({floor(width / 2) + 4, 57});
+    movingPlatformComponent4->setMovementStart({floor(width / 2) + 15, 30});
+    movingPlatformComponent4->setSpeed(5);
+    addPlatform(floor(width / 2) + 10, 26, ground, 5, false);
+    addPlatform(floor(width / 2) + 5, 22, ground, 5, false);
+    addPlatform(floor(width / 2) + 10, 18, ground, 5, false);
+
+    addDoor(vec2{startPosition.x, 2.4f}, false, true, 1, vec2{2.5f, (50 - 10) + 2.4f}); //Top-left hub world door
+
+    vector<shared_ptr<CollectibleItem>> temp;
+    if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
+        collectibles.emplace_back(addCollectible(vec2(floor(width / 2) + 11, 23), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(floor(width / 2) - 3, 97), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(floor(width / 2) - 5, 97), "Pie"));
+        collectibles.emplace_back(addCollectible(vec2(width - 3, 14.0f), "Emerald"));
+        collectibles.emplace_back(
+                addCollectible(vec2(floor(((floor(width / 2) + 4) + (width - 3)) / 2), 14.0f), "Emerald"));
+    } else {
+        for (auto &cItem : collectibles) {
+            temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+        }
+        collectibles.clear();
+        for (auto &cItem : temp) {
+            collectibles.emplace_back(cItem);
+        }
+        temp.clear();
+    }
 
 }
 
 void Level::level_phys() {
-
+    doorIsOpen = false;
     game->background.initDynamicBackground("background.png");
 
     emeraldsNeeded = 5;
@@ -399,13 +405,11 @@ void Level::level_phys() {
     int width = 70;
     int height = 70;
 
-
-	
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ 2.5, 2.5 }; //Real starting position
-		//startPosition = vec2{ 15, 61.5 }; //This one's just here for quicker testing
-	}
+    startPosition = EmeraldGame::currentStartPosition;
+    //if (startPosition == vec2{ NULL , NULL }) {
+    startPosition = vec2{3.5, 2.5}; //Real starting position
+    //startPosition = vec2{ 15, 61.5 }; //This one's just here for quicker testing
+//}
 
 
     vec2 levelMin = {width + width, height - 5};
@@ -425,62 +429,63 @@ void Level::level_phys() {
     // floor
     addPlatform(0, 0, ground, width, false);
 
-	addDoor(vec2{ startPosition.x , 2.4f }, false, true, 1, vec2{ 50 - 1.5f, (50 - 10) + 2.4f }); //Top-right hub-world door
+    addWall(1, 1, brick, 1);
+    addDoor(vec2{startPosition.x, 2.4f}, false, true, 1, vec2{50 - 1.5f, (50 - 10) + 2.4f}); //Top-right hub-world door
 
 
-	vector<shared_ptr<CollectibleItem>> temp;
-	if (collectibles.empty()) {
-		collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(3.5f, 11.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(36.5f, 40.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(40.0f, 58.0f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 4.5f, 68.5f), "Emerald"));
-	}
-	else {
-		for (auto &cItem : collectibles) {
-			temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
-		}
-		collectibles.clear();
-		for (auto &cItem : temp) {
-			collectibles.emplace_back(cItem);
-		}
-		temp.clear();
-	}
+    vector<shared_ptr<CollectibleItem>> temp;
+    if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
+        collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(3.5f, 11.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(36.5f, 40.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(40.0f, 58.0f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(38.0f, 58.0f), "Pie"));
+        collectibles.emplace_back(addCollectible(vec2(width - 4.5f, 68.5f), "Emerald"));
+    } else {
+        for (auto &cItem : collectibles) {
+            temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+        }
+        collectibles.clear();
+        for (auto &cItem : temp) {
+            collectibles.emplace_back(cItem);
+        }
+        temp.clear();
+    }
 
-	addPlatform(1, 10, ground, 5, false);
-	addPlatform(1, 30, ground, 40, false);
-	addWall(41, 30, brick, 9);
-	addWall(41, 45, brick, 15);
-	addPlatform(33, 38, ground, 8, false);
-	addPlatform(33, 45, ground, 8, false);
-	addWall(33, 39, brick, 6);
+    addPlatform(1, 10, ground, 5, false);
+    addPlatform(1, 30, ground, 40, false);
+    addWall(41, 30, brick, 9);
+    addWall(41, 45, brick, 15);
+    addPlatform(33, 38, ground, 8, false);
+    addPlatform(33, 45, ground, 8, false);
+    addWall(33, 39, brick, 6);
 
-	addWall(37.7, 46, brick, 2.5);
-	addBrick(vec2{ 39.5, 46 }, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_stoneGrassTop.png"),
-		EmeraldGame::scale *4.0f,
-		0.7f, 1, 1);
+    addWall(37, 46, brick, 2);
+    addBrick(vec2{39.5, 46}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_wood.png"),
+             EmeraldGame::scale * 4.0f,
+             0.7f, 1, 1);
 
-	addPlatform(20, 5, ground, 5, false);
-	addPlatform(25, 10, ground, width - 25, false);
+    addPlatform(20, 5, ground, 5, false);
+    addPlatform(25, 10, ground, width - 25, false);
 
-	addEnemy({ 30, 2 }, Enemy::EnemyType::Zombie);
-	addEnemy({ 35, 2 }, Enemy::EnemyType::Zombie);
-	addEnemy({ 40, 2 }, Enemy::EnemyType::Zombie);
-	addEnemy({ 45, 2 }, Enemy::EnemyType::Zombie);
-	addEnemy({ 50, 2 }, Enemy::EnemyType::Zombie);
-	addEnemy({ 55, 2 }, Enemy::EnemyType::Zombie);
-	addEnemy({ 60, 2 }, Enemy::EnemyType::Zombie);
+    addEnemy({30, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({35, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({40, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({45, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({50, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({55, 2}, Enemy::EnemyType::Zombie);
+    addEnemy({60, 2}, Enemy::EnemyType::Zombie);
 
 
-	//Elevator 1
-	auto movingPlatform = addPlatform(static_cast<int>(width - 12.5), 12, ground, 5, true);
-	auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-	movingPlatformComponent->setMovementStart({ width - 12.5, 12 });
-	movingPlatformComponent->setMovementEnd({ width - 12.5, 24});
-	movingPlatformComponent->setSpeed(2);
-	movingPlatform->getPhysicsComponent()->getFixture()->SetRestitution(0.2);
+    //Elevator 1
+    auto movingPlatform = addPlatform(static_cast<int>(width - 12.5), 12, ground, 5, true);
+    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent->setMovementStart({width - 12.5, 12});
+    movingPlatformComponent->setMovementEnd({width - 12.5, 24});
+    movingPlatformComponent->setSpeed(2);
+    movingPlatform->getPhysicsComponent()->getFixture()->SetRestitution(0.2);
 
-	//Elevator 2
+    //Elevator 2
 
     movingPlatform = addPlatform(static_cast<int>(width - 22.5), 42, ground, 5, true);
     movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
@@ -504,12 +509,12 @@ void Level::level_phys() {
     movingPlatformComponent->setSpeed(2);
 
 
-	addPlatform(15, 59, ground, 26, false);
-	addPlatform(11, 67, ground, width - 11, false);
-	addWall(15, 57, brick, 6);
-	addPlatform(11, 57, ground, 4, false);
+    addPlatform(15, 59, ground, 26, false);
+    addPlatform(11, 67, ground, width - 11, false);
+    addWall(15, 57, brick, 6);
+    addPlatform(11, 57, ground, 4, false);
 
-    addBrick(vec2{19, 62}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_stoneGrassTop.png"),
+    addBrick(vec2{19, 62}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_wood.png"),
              EmeraldGame::scale * 4.0f,
              0.7f, 1, 1);
 
@@ -520,7 +525,7 @@ void Level::level_phys() {
     movingPlatformComponent->setMovementEnd({1, 61});
     movingPlatformComponent->setSpeed(5);
 
-    addRock(vec2{12, 40}, EmeraldGame::gameInstance->enemiesAtlas->get("frame-1_zombie_idle.png"),
+    addRock(vec2{12, 40}, EmeraldGame::gameInstance->gameSpritesAtlas->get("meteorGrey_big1.png"),
             EmeraldGame::scale * 10.0f,
             0.2f, 0.5f, 1);
 }
@@ -533,120 +538,119 @@ float clamp(float n, float lower, float upper) {
 
 //Procedurally generates a level.
 void Level::level_proc() {
+    doorIsOpen = false;
+    game->background.initDynamicBackground("background.png");
 
-	game->background.initDynamicBackground("background.png");
+    int width = 200;
+    int height = 30;
+    emeraldsNeeded = 1;
 
-	int width = 200;
-	int height = 30;
-	emeraldsNeeded = 1;
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{2.5, 2.5};
+    }
+    addDoor(vec2{startPosition.x, 2.4f}, false, true, 1, vec2{50 - 6.5f, 2.4f}); //Bottom-right hub-world door
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ 2.5, 2.5 };
-	}
-	addDoor(vec2{ startPosition.x , 2.4f }, false, true, 1, vec2{ 50 - 6.5f, 2.4f }); //Bottom-right hub-world door
+    levelWidth = static_cast<int>((width + 1) * tileSize);
+    levelHeight = static_cast<int>(height * tileSize);
 
-	levelWidth = static_cast<int>((width + 1) * tileSize);
-	levelHeight = static_cast<int>(height * tileSize);
+    // start wall
+    addWall(0, 0, brick, height);
+    // end wall
+    addWall(width, 0, brick, height);
+    // floor
+    addPlatform(0, 0, ground, 10, false);
+    // ceil
+    addPlatform(0, height, ground, width, false);
 
-	// start wall
-	addWall(0, 0, brick, height);
-	// end wall
-	addWall(width, 0, brick, height);
-	// floor
-	addPlatform(0, 0, ground, 10, false);
-	// ceil
-	addPlatform(0, height, ground, width, false);
+    //Defines how far apart platforms are allowed to be
+    vec2 min(2, -5);
+    vec2 max(6, 5);
 
-	//Defines how far apart platforms are allowed to be
-	glm::vec2 min(2, -5);
-	glm::vec2 max(6, 5);
+    int max_length;
+    int min_length;
 
-	int max_length;
-	int min_length;
+    //Defines how long platforms are allowed to be
+    if (game->livesCounter == 5) {
+        max_length = 4;
+        min_length = 1;
+    } else if (game->livesCounter < 5 && game->livesCounter > 2) {
+        max_length = 5;
+        min_length = 2;
+    } else {
+        max_length = 6;
+        min_length = 3;
+    }
 
-	//Defines how long platforms are allowed to be
-	if (game->livesCounter == 5) {
-		max_length = 4;
-		min_length = 1;
-	}
-	else if (game->livesCounter < 5 && game->livesCounter > 2) {
-		max_length = 5;
-		min_length = 2;
-	}
-	else {
-		max_length = 6;
-		min_length = 3;
-	}
+    float floor = 1;
+    float ceil = 15;
+    float wall_l = 0;
+    float wall_r = 200;
 
-	float floor = 1;
-	float ceil = 15;
-	float wall_l = 0;
-	float wall_r = 200;
+    //Initial platform that starts chain
+    addPlatform(15, 5, ground, 5, false);
+    vec2 prev_platform = vec2(15 + 5, 5);
 
-	//Initial platform that starts chain
-	addPlatform(15, 5, ground, 5, false);
-	glm::vec2 prev_platform = glm::vec2(15 + 5, 5);
+    /*
+    Todo: Add special cases so jumps can either be very tall (max 6 in height)
+                                                or very long (max TBD), but not both
+          Add enemies
+          Add spikes
+          Add jewel-pickup (goal)
+          Add moving platform back to beginning of level once completed
+    */
 
-	/*
-	Todo: Add special cases so jumps can either be very tall (max 6 in height)
-												or very long (max TBD), but not both
-		  Add enemies
-		  Add spikes
-		  Add jewel-pickup (goal)
-		  Add moving platform back to beginning of level once completed
-	*/
+    int i = 0;
+    while (prev_platform.x < (width - 30)) {
+        //int min_y = clamp(min.y, floor, ceil);
+        //int max_y = clamp(max.y, floor, ceil);
 
-	int i = 0;
-	while (prev_platform.x < (width - 30)) {
-		//int min_y = clamp(min.y, floor, ceil);
-		//int max_y = clamp(max.y, floor, ceil);
+        int length = (rand() % max_length) + min_length;
+        int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
+        int rand_y = clamp(static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y), floor,
+                           ceil);
+        addPlatform(rand_x, rand_y, ground, length, false);
+        prev_platform = vec2(rand_x + length, rand_y);
+    }
+    addPlatform(width - 20, 0, ground, 20, false);
 
-		int length = (rand() % max_length) + min_length;
-		int rand_x = static_cast<int>((rand() % (int)((max.x - min.x) + 1)) + min.x + prev_platform.x);
-		int rand_y = clamp(static_cast<int>((rand() % (int)((max.y - min.y) + 1)) + min.y + prev_platform.y), floor, ceil);
-		addPlatform(rand_x, rand_y, ground, length, false);
-		prev_platform = glm::vec2(rand_x + length, rand_y);
-	}
-	addPlatform(width - 20, 0, ground, 20, false);
+    vector<shared_ptr<CollectibleItem>> temp;
+    if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
+        collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
+        collectibles.emplace_back(addCollectible(vec2(width - 22, ceil + 5), "Pie"));
+    } else {
+        for (auto &cItem : collectibles) {
+            temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
+        }
+        collectibles.clear();
+        for (auto &cItem : temp) {
+            collectibles.emplace_back(cItem);
+        }
+        temp.clear();
+    }
 
-	vector<shared_ptr<CollectibleItem>> temp;
-	if (collectibles.empty()) {
-		collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
-		collectibles.emplace_back(addCollectible(vec2(width - 22, ceil + 5), "Pie"));
-	}
-	else {
-		for (auto &cItem : collectibles) {
-			temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
-		}
-		collectibles.clear();
-		for (auto &cItem : temp) {
-			collectibles.emplace_back(cItem);
-		}
-		temp.clear();
-	}
-
-	//Elevator
-	auto movingPlatform = addPlatform(width - 15, 2, ground, 5, true);
-	auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-	movingPlatformComponent->setMovementStart({ width - 22, 5 });
-	movingPlatformComponent->setMovementEnd({ width - 22, ceil });
-	movingPlatformComponent->setSpeed(4);
+    //Elevator
+    auto movingPlatform = addPlatform(width - 15, 2, ground, 5, true);
+    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
+    movingPlatformComponent->setMovementStart({width - 22, 5});
+    movingPlatformComponent->setMovementEnd({width - 22, ceil});
+    movingPlatformComponent->setSpeed(4);
 
 }
 
 void Level::level_test() {
+    doorIsOpen = false;
     game->background.initDynamicBackground("background.png");
 
     int width = 30;
     int height = 30;
 
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ 28, 5 };
-	}
-	finishPosition = vec2{ width - 2.5f, 2.4f };
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{28, 5};
+    }
+    finishPosition = vec2{width - 2.5f, 2.4f};
 
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
@@ -663,22 +667,24 @@ void Level::level_test() {
 }
 
 void Level::level_bonus_0() {
+    doorIsOpen = false;
+    EmeraldGame::gameInstance->audioManager->playMusic("bgMusic.mp3", 4);
 
     int width = 150;
     int height = 50;
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
-    game->background.initDynamicBackground("background.png");
+    //game->background.initDynamicBackground("background.png");
 
-	emeraldsNeeded = 5;
+    emeraldsNeeded = 5;
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ 2.5, 47.5 };
-	}
-	addDoor(startPosition, true, false, 1, vec2{50/2, 2.4f}); //hub-world's middle
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{2.5, 47.5};
+    }
+    addDoor(startPosition, true, false, 1, vec2{50 / 2, 2.4f}); //hub-world's middle
     finishPosition = vec2{12.5, 47.5};
-	addDoor(finishPosition, false, true, 7, vec2{2.5, 2.4}); //Level_bonus_1's startPosition
+    addDoor(finishPosition, false, true, 7, vec2{2.5, 2.4}); //Level_bonus_1's startPosition
 
     // start wall
     addWall(0, 0, brick, height); // 1w
@@ -749,7 +755,7 @@ void Level::level_bonus_0() {
 
 
     vector<shared_ptr<CollectibleItem>> temp;
-    if (collectibles.empty()) {
+    if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
         collectibles.emplace_back(addCollectible(vec2(13, 42.5), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(13, 22.5), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(72.5, 7.5f), "Emerald"));
@@ -767,7 +773,7 @@ void Level::level_bonus_0() {
         temp.clear();
     }
     // add Brick
-    addBrick(vec2{13, 32.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_stoneGrassTop.png"),
+    addBrick(vec2{13, 32.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_wood.png"),
              EmeraldGame::scale * 5.0f, 0.8f, 1, 1);
 
 
@@ -780,20 +786,20 @@ void Level::level_bonus_0() {
     addWall(width, 0, brick, height); //End wall
 
     // add rock
-    /*addRock(vec2{2.5, 1.5}, EmeraldGame::gameInstance->enemiesAtlas->get("frame-1_zombie_idle.png"),
+    /*addRock(vec2{2.5, 1.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("frame-1_zombie_idle.png"),
             EmeraldGame::scale * 2.5f,
             0.2f, 0.5f, 1);*/
 }
 
 void Level::level_bonus_1() {
-
+    doorIsOpen = false;
     int width = 205;
     int height = 51;
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ 2.5, 2.4 };
-	}
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{2.5, 2.4};
+    }
     finishPosition = vec2{width - 2.5f, 2.4f};
     emeraldsNeeded = 5;
     levelWidth = static_cast<int>((width + 1) * tileSize);
@@ -818,8 +824,8 @@ void Level::level_bonus_1() {
     movingPlatformComponent->setMovementEnd({10, 10});
 
     // doors:
-	addDoor(startPosition, true, false, 6, vec2{ 12.5, 47.5 }); //level_bonus_0's finishPosition
-	addDoor(finishPosition, false, true, 8, vec2{200, 51 - 3.5}); //level_bonus_2's startPosition
+    addDoor(startPosition, true, false, 6, vec2{12.5, 47.5}); //level_bonus_0's finishPosition
+    addDoor(finishPosition, false, true, 8, vec2{200, 51 - 3.5}); //level_bonus_2's startPosition
     // add some enemies to the level
     addEnemy({50, 2}, Enemy::EnemyType::Zombie);
     addEnemy({25, 2}, Enemy::EnemyType::Zombie);
@@ -837,7 +843,7 @@ void Level::level_bonus_1() {
     // don't forget to clean collectibles vector when level is finished
 
     vector<shared_ptr<CollectibleItem>> temp;
-    if (collectibles.empty()) {
+    if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
         collectibles.emplace_back(addCollectible(vec2(15, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(25, 1.5f), "Pie"));
         collectibles.emplace_back(addCollectible(vec2(95, 1.5f), "Emerald"));
@@ -882,13 +888,14 @@ void Level::level_bonus_1() {
 //todo: design levels:
 
 void Level::level_bonus_2() {
+    doorIsOpen = false;
     int width = 205;
     int height = 51;
 
-	startPosition = EmeraldGame::currentStartPosition;
-	if (startPosition == vec2{ NULL , NULL }) {
-		startPosition = vec2{ 200.0, height - 3.5 };
-	}
+    startPosition = EmeraldGame::currentStartPosition;
+    if (startPosition == vec2{NULL, NULL}) {
+        startPosition = vec2{200.0, height - 3.5};
+    }
     finishPosition = vec2{width - 2.5f, 2.4f};
     emeraldsNeeded = 5;
     levelWidth = static_cast<int>((width + 1) * tileSize);
@@ -907,8 +914,8 @@ void Level::level_bonus_2() {
     addPlatform(1, height - 1, ground, width - 1, false);
 
     // doors:
-	addDoor(startPosition, true, false, 7, vec2{ 205 - 2.5, 2.4 }); //level_bonus_1's finishPosition
-	addDoor(finishPosition, false, true, 1, vec2{ 50 / 2 , 2.4}); //Hub-world's middle position
+    addDoor(startPosition, true, false, 7, vec2{205 - 2.5, 2.4}); //level_bonus_1's finishPosition
+    addDoor(finishPosition, false, true, 1, vec2{50 / 2, 2.4}); //Hub-world's middle position
 
     auto movingPlatform = addPlatform(10, 3, ground, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
@@ -930,7 +937,7 @@ void Level::level_bonus_2() {
     //create a list of positions for collectibles and safe them to emeraldGame
     // when emerald is taken, position is deleted from the list
     vector<shared_ptr<CollectibleItem>> temp;
-    if (collectibles.empty()) {
+    if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
         collectibles.emplace_back(addCollectible(vec2(25, 1.5f), "Pie"));
         collectibles.emplace_back(addCollectible(vec2(75, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(85, 1.5f), "Emerald"));
@@ -1006,7 +1013,7 @@ shared_ptr<PlatformComponent> Level::addWall(int x, int y, Sprite sprite, int le
 shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
     auto gameObject = game->createGameObject();
     auto res = gameObject->addComponent<Enemy>();
-    if (enemyType==Enemy::EnemyType::Boulder) {
+    if (enemyType == Enemy::EnemyType::Boulder) {
         gameObject->name = "Boulder";
         res->initEnemy(EmeraldGame::gameInstance->obstaclesAtlas, pos, enemyType);
     } else {
@@ -1020,7 +1027,7 @@ shared_ptr<Door> Level::addDoor(vec2 position, bool isOpen, bool isExit, int lev
     auto doorObject = game->createGameObject();
     doorObject->name = "Door";
     auto door = doorObject->addComponent<Door>();
-	door->initDoor(position, isOpen, isExit, level, nextLevelStartPosition);
+    door->initDoor(position, isOpen, isExit, level, nextLevelStartPosition);
     return door;
 }
 
@@ -1052,39 +1059,38 @@ shared_ptr<CollectibleItem> Level::addCollectible(vec2 position, string name) {
     auto collectibleObject = game->createGameObject();
     collectibleObject->name = name;
     auto collectible = collectibleObject->addComponent<CollectibleItem>();
-    collectible->initCollectible(position, name);
-    collectible->gameObjectCopy = collectibleObject;
+    collectible->initCollectible(position, move(name));
     return collectible;
 }
 
 shared_ptr<GameObject> Level::addFlag(vec2 position, bool cleared) {
-	auto flagObject = game->createGameObject();
+    auto flagObject = game->createGameObject();
 
-	flagObject->setPosition(position * tileSize);
+    flagObject->setPosition(position * tileSize);
 
-	auto sprite = flagObject->addComponent<SpriteComponent>();
-	auto sprites = flagObject->addComponent<SpriteAnimationComponent>();
+    auto sprite = flagObject->addComponent<SpriteComponent>();
+    auto sprites = flagObject->addComponent<SpriteAnimationComponent>();
 
-	sprite->setSprite(EmeraldGame::gameInstance->platformerArtAtlas->get("312.png"));
+    sprite->setSprite(EmeraldGame::gameInstance->platformerArtAtlas->get("312.png"));
 
-	string img1, img2;
-	if (cleared){
-		img1 = "313.png";
-		img2 = "343.png";
-	}
-	else {
-		img1 = "312.png";
-		img2 = "342.png";
-	}
+    string img1, img2;
+    if (cleared) {
+        img1 = "313.png";
+        img2 = "343.png";
+    } else {
+        img1 = "312.png";
+        img2 = "342.png";
+    }
 
-	vector<Sprite> spriteAnim({ EmeraldGame::gameInstance->platformerArtAtlas->get(img1),EmeraldGame::gameInstance->platformerArtAtlas->get(img2)});
-	for (auto & s : spriteAnim) {
-		s.setScale({ 2,2 });
-	}
-	sprites->setSprites(spriteAnim);
-	sprites->setAnimationTime(0.1);
+    vector<Sprite> spriteAnim({EmeraldGame::gameInstance->platformerArtAtlas->get(img1),
+                               EmeraldGame::gameInstance->platformerArtAtlas->get(img2)});
+    for (auto &s : spriteAnim) {
+        s.setScale({2, 2});
+    }
+    sprites->setSprites(spriteAnim);
+    sprites->setAnimationTime(0.1);
 
-	return flagObject;
+    return flagObject;
 }
 
 int Level::getWidth() {

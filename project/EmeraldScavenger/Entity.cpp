@@ -1,5 +1,5 @@
 //
-// Created by Admin on 01.12.2018.
+// Created by Sergiy Isakov on 01.12.2018.
 //
 
 #include <SDL_events.h>

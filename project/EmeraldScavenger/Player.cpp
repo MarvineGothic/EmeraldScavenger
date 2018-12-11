@@ -12,18 +12,18 @@
 #include "SpriteComponent.hpp"
 #include "Door.hpp"
 
-Player::Player(GameObject *gameObject) : Component(gameObject) {
-    characterPhysics = gameObject->addComponent<PhysicsComponent>();
+Player::Player(GameObject *gameObject) : Entity(gameObject) {
     accelerationSpeed = 1.00f;
     maximumVelocity = 2.0f;
-    physicsScale = EmeraldGame::gameInstance->physicsScale;
     radius = 16 / physicsScale;
-    characterPhysics->initCircle(b2_dynamicBody, radius, Level::getStartPos() / physicsScale, 1);
-    characterPhysics->fixRotation();
-    characterPhysics->getFixture()->SetFriction(1);
-    characterPhysics->getFixture()->SetDensity(0.1f);
-    spriteComponent = gameObject->getComponent<SpriteComponent>();
-    lastSprite = idle;
+    physicsComponent->initCircle(b2_dynamicBody, radius, Level::getStartPos() / physicsScale, 1);
+    physicsComponent->fixRotation();
+    physicsComponent->getFixture()->SetFriction(1);
+    physicsComponent->getFixture()->SetDensity(0.1f);
+    auto playerSpriteObj = EmeraldGame::gameInstance->scavengerAtlas->get("boy-idle.png");
+    playerSpriteObj.setScale(EmeraldGame::scale);
+    spriteComponent->setSprite(playerSpriteObj);
+    entitySprite = idle;
 }
 
 bool Player::onKey(SDL_Event &event) {
@@ -57,7 +57,7 @@ bool Player::onKey(SDL_Event &event) {
 void Player::update(float deltaTime) {
 
     // raycast ignores any shape in the starting point
-    auto from = characterPhysics->getBody()->GetWorldCenter();
+    auto from = physicsComponent->getBody()->GetWorldCenter();
     b2Vec2 to{from.x, from.y - radius * 1.3f};
     isGrounded = false;
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
@@ -74,17 +74,17 @@ void Player::update(float deltaTime) {
             facingLeft = false;
         }
         if (isJump)jump();
-        
+
         fireTimer += deltaTime;
     }
     // ====================== PLAYER VELOCITY =====================
 
-    characterPhysics->addImpulse(movement * accelerationSpeed);
-    auto linearVelocity = characterPhysics->getLinearVelocity();
+    physicsComponent->addImpulse(movement * accelerationSpeed);
+    auto linearVelocity = physicsComponent->getLinearVelocity();
     float currentVelocity = linearVelocity.x;
     if (abs(currentVelocity) > maximumVelocity) {
         linearVelocity.x = sign(linearVelocity.x) * maximumVelocity;
-        characterPhysics->setLinearVelocity(linearVelocity);
+        physicsComponent->setLinearVelocity(linearVelocity);
     }
 
     updateSprite(deltaTime);
@@ -104,9 +104,9 @@ void Player::jump() {
     isJump = false;
     auto world = EmeraldGame::gameInstance->world;
     if (world->GetGravity().y < 0) {
-        characterPhysics->addImpulse({0, 0.4f});
+        physicsComponent->addImpulse({0, 0.4f});
     } else {
-        characterPhysics->addImpulse({0, -0.4f});
+        physicsComponent->addImpulse({0, -0.4f});
     }
 }
 
@@ -118,8 +118,8 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
         if (!obj->getComponent<Enemy>()->isDead) {
             lostLife = true;
             blinkTime = 3.0f;
-            vec2 pV = characterPhysics->getLinearVelocity();
-            characterPhysics->addImpulse({-pV.x, -pV.y * 0.1f});
+            vec2 pV = physicsComponent->getLinearVelocity();
+            physicsComponent->addImpulse({-pV.x, -pV.y * 0.1f});
             EmeraldGame::gameInstance->audioManager->playSFX("lostLife.wav", 8);
         }
     }
@@ -144,8 +144,8 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
     if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
         exit = true;
 
-		EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
-		EmeraldGame::nextStartPosition = obj->getComponent<Door>()->nextLevelStartPosition;
+        EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
+        EmeraldGame::nextStartPosition = obj->getComponent<Door>()->nextLevelStartPosition;
 
     }
 }
@@ -197,7 +197,7 @@ void Player::fireCannon(std::shared_ptr<sre::SpriteAtlas> spritesAtlas) {
         auto cannonPhysics = cannonObject->addComponent<PhysicsComponent>();
         auto cannonVelocity = 3.0f;
         auto cannonRadius = 5 / physicsScale;
-        
+
         auto cannonPos = gameObject->getPosition() / physicsScale;
         if (facingLeft) {
             cannonPos.x -= 0.1;
@@ -205,17 +205,17 @@ void Player::fireCannon(std::shared_ptr<sre::SpriteAtlas> spritesAtlas) {
             cannonPos.x += 0.1;
         }
         cannonPhysics->initCircle(b2_dynamicBody, cannonRadius, cannonPos, 1);
-    //    cannonPhysics->setSensor(true);
+        //    cannonPhysics->setSensor(true);
         auto cannonSpriteObj = spritesAtlas->get("diamond blue.png");
         cannonSpriteObj.setColor({0.0, 1.0, 0.0, 1.0});
         cannonSpriteObj.setScale({0.05f, 0.05f});
         spriteComponent->setSprite(cannonSpriteObj);
         vec2 movement{0, 0};
         if (facingLeft) {
-            cannonPhysics->setLinearVelocity({ -1,0 });
+            cannonPhysics->setLinearVelocity({-1, 0});
             movement.x = movement.x - cannonVelocity;
         } else {
-            cannonPhysics->setLinearVelocity({ 1,0 });
+            cannonPhysics->setLinearVelocity({1, 0});
             movement.x = movement.x + cannonVelocity;
         }
         float accelerationSpeed = 0.01f;
@@ -249,19 +249,19 @@ void Player::updateSprite(float deltaTime) {
     }
 
 
-    auto velocity = characterPhysics->getLinearVelocity();
+    auto velocity = physicsComponent->getLinearVelocity();
     // ================================ PLAYER SPRITES ANIMATION ==============================
     // =========================== by: Sergiy Isakov 05.11.18 05:07 ======================
     auto world = EmeraldGame::gameInstance->world;
     if (touchesPlatform) {
-        isGrounded= true;
+        isGrounded = true;
     }
-    
+
     if (isGrounded) {
         distance += velocity.x * deltaTime;
         if (velocity.x == 0.0f) {
             idle.setFlip({(facingLeft), false});
-            lastSprite = idle;
+            entitySprite = idle;
         }
         if (distance > 0.06 || distance < -0.06) {
             spriteIndex = (spriteIndex + 1) % runningSprites.size();
@@ -269,31 +269,31 @@ void Player::updateSprite(float deltaTime) {
             if (distance < -0.06)
                 runningSprite.setFlip({true, false});
             distance = 0.0f;
-            lastSprite = runningSprite;
+            entitySprite = runningSprite;
         }
     } else {
         if (velocity.y > 0) {
             jumpUp.setFlip({(facingLeft), false});
-            lastSprite = jumpUp;
+            entitySprite = jumpUp;
         }
         if (velocity.y < 0) {
             fall.setFlip({(facingLeft), false});
-            lastSprite = fall;
+            entitySprite = fall;
         }
     }
     if (blinkTime > 2.5f) {
         death.setFlip({(facingLeft), false});
-        lastSprite = death;
+        entitySprite = death;
         invincible = true;
         blinkTime -= deltaTime;
     }
 
-    spriteComponent->setSprite(lastSprite);
+    spriteComponent->setSprite(entitySprite);
     // Flips sprite for gravity room
     if (world->GetGravity().y > 0) {
-        lastSprite.setFlip({false, true});
+        entitySprite.setFlip({false, true});
         if (facingLeft)
-            lastSprite.setFlip({true, true});
-        spriteComponent->setSprite(lastSprite);
+            entitySprite.setFlip({true, true});
+        spriteComponent->setSprite(entitySprite);
     }
 }

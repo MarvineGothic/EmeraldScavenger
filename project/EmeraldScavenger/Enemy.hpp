@@ -9,14 +9,11 @@
 #include "SpriteComponent.hpp"
 #include "SpriteAnimationComponent.hpp"
 #include "sre/Sprite.hpp"
-
-using namespace std;
-using namespace sre;
-using namespace glm;
+#include "Entity.hpp"
 
 class GameObject;
 
-class Enemy : public Component, public b2RayCastCallback {
+class Enemy : public Entity, public b2RayCastCallback {
 public:
     explicit Enemy(GameObject *gameObject);
 
@@ -40,8 +37,6 @@ public:
 
     void update(float deltaTime) override;
 
-    bool onKey(SDL_Event &event) override;
-
     void jump();
 
     // raycast callback
@@ -52,27 +47,20 @@ public:
 
     void onCollisionEnd(PhysicsComponent *comp) override;
     
-    void initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 position, EnemyType enemyType);
+    void initEnemy(shared_ptr<SpriteAtlas> enemyAtlas, vec2 position, EnemyType enemyType);
     
     bool isDead = false;
 
 private:
     Sprite move1;
-    Sprite move2;
-    Sprite move3;
-    Sprite move4;
-    Sprite dead1;
-    Sprite dead2;
-    
+
     static const vec2 dragonScale;
     static const vec2 birdScale;
 
     vector<shared_ptr<GameObject>> enemies;
-    std::vector<sre::Sprite> movingSprites;
-    std::vector<sre::Sprite> deadSprites;
-    shared_ptr<SpriteComponent> spriteComponent;
-    shared_ptr<PhysicsComponent> characterPhysics;
-    float physicsScale;
+    vector<Sprite> movingSprites;
+    vector<Sprite> deadSprites;
+
     bool isGrounded = false;
     float radius;
     bool left = false;

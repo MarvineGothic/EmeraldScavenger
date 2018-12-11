@@ -14,24 +14,24 @@
 const vec2 Enemy::dragonScale(0.3f, 0.3f);
 const vec2 Enemy::birdScale(0.5f, 0.5f);
 
-Enemy::Enemy(GameObject *gameObject) : Component(gameObject) {
+Enemy::Enemy(GameObject *gameObject) : Entity(gameObject) {
 }
 
 // ====================== ENEMY =======================
 // ================ by: Eimantas Urbutis 11.11.18 ======================
 
-void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 position, EnemyType enemyType) {
-    auto spriteComponent = gameObject->addComponent<SpriteComponent>();
-    auto physicsScale = EmeraldGame::gameInstance->physicsScale;
-    characterPhysics = gameObject->addComponent<PhysicsComponent>();
+void Enemy::initEnemy(std::shared_ptr<SpriteAtlas> enemyAtlas, vec2 position, EnemyType enemyType) {
+    //auto spriteComponent = gameObject->addComponent<SpriteComponent>();
+    //auto physicsScale = EmeraldGame::gameInstance->physicsScale;
+    //physicsComponent = gameObject->addComponent<PhysicsComponent>();
     enemyVelocity = 0.25f;
-    
-    //characterPhysics->getFixture()->SetRestitution(1);
-    this->enemyType=enemyType;
+
+    //physicsComponent->getFixture()->SetRestitution(1);
+    this->enemyType = enemyType;
 
     if (enemyType == EnemyType::Zombie) {
         radius = 10 / physicsScale;
-        characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        physicsComponent->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
         auto zombieSpriteObj = enemyAtlas->get("frame-1_zombie_idle.png");
         zombieSpriteObj.setScale(EmeraldGame::scale);
         spriteComponent->setSprite(zombieSpriteObj);
@@ -44,7 +44,7 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    EmeraldGame::scale);
     } else if (enemyType == EnemyType::AngryBird) {
         radius = 10 / physicsScale;
-        characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        physicsComponent->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
         flyingEnemy = true;
         auto birdSpriteObj = enemyAtlas->get("1.png");
         birdSpriteObj.setScale(birdScale);
@@ -56,10 +56,10 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("1.png"),
                    enemyAtlas->get("2.png"),
                    birdScale);
-    } else if (enemyType == EnemyType::Dragon){
+    } else if (enemyType == EnemyType::Dragon) {
         radius = 10 / physicsScale;
-        characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
-        characterPhysics->setLinearVelocity({1,0});
+        physicsComponent->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        physicsComponent->setLinearVelocity({1, 0});
         auto dragonSpriteObj = enemyAtlas->get("frame-1_dragon.png");
         dragonSpriteObj.setScale(dragonScale);
         flyingEnemy = true;
@@ -71,10 +71,10 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("frame-1_dragon.png"),
                    enemyAtlas->get("frame-2_dragon.png"),
                    dragonScale);
-    } else if (enemyType == EnemyType::SpikeMonster){
+    } else if (enemyType == EnemyType::SpikeMonster) {
         radius = 5 / physicsScale;
         enemyVelocity = 0.0f;
-        characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        physicsComponent->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
         auto spikeSpriteObj = enemyAtlas->get("spike monster A.png");
         spikeSpriteObj.setScale(birdScale);
         spriteComponent->setSprite(spikeSpriteObj);
@@ -85,15 +85,14 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("spike monster A.png"),
                    enemyAtlas->get("spike monster A.png"),
                    birdScale);
-    }
-	else {
-		radius = 10 / physicsScale;
-		characterPhysics->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
-		characterPhysics->setLinearVelocity({ 1,0 });
-		auto boulderSpriteObj = enemyAtlas->get("spike monster A.png");
-		boulderSpriteObj.setScale(dragonScale);
-		flyingEnemy = false;
-		spriteComponent->setSprite(boulderSpriteObj);
+    } else {
+        radius = 10 / physicsScale;
+        physicsComponent->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        physicsComponent->setLinearVelocity({1, 0});
+        auto boulderSpriteObj = enemyAtlas->get("spike monster A.png");
+        boulderSpriteObj.setScale(dragonScale);
+        flyingEnemy = false;
+        spriteComponent->setSprite(boulderSpriteObj);
         setSprites(enemyAtlas->get("spike monster B.png"),
                    enemyAtlas->get("spike monster B.png"),
                    enemyAtlas->get("spike monster B.png"),
@@ -101,49 +100,44 @@ void Enemy::initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 positio
                    enemyAtlas->get("spike monster A.png"),
                    enemyAtlas->get("spike monster A.png"),
                    birdScale);
-		enemyVelocity = 25.0f;
-		vec2 movement{ 0, 0 };
-		if (facingLeft) {
-			movement.x = movement.x - enemyVelocity;
-		}
-		else {
-			movement.x = movement.x + enemyVelocity;
-		}
-		float accelerationSpeed = 0.01f;
-		characterPhysics->addImpulse(movement * accelerationSpeed);
+        enemyVelocity = 25.0f;
+        vec2 movement{0, 0};
+        if (facingLeft) {
+            movement.x = movement.x - enemyVelocity;
+        } else {
+            movement.x = movement.x + enemyVelocity;
+        }
+        float accelerationSpeed = 0.01f;
+        physicsComponent->addImpulse(movement * accelerationSpeed);
 
-		pos = characterPhysics->getPosition();
-		characterPhysics->getFixture()->SetFriction(0.25);
-		characterPhysics->fixRotation();
-		//characterPhysics->getBody()->SetTransform();
-		//characterPhysics->getBody()->ApplyAngularImpulse(5, true);
-		characterPhysics->getFixture()->SetRestitution(0.4);
-	}
-	if (!(enemyType == EnemyType::Boulder)) {
-		pos = characterPhysics->getPosition();
-		characterPhysics->fixRotation();
-		characterPhysics->getFixture()->SetFriction(1);
-	}
+        pos = physicsComponent->getPosition();
+        physicsComponent->getFixture()->SetFriction(0.25);
+        physicsComponent->fixRotation();
+        //physicsComponent->getBody()->SetTransform();
+        //physicsComponent->getBody()->ApplyAngularImpulse(5, true);
+        physicsComponent->getFixture()->SetRestitution(0.4);
+    }
+    if (!(enemyType == EnemyType::Boulder)) {
+        pos = physicsComponent->getPosition();
+        physicsComponent->fixRotation();
+        physicsComponent->getFixture()->SetFriction(1);
+    }
 }
 
-
-bool Enemy::onKey(SDL_Event &event) {
-    return false;
-}
 
 void Enemy::update(float deltaTime) {
     // raycast ignores any shape in the starting point
-    auto from = characterPhysics->getBody()->GetWorldCenter();
+    auto from = physicsComponent->getBody()->GetWorldCenter();
     b2Vec2 to{from.x, from.y - radius * 1.3f};
-    
+
     isGrounded = false;
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
-    
+
     // To keep dragon at same height while ignoring gravity
-    
-    if (enemyType==EnemyType::Dragon && !isDead) {
-        characterPhysics->addForce({characterPhysics->getLinearVelocity().x, 0});
-        characterPhysics->moveTo({characterPhysics->getPosition().x, pos.y});
+
+    if (enemyType == EnemyType::Dragon && !isDead) {
+        physicsComponent->addForce({physicsComponent->getLinearVelocity().x, 0});
+        physicsComponent->moveTo({physicsComponent->getPosition().x, pos.y});
     }
 
     vec2 movement{0, 0};
@@ -153,25 +147,24 @@ void Enemy::update(float deltaTime) {
         movement.x = movement.x + enemyVelocity;
     }
 
-    b2Body *body = characterPhysics->getBody();
+    b2Body *body = physicsComponent->getBody();
 
     // ====================== Enemy VELOCITY =====================
-	if (!(enemyType == EnemyType::Boulder)) {
-		float accelerationSpeed = 0.01f;
-		characterPhysics->addImpulse(movement * accelerationSpeed);
-		float maximumVelocity = enemyVelocity;
-		auto linearVelocity = characterPhysics->getLinearVelocity();
-		float currentVelocity = linearVelocity.x;
-		if (abs(currentVelocity) > maximumVelocity) {
-			linearVelocity.x = sign(linearVelocity.x) * maximumVelocity;
-			characterPhysics->setLinearVelocity(linearVelocity);
-		}
-		updateSprite(deltaTime);
-	}
-	else {
-		rotation -= characterPhysics->getBody()->GetLinearVelocity().x;
-		gameObject->setRotation(rotation);
-	}
+    if (!(enemyType == EnemyType::Boulder)) {
+        float accelerationSpeed = 0.01f;
+        physicsComponent->addImpulse(movement * accelerationSpeed);
+        float maximumVelocity = enemyVelocity;
+        auto linearVelocity = physicsComponent->getLinearVelocity();
+        float currentVelocity = linearVelocity.x;
+        if (abs(currentVelocity) > maximumVelocity) {
+            linearVelocity.x = sign(linearVelocity.x) * maximumVelocity;
+            physicsComponent->setLinearVelocity(linearVelocity);
+        }
+        updateSprite(deltaTime);
+    } else {
+        rotation -= physicsComponent->getBody()->GetLinearVelocity().x;
+        gameObject->setRotation(rotation);
+    }
     // ====================== Enemy DIES =======================
     //TODO
 
@@ -180,16 +173,16 @@ void Enemy::update(float deltaTime) {
 void Enemy::jump() {
     auto world = EmeraldGame::gameInstance->world;
     if (world->GetGravity().y < 0) {
-        characterPhysics->addImpulse({0, 0.25f});
+        physicsComponent->addImpulse({0, 0.25f});
     } else {
-        characterPhysics->addImpulse({0, -0.25f});
+        physicsComponent->addImpulse({0, -0.25f});
     }
-    
+
 }
 
 // On collision with any object enemy turns around
 void Enemy::onCollisionStart(PhysicsComponent *comp) {
-    if (comp->getGameObject()->name == "Wall" && enemyType!=EnemyType::Dragon) {
+    if (comp->getGameObject()->name == "Wall" && enemyType != EnemyType::Dragon) {
         Sprite sprite = gameObject->getComponent<SpriteComponent>()->getSprite();
         sprite.setFlip({true, false});
         gameObject->getComponent<SpriteComponent>()->setSprite(sprite);
@@ -198,12 +191,12 @@ void Enemy::onCollisionStart(PhysicsComponent *comp) {
         isDead = true;
     }
     if (!isDead) {
-        if (enemyType==EnemyType::AngryBird) {
+        if (enemyType == EnemyType::AngryBird) {
             this->jump();
         }
-        if (enemyType==EnemyType::Dragon) {
-            auto linearVelocity = characterPhysics->getLinearVelocity();
-            characterPhysics->setLinearVelocity({linearVelocity.x*-1,linearVelocity.y});
+        if (enemyType == EnemyType::Dragon) {
+            auto linearVelocity = physicsComponent->getLinearVelocity();
+            physicsComponent->setLinearVelocity({linearVelocity.x * -1, linearVelocity.y});
             facingLeft = !facingLeft;
         }
     }
@@ -219,8 +212,8 @@ Enemy::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &norm
     return 0; // terminate raycast
 }
 
-void Enemy::setSprites(sre::Sprite move1, sre::Sprite move2, sre::Sprite move3, sre::Sprite move4,
-                       sre::Sprite dead1, sre::Sprite dead2, vec2 scale) {
+void Enemy::setSprites(Sprite move1, Sprite move2, Sprite move3, Sprite move4,
+                       Sprite dead1, Sprite dead2, vec2 scale) {
     move1.setScale(scale);
     move2.setScale(scale);
     move3.setScale(scale);
@@ -228,11 +221,6 @@ void Enemy::setSprites(sre::Sprite move1, sre::Sprite move2, sre::Sprite move3, 
     dead1.setScale(scale);
     dead2.setScale(scale);
     this->move1 = move1;
-    this->move2 = move2;
-    this->move3 = move3;
-    this->move4 = move4;
-    this->dead1 = dead1;
-    this->dead2 = dead2;
     deadSprites = {dead1, dead2};
     movingSprites = {move1, move2, move3, move4};
 }
@@ -240,7 +228,7 @@ void Enemy::setSprites(sre::Sprite move1, sre::Sprite move2, sre::Sprite move3, 
 // ====================== ENEMY ANIMATIONS =======================
 
 void Enemy::updateSprite(float deltaTime) {
-    auto velocity = characterPhysics->getLinearVelocity();
+    auto velocity = physicsComponent->getLinearVelocity();
     distance += velocity.x * deltaTime;
     if (velocity.x == 0.0f) {
         move1.setFlip({(facingLeft), false});
@@ -248,9 +236,9 @@ void Enemy::updateSprite(float deltaTime) {
     } else if ((distance > 0.02 && !isDead) || (distance < -0.02 && !isDead)) {
         spriteIndex = (spriteIndex + 1) % movingSprites.size();
         Sprite movingSprite = movingSprites[spriteIndex];
-        if (distance > 0.02 && enemyType!=EnemyType::Dragon)
+        if (distance > 0.02 && enemyType != EnemyType::Dragon)
             movingSprite.setFlip({true, false});
-        else if (distance < -0.02 && enemyType==EnemyType::Dragon)
+        else if (distance < -0.02 && enemyType == EnemyType::Dragon)
             movingSprite.setFlip({true, false});
         gameObject->getComponent<SpriteComponent>()->setSprite(movingSprite);
         distance = 0.0f;
@@ -261,7 +249,7 @@ void Enemy::updateSprite(float deltaTime) {
         Sprite deadSprite = deadSprites[spriteIndex];
         gameObject->getComponent<SpriteComponent>()->setSprite(deadSprite);
     }
-    
+
     // Flips sprite for gravity room
     auto world = EmeraldGame::gameInstance->world;
     if (world->GetGravity().y > 0) {

@@ -8,10 +8,8 @@
 #include <memory>
 #include "Component.hpp"
 #include "SpriteComponent.hpp"
+#include "Entity.hpp"
 
-using namespace std;
-using namespace sre;
-using namespace glm;
 
 class CollectibleItem : public Component {
     float physicsScale;
@@ -22,10 +20,8 @@ class CollectibleItem : public Component {
     Sprite pie;
 public:
     explicit CollectibleItem(GameObject *gameObject);
-
-    shared_ptr<GameObject> gameObjectCopy;
-    shared_ptr<SpriteComponent> collectibleSpriteComponent;
-    shared_ptr<PhysicsComponent> collectiblePhysicsComponent;
+    shared_ptr<SpriteComponent> spriteComponent;
+    shared_ptr<PhysicsComponent> physicsComponent;
 
     vec2 getPosition();
 

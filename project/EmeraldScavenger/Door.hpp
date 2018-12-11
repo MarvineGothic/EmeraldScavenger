@@ -10,12 +10,7 @@
 #include "Component.hpp"
 #include "Entity.hpp"
 
-using namespace std;
-using namespace sre;
-using namespace glm;
-
-class Door : public Component {
-    float physicsScale;
+class Door : public Entity {
 
     Sprite open;
     Sprite close;
@@ -25,12 +20,9 @@ public:
 
     bool isExit = false;
 
-	  int level;
-    
-	  vec2 nextLevelStartPosition;
+    int level;
 
-    shared_ptr<SpriteComponent> spriteComponent;
-    shared_ptr<PhysicsComponent> physicsComponent;
+    vec2 nextLevelStartPosition;
 
     void update(float deltaTime) override;
 

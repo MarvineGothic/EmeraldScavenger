@@ -5,23 +5,17 @@
 #include "SpriteComponent.hpp"
 #include "SpriteAnimationComponent.hpp"
 #include "sre/Sprite.hpp"
+#include "Entity.hpp"
 
-using namespace std;
-using namespace sre;
-using namespace glm;
-
-class Player : public Component, public b2RayCastCallback {
-    float physicsScale;
+class Player : public Entity, public b2RayCastCallback {
 
     Sprite idle;
     Sprite jumpUp;
     Sprite fall;
     Sprite death;
-    Sprite lastSprite;
-    vector<sre::Sprite> runningSprites;
+    Sprite entitySprite;
+    vector<Sprite> runningSprites;
 
-    shared_ptr<SpriteComponent> spriteComponent;
-    shared_ptr<PhysicsComponent> characterPhysics;
 
     float accelerationSpeed;
     float maximumVelocity;

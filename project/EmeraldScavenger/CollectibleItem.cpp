@@ -10,33 +10,33 @@
 #include "CollectibleItem.hpp"
 
 CollectibleItem::CollectibleItem(GameObject *gameObject) : Component(gameObject) {
-    collectibleSpriteComponent = gameObject->addComponent<SpriteComponent>();
-    collectiblePhysicsComponent = gameObject->addComponent<PhysicsComponent>();
+    spriteComponent = gameObject->addComponent<SpriteComponent>();
+    physicsComponent = gameObject->addComponent<PhysicsComponent>();
+    physicsScale = EmeraldGame::gameInstance->physicsScale;
     emerald = EmeraldGame::gameInstance->obstaclesAtlas->get("diamond blue.png");
     pie = EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_teamCakeLogo.png");
     emerald.setScale(EmeraldGame::scale / 2.0f);
     pie.setScale(EmeraldGame::scale / 3.0f);
-    physicsScale = EmeraldGame::gameInstance->physicsScale;
 }
 
 void CollectibleItem::initCollectible(vec2 pos, string name) {
     this->name = name;
     this->position = pos;
     if (name == "Emerald") {
-        collectibleSpriteComponent->setSprite(emerald);
-        collectiblePhysicsComponent->initCircle(b2_staticBody,
-                                                emerald.getSpriteSize().x / (physicsScale * Level::tileSize),
-                                                pos * Level::tileSize / physicsScale,
-                                                1);
+        spriteComponent->setSprite(emerald);
+        physicsComponent->initCircle(b2_staticBody,
+                                     emerald.getSpriteSize().x / (physicsScale * Level::tileSize),
+                                     pos * Level::tileSize / physicsScale,
+                                     1);
     } else if (name == "Pie") {
-        collectibleSpriteComponent->setSprite(pie);
-        collectiblePhysicsComponent->initCircle(b2_staticBody,
-                                                pie.getSpriteSize().x / (physicsScale * Level::tileSize),
-                                                pos * Level::tileSize / physicsScale,
-                                                1);
+        spriteComponent->setSprite(pie);
+        physicsComponent->initCircle(b2_staticBody,
+                                     pie.getSpriteSize().x / (physicsScale * Level::tileSize),
+                                     pos * Level::tileSize / physicsScale,
+                                     1);
     }
     gameObject->setPosition(pos * Level::tileSize);
-    collectiblePhysicsComponent->setSensor(true);
+    physicsComponent->setSensor(true);
 }
 
 void CollectibleItem::update(float deltaTime) {

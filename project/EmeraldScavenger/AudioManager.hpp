@@ -5,8 +5,10 @@
 #ifndef SIMPLERENDERENGINEPROJECT_AUDIOMANAGER_H
 #define SIMPLERENDERENGINEPROJECT_AUDIOMANAGER_H
 
+#include "SDL_mixer.h"
+#include "map"
 
-#include "AssetManager.hpp"
+using namespace std;
 
 class AudioManager {
     AudioManager();
@@ -14,11 +16,19 @@ class AudioManager {
     ~AudioManager();
 
     static AudioManager *sInstance;
-    AssetManager *assetManager;
+    //AssetManager *assetManager;
+
+    map<string, Mix_Music *> mMusic;
+    map<string, Mix_Chunk *> mSFX;
+
 public:
     static AudioManager *instance();
 
     static void release();
+
+    Mix_Music *getMusic(string fileName);
+
+    Mix_Chunk *getSFX(string fileName);
 
     void playMusic(string fileName, int volume = MIX_MAX_VOLUME, int loops = -1);
 
