@@ -74,6 +74,8 @@ void Player::update(float deltaTime) {
             facingLeft = false;
         }
         if (isJump)jump();
+        
+        fireTimer += deltaTime;
     }
     // ====================== PLAYER VELOCITY =====================
 
@@ -113,11 +115,13 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
     // ================ by: Sergiy Isakov 17.11.18 22:16 =================================
     auto obj = comp->getGameObject();
     if (!invincible && obj->name == "Enemy") {
-        lostLife = true;
-        blinkTime = 3.0f;
-        vec2 pV = characterPhysics->getLinearVelocity();
-        characterPhysics->addImpulse({-pV.x, -pV.y * 0.1f});
-        EmeraldGame::gameInstance->audioManager->playSFX("lostLife.wav", 8);
+        if (!obj->getComponent<Enemy>()->isDead) {
+            lostLife = true;
+            blinkTime = 3.0f;
+            vec2 pV = characterPhysics->getLinearVelocity();
+            characterPhysics->addImpulse({-pV.x, -pV.y * 0.1f});
+            EmeraldGame::gameInstance->audioManager->playSFX("lostLife.wav", 8);
+        }
     }
     if (obj->name == "Emerald" && obj->getComponent<SpriteComponent>() != nullptr) {
         EmeraldGame::gameInstance->level->deleteEmerald(obj->getComponent<CollectibleItem>());
@@ -134,6 +138,9 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
         }
         EmeraldGame::gameInstance->audioManager->playSFX("lifeUp.wav");
     }
+    if (obj->name == "Platform") {
+        touchesPlatform = true;
+    }
     if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
         exit = true;
 
@@ -147,6 +154,9 @@ void Player::onCollisionEnd(PhysicsComponent *comp) {
     auto obj = comp->getGameObject();
     if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
         exit = false;
+    }
+    if (obj->name == "Platform") {
+        touchesPlatform = false;
     }
 }
 
@@ -171,6 +181,49 @@ void Player::setSprites(Sprite idle, Sprite jumpUp, Sprite fall, Sprite run1,
     this->fall = fall;
     this->death = death;
     runningSprites = {run1, run2, run3};
+}
+
+// ================================ Shooting system ======================
+// =========================== by: Eimantas Urbutis ======================
+void Player::fireCannon(std::shared_ptr<sre::SpriteAtlas> spritesAtlas) {
+    if (fireTimer > 2.5) {
+        EmeraldGame::gameInstance->audioManager->playSFX("cannon.mp3");
+        auto game = EmeraldGame::gameInstance;
+        game->deleteGameObjectsByName("Cannon");
+        auto cannonObject = game->createGameObject();
+        cannonObject->name = "Cannon";
+        auto spriteComponent = cannonObject->addComponent<SpriteComponent>();
+        auto physicsScale = EmeraldGame::gameInstance->physicsScale;
+        auto cannonPhysics = cannonObject->addComponent<PhysicsComponent>();
+        auto cannonVelocity = 3.0f;
+        auto cannonRadius = 5 / physicsScale;
+        
+        auto cannonPos = gameObject->getPosition() / physicsScale;
+        if (facingLeft) {
+            cannonPos.x -= 0.1;
+        } else {
+            cannonPos.x += 0.1;
+        }
+        cannonPhysics->initCircle(b2_dynamicBody, cannonRadius, cannonPos, 1);
+    //    cannonPhysics->setSensor(true);
+        auto cannonSpriteObj = spritesAtlas->get("diamond blue.png");
+        cannonSpriteObj.setColor({0.0, 1.0, 0.0, 1.0});
+        cannonSpriteObj.setScale({0.05f, 0.05f});
+        spriteComponent->setSprite(cannonSpriteObj);
+        vec2 movement{0, 0};
+        if (facingLeft) {
+            cannonPhysics->setLinearVelocity({ -1,0 });
+            movement.x = movement.x - cannonVelocity;
+        } else {
+            cannonPhysics->setLinearVelocity({ 1,0 });
+            movement.x = movement.x + cannonVelocity;
+        }
+        float accelerationSpeed = 0.01f;
+        cannonPhysics->addImpulse(movement * accelerationSpeed);
+        cannonPhysics->getFixture()->SetFriction(0.25);
+        cannonPhysics->getFixture()->SetRestitution(0.4);
+        fireTimer = 0.0;
+    }
 }
 
 void Player::updateSprite(float deltaTime) {
@@ -200,10 +253,9 @@ void Player::updateSprite(float deltaTime) {
     // ================================ PLAYER SPRITES ANIMATION ==============================
     // =========================== by: Sergiy Isakov 05.11.18 05:07 ======================
     auto world = EmeraldGame::gameInstance->world;
-    if (world->GetGravity().y > 5 || velocity.y * deltaTime == posY) {
+    if (touchesPlatform) {
         isGrounded= true;
     }
-    posY = velocity.y * deltaTime;
     
     if (isGrounded) {
         distance += velocity.x * deltaTime;

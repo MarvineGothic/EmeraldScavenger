@@ -140,7 +140,8 @@ void Enemy::update(float deltaTime) {
     EmeraldGame::gameInstance->world->RayCast(this, from, to);
     
     // To keep dragon at same height while ignoring gravity
-    if (enemyType==EnemyType::Dragon) {
+    
+    if (enemyType==EnemyType::Dragon && !isDead) {
         characterPhysics->addForce({characterPhysics->getLinearVelocity().x, 0});
         characterPhysics->moveTo({characterPhysics->getPosition().x, pos.y});
     }
@@ -193,18 +194,19 @@ void Enemy::onCollisionStart(PhysicsComponent *comp) {
         sprite.setFlip({true, false});
         gameObject->getComponent<SpriteComponent>()->setSprite(sprite);
         facingLeft = !facingLeft;
+    } else if (comp->getGameObject()->name == "Cannon") {
+        isDead = true;
     }
-    if (enemyType==EnemyType::AngryBird) {
-        this->jump();
+    if (!isDead) {
+        if (enemyType==EnemyType::AngryBird) {
+            this->jump();
+        }
+        if (enemyType==EnemyType::Dragon) {
+            auto linearVelocity = characterPhysics->getLinearVelocity();
+            characterPhysics->setLinearVelocity({linearVelocity.x*-1,linearVelocity.y});
+            facingLeft = !facingLeft;
+        }
     }
-    if (enemyType==EnemyType::Dragon) {
-        auto linearVelocity = characterPhysics->getLinearVelocity();
-        characterPhysics->setLinearVelocity({linearVelocity.x*-1,linearVelocity.y});
-        facingLeft = !facingLeft;
-    }
-	if (enemyType == EnemyType::Boulder) {
-	
-	}
 }
 
 void Enemy::onCollisionEnd(PhysicsComponent *comp) {
@@ -243,7 +245,7 @@ void Enemy::updateSprite(float deltaTime) {
     if (velocity.x == 0.0f) {
         move1.setFlip({(facingLeft), false});
         gameObject->getComponent<SpriteComponent>()->setSprite(move1);
-    } else if (distance > 0.02 || distance < -0.02) {
+    } else if ((distance > 0.02 && !isDead) || (distance < -0.02 && !isDead)) {
         spriteIndex = (spriteIndex + 1) % movingSprites.size();
         Sprite movingSprite = movingSprites[spriteIndex];
         if (distance > 0.02 && enemyType!=EnemyType::Dragon)

@@ -27,7 +27,7 @@ class Player : public Component, public b2RayCastCallback {
     float maximumVelocity;
     int spriteIndex = 0;
     float distance = 0.0f;
-    float posY = 0.0f;
+    bool touchesPlatform = false;
     bool isGrounded = false;
 
     float radius;
@@ -58,6 +58,8 @@ public:
     bool onKey(SDL_Event &event) override;
 
     void jump();
+    
+    void fireCannon(std::shared_ptr<sre::SpriteAtlas> spritesAtlas);
 
     // raycast callback
     virtual float32 ReportFixture(b2Fixture *fixture, const b2Vec2 &point,
@@ -70,5 +72,6 @@ public:
     bool inPit = false;
     bool lostLife = false;
     bool exit = false;
+    float fireTimer = 0.0f;
 
 };

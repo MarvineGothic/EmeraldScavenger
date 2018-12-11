@@ -35,6 +35,8 @@ file(COPY
         assets/sounds/glassbell.wav
         assets/sounds/jump.wav
         assets/sounds/inPit.wav
+	assets/sounds/gravitySoundtrack.mp3
+	assets/sounds/cannon.mp3
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
 file(COPY
 	assets/fence_background.png
@@ -62,6 +64,8 @@ file(COPY
         assets/sounds/glassbell.wav
         assets/sounds/jump.wav
         assets/sounds/inPit.wav
+	assets/sounds/gravitySoundtrack.mp3
+	assets/sounds/cannon.mp3
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 
 IF (WIN32)

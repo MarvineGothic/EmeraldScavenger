@@ -129,6 +129,8 @@ public:
     void addGameObjectsVector(vector<shared_ptr<GameObject>> objects);
 
     void deleteGameObject(shared_ptr<GameObject> gameObject);
+    
+    void deleteGameObjectsByName(string name);
 
     static const vec2 windowSize;
     static const vec2 scale;

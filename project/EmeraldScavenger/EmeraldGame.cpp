@@ -276,6 +276,9 @@ void EmeraldGame::onKey(SDL_Event &event) {
                 initGame();
                 gameState = GameState::Start;
                 break;
+            case SDLK_LCTRL:
+                player->getComponent<Player>()->fireCannon(obstaclesAtlas);
+                break;
             default:
                 break;
         }
@@ -435,6 +438,14 @@ void EmeraldGame::addGameObjectsVector(vector<shared_ptr<GameObject>> objects) {
 
 void EmeraldGame::deleteGameObject(shared_ptr<GameObject> gameObject) {
     gameObjectsList.erase(remove(gameObjectsList.begin(), gameObjectsList.end(), gameObject), gameObjectsList.end());
+}
+
+void EmeraldGame::deleteGameObjectsByName(string name) {
+    for (auto &go : gameObjectsList) {
+        if (go->name==name) {
+            deleteGameObject(go);
+        }
+    }
 }
 
 void EmeraldGame::updatePhysics() {

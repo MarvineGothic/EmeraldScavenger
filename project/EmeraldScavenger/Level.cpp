@@ -191,7 +191,7 @@ void Level::level_intro() {
 
 //todo: design levels:
 void Level::level_hub() {
-
+    EmeraldGame::gameInstance->audioManager->playMusic("gravitySoundtrack.mp3", 4);
     game->background.initDynamicBackground("background.png");
 
     int width = 50;
@@ -286,6 +286,7 @@ void Level::level_hub() {
 }
 
 void Level::level_grav() {
+    EmeraldGame::gameInstance->audioManager->playMusic("gravitySoundtrack.mp3", 4);
     game->background.initDynamicBackground("gravity_background.png");
     
     int width = 40;

@@ -53,6 +53,8 @@ public:
     void onCollisionEnd(PhysicsComponent *comp) override;
     
     void initEnemy(std::shared_ptr<sre::SpriteAtlas> enemyAtlas, vec2 position, EnemyType enemyType);
+    
+    bool isDead = false;
 
 private:
     Sprite move1;
@@ -72,7 +74,6 @@ private:
     shared_ptr<PhysicsComponent> characterPhysics;
     float physicsScale;
     bool isGrounded = false;
-    bool isDead = false;
     float radius;
     bool left = false;
     bool right = false;
