@@ -9,7 +9,6 @@
 #include "Level.hpp"
 #include "BirdMovementComponent.hpp"
 #include "Background.hpp"
-#include "AssetManager.hpp"
 #include "AudioManager.hpp"
 
 using namespace std;
@@ -22,7 +21,6 @@ enum class GameState {
     Start,
     Pause,
     Menu,
-    GetReady,
     Ready,
     Running,
     GameOver,
@@ -58,7 +56,6 @@ class EmeraldGame : public b2ContactListener {
 
     b2World *world = nullptr;
 
-    AssetManager *assetManager;
     AudioManager *audioManager;
 
     void initAssets();
@@ -107,8 +104,6 @@ class EmeraldGame : public b2ContactListener {
     friend class Enemy;
 
     friend class Door;
-
-    //friend class Rock;
 
     friend class CollectibleItem;
 

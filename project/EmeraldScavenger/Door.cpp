@@ -10,15 +10,15 @@
 #include "PhysicsComponent.hpp"
 #include "Level.hpp"
 
-Door::Door(GameObject *gameObject) : Component(gameObject) {
-    spriteComponent = gameObject->addComponent<SpriteComponent>();
-    physicsComponent = gameObject->addComponent<PhysicsComponent>();
+Door::Door(GameObject *gameObject) : Entity(gameObject) {
+    //spriteComponent = gameObject->addComponent<SpriteComponent>();
+    //physicsComponent = gameObject->addComponent<PhysicsComponent>();
     open = EmeraldGame::gameInstance->getGameSpriteAtlas()->get("spr_doorOpen.png");
     close = EmeraldGame::gameInstance->getGameSpriteAtlas()->get("spr_door.png");
     open.setScale(EmeraldGame::scale * 1.5f);
     close.setScale(EmeraldGame::scale * 1.5f);
 
-    physicsScale = EmeraldGame::gameInstance->physicsScale;
+    //physicsScale = EmeraldGame::gameInstance->physicsScale;
 }
 
 void Door::openDoor() {

@@ -26,14 +26,14 @@ auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 
 int EmeraldGame::currentLevel = 0;
 int EmeraldGame::nextLevel = 1;
-vec2 EmeraldGame::currentStartPosition = vec2{ NULL, NULL };
-vec2 EmeraldGame::nextStartPosition = vec2{ NULL, NULL };
+vec2 EmeraldGame::currentStartPosition = vec2{NULL, NULL};
+vec2 EmeraldGame::nextStartPosition = vec2{NULL, NULL};
 const vec2 EmeraldGame::windowSize(800, 600);
 const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
 bool EmeraldGame::introCleared = false, EmeraldGame::physCleared = false,
-	EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false,
-	EmeraldGame::bonusCleared = false;
+        EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false,
+        EmeraldGame::bonusCleared = false;
 
 EmeraldGame::EmeraldGame()
         : debugDraw(physicsScale) {
@@ -97,9 +97,9 @@ void EmeraldGame::initAssets() {
             .withFilterSampling(false)
             .build());
     platformerArtAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
-		        .withFile("platformer-art-deluxe.png")
-		        .withFilterSampling(false)
-		        .build());
+            .withFile("platformer-art-deluxe.png")
+            .withFilterSampling(false)
+            .build());
     level = Level::createDefaultLevel(this);
 
     // init sprites
@@ -111,7 +111,6 @@ void EmeraldGame::initAssets() {
     emeraldSprite = obstaclesAtlas->get("diamond blue.png");
     emeraldSprite.setScale(EmeraldGame::scale * 0.8f);
 
-    assetManager = AssetManager::instance();
     audioManager = AudioManager::instance();
 }
 
@@ -164,11 +163,8 @@ void EmeraldGame::initLevel() {
 void EmeraldGame::initPlayer() {
     player = createGameObject();
     player->name = "Player";
-    auto playerSpriteComponent = player->addComponent<SpriteComponent>();
-    auto playerSpriteObj = scavengerAtlas->get("boy-idle.png");
-    playerSpriteObj.setScale(EmeraldGame::scale);
-    playerSpriteComponent->setSprite(playerSpriteObj);
     auto playerComponent = player->addComponent<Player>();
+
     playerComponent->setSprites(
             scavengerAtlas->get("boy-idle.png"),
             scavengerAtlas->get("jump_upboy.png"),
@@ -184,25 +180,25 @@ void EmeraldGame::initPlayer() {
 }
 
 void EmeraldGame::completedLevel(int level) {
-	switch (level) {
-	case 0: 
-		introCleared = true;
-		break;
-	case 2: 
-		gravCleared = true;
-		break;
-	case 3: 
-		physCleared = true;
-		break;
-	case 4: 
-		procCleared = true;
-		break;
-	case 8:
-		bonusCleared = true;
-		break;
-	default: 
-		break;
-	}
+    switch (level) {
+        case 0:
+            introCleared = true;
+            break;
+        case 2:
+            gravCleared = true;
+            break;
+        case 3:
+            physCleared = true;
+            break;
+        case 4:
+            procCleared = true;
+            break;
+        case 8:
+            bonusCleared = true;
+            break;
+        default:
+            break;
+    }
 }
 
 // ============================================ GAME LOOP FUNCTIONS ====================================================
@@ -226,7 +222,13 @@ void EmeraldGame::onKey(SDL_Event &event) {
                     audioManager->playSFX("menuBeep.wav");
                 }
                 break;
-
+            case SDLK_b:
+                if (gameState == GameState::Pause) {
+                    initGame();
+                    gameState = GameState::Start;
+                    audioManager->playSFX("menuBeep.wav");
+                }
+                break;
             case SDLK_z:
                 camera->setZoomMode(!camera->isZoomMode());
                 break;
@@ -265,16 +267,18 @@ void EmeraldGame::onKey(SDL_Event &event) {
                         audioManager->playMusic("finish.mp3", 4, 0);
                     gameState = GameState::NextLevel;
                     completedLevel(currentLevel);
-				            currentStartPosition = nextStartPosition;
+                    currentStartPosition = nextStartPosition;
                     currentLevel = nextLevel;
                     initGame();
                     emeraldCounter = 0;
                 }
                 break;
             case SDLK_ESCAPE:
-                audioManager->playSFX("menuBeep.wav");
-                initGame();
-                gameState = GameState::Start;
+                if (gameState != GameState::Pause) {
+                    audioManager->playSFX("menuBeep.wav");
+                    initGame();
+                    gameState = GameState::Start;
+                }
                 break;
             case SDLK_LCTRL:
                 player->getComponent<Player>()->fireCannon(obstaclesAtlas);
@@ -311,13 +315,14 @@ void EmeraldGame::update(float time) {
             initGame();
             currentLevel = 0;
             gameState = GameState::GameOver;
-            audioManager->playSFX("gameOver.mp3");
+            audioManager->playSFX("gameOver.mp3", 4);
         }
         // ==========================    CHANGES GRAVITY    =============================
         // ========================== by: Eimantas Urbutis  =============================
         if (currentLevel == 2) {
-            float gravity = - 9.8;
-            if (player->position.x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 && player->position.y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+            float gravity = -9.8;
+            if (player->position.x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 &&
+                player->position.y > EmeraldGame::gameInstance->getLevel()->getHeight() / 10) {
                 gravity = (300 / sqrt(player->position.y));
                 world = EmeraldGame::gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
@@ -330,9 +335,11 @@ void EmeraldGame::update(float time) {
                 printf("Current gravity: %f\n", world->GetGravity().y);
             }
             for (auto &go : gameObjectsList) {
-                if (go->getPosition().x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 && go->position.y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                if (go->getPosition().x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 &&
+                    go->position.y > EmeraldGame::gameInstance->getLevel()->getHeight() / 10) {
                     if (go->getComponent<SpriteComponent>()) {
-                        if (go->name != "Player" && go->name != "Enemy" && go->getPosition().y > EmeraldGame::gameInstance->getLevel()->getHeight()/10) {
+                        if (go->name != "Player" && go->name != "Enemy" &&
+                            go->getPosition().y > EmeraldGame::gameInstance->getLevel()->getHeight() / 10) {
                             auto currentSprite = go->getComponent<SpriteComponent>()->getSprite();
                             currentSprite.setFlip({false, true});
                             go->getComponent<SpriteComponent>()->setSprite(currentSprite);
@@ -442,7 +449,7 @@ void EmeraldGame::deleteGameObject(shared_ptr<GameObject> gameObject) {
 
 void EmeraldGame::deleteGameObjectsByName(string name) {
     for (auto &go : gameObjectsList) {
-        if (go->name==name) {
+        if (go->name == name) {
             deleteGameObject(go);
         }
     }

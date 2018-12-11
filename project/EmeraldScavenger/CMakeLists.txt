@@ -6,7 +6,7 @@ file(GLOB EmeraldScavenger
         )
 
 # Compile cpp files
-add_executable(EmeraldScavenger ${EmeraldScavenger} Enemy.hpp Door.cpp Door.hpp CollectibleItem.cpp CollectibleItem.hpp Entity.cpp Entity.hpp AssetManager.cpp AssetManager.hpp AudioManager.cpp AudioManager.hpp)
+add_executable(EmeraldScavenger ${EmeraldScavenger} Enemy.hpp Door.cpp Door.hpp CollectibleItem.cpp CollectibleItem.hpp Entity.cpp Entity.hpp AudioManager.cpp AudioManager.hpp)
 target_link_libraries(EmeraldScavenger ${all_libs})
 
 # copy files to dest

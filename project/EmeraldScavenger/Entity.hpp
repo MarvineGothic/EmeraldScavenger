@@ -1,5 +1,5 @@
 //
-// Created by Admin on 01.12.2018.
+// Created by Sergiy Isakov on 01.12.2018.
 //
 
 #ifndef SIMPLERENDERENGINEPROJECT_ENTITY_H
@@ -29,7 +29,6 @@ public:
 
     shared_ptr<SpriteComponent> spriteComponent;
     shared_ptr<PhysicsComponent> physicsComponent;
-
 };
 
 

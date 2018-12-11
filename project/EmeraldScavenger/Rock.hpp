@@ -9,10 +9,6 @@
 #include "Component.hpp"
 #include "Entity.hpp"
 
-using namespace std;
-using namespace sre;
-using namespace glm;
-
 class Rock : public Entity {
 
 public:
