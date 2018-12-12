@@ -9,10 +9,7 @@
 #include "PhysicsComponent.hpp"
 #include "CollectibleItem.hpp"
 
-CollectibleItem::CollectibleItem(GameObject *gameObject) : Component(gameObject) {
-    spriteComponent = gameObject->addComponent<SpriteComponent>();
-    physicsComponent = gameObject->addComponent<PhysicsComponent>();
-    physicsScale = EmeraldGame::gameInstance->physicsScale;
+CollectibleItem::CollectibleItem(GameObject *gameObject) : Entity(gameObject) {
     emerald = EmeraldGame::gameInstance->obstaclesAtlas->get("diamond blue.png");
     pie = EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_teamCakeLogo.png");
     emerald.setScale(EmeraldGame::scale / 2.0f);

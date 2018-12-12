@@ -11,8 +11,7 @@
 #include "Entity.hpp"
 
 
-class CollectibleItem : public Component {
-    float physicsScale;
+class CollectibleItem : public Entity {
     vec2 position;
     string name;
 
@@ -20,8 +19,8 @@ class CollectibleItem : public Component {
     Sprite pie;
 public:
     explicit CollectibleItem(GameObject *gameObject);
-    shared_ptr<SpriteComponent> spriteComponent;
-    shared_ptr<PhysicsComponent> physicsComponent;
+
+    shared_ptr<GameObject> gameObjectCopy;
 
     vec2 getPosition();
 
