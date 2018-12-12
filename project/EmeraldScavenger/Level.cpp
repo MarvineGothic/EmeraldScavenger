@@ -192,7 +192,6 @@ void Level::level_intro() {
 
 }
 
-//todo: design levels:
 void Level::level_hub() {
     doorIsOpen = false;
     EmeraldGame::gameInstance->audioManager->playMusic("gravitySoundtrack.mp3", 4);
@@ -276,7 +275,7 @@ void Level::level_hub() {
         vector<shared_ptr<CollectibleItem>> temp;
         if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
             collectibles.emplace_back(addCollectible(vec2(width / 2, height - 5), "Emerald"));
-        } else {
+        } else if (!collectibles.empty()) {
             for (auto &cItem : collectibles) {
                 temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
             }
@@ -383,7 +382,7 @@ void Level::level_grav() {
         collectibles.emplace_back(addCollectible(vec2(width - 3, 14.0f), "Emerald"));
         collectibles.emplace_back(
                 addCollectible(vec2(floor(((floor(width / 2) + 4) + (width - 3)) / 2), 14.0f), "Emerald"));
-    } else {
+    } else if(!collectibles.empty()){
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
         }
@@ -441,7 +440,7 @@ void Level::level_phys() {
         collectibles.emplace_back(addCollectible(vec2(40.0f, 58.0f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(38.0f, 58.0f), "Pie"));
         collectibles.emplace_back(addCollectible(vec2(width - 4.5f, 68.5f), "Emerald"));
-    } else {
+    } else if(!collectibles.empty()){
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
         }
@@ -618,7 +617,7 @@ void Level::level_proc() {
     if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
         collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(width - 22, ceil + 5), "Pie"));
-    } else {
+    } else if(!collectibles.empty()){
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
         }
@@ -674,7 +673,6 @@ void Level::level_bonus_0() {
     int height = 50;
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
-    //game->background.initDynamicBackground("background.png");
 
     emeraldsNeeded = 5;
 
@@ -762,7 +760,7 @@ void Level::level_bonus_0() {
         collectibles.emplace_back(addCollectible(vec2(135, 2.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(145, 2.5f), "Pie"));
         collectibles.emplace_back(addCollectible(vec2(70, 32.5f), "Emerald"));
-    } else {
+    } else if(!collectibles.empty()){
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
         }
@@ -850,7 +848,7 @@ void Level::level_bonus_1() {
         collectibles.emplace_back(addCollectible(vec2(105, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(115, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(200, 1.5f), "Emerald"));
-    } else {
+    } else if(!collectibles.empty()){
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
         }
@@ -945,7 +943,7 @@ void Level::level_bonus_2() {
         collectibles.emplace_back(addCollectible(vec2(105, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(115, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(200, 1.5f), "Emerald"));
-    } else {
+    } else if(!collectibles.empty()){
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
         }
@@ -1060,6 +1058,7 @@ shared_ptr<CollectibleItem> Level::addCollectible(vec2 position, string name) {
     collectibleObject->name = name;
     auto collectible = collectibleObject->addComponent<CollectibleItem>();
     collectible->initCollectible(position, move(name));
+    collectible->gameObjectCopy = collectibleObject;
     return collectible;
 }
 
