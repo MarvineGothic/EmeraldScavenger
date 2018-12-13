@@ -10,10 +10,10 @@
 #include "CollectibleItem.hpp"
 
 CollectibleItem::CollectibleItem(GameObject *gameObject) : Entity(gameObject) {
-    emerald = EmeraldGame::gameInstance->obstaclesAtlas->get("diamond blue.png");
-    pie = EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_teamCakeLogo.png");
-    emerald.setScale(EmeraldGame::scale / 2.0f);
-    pie.setScale(EmeraldGame::scale / 3.0f);
+    emerald = EmeraldGame::gameInstance->obstaclesAtlas->get("emerald.png");
+    pie = EmeraldGame::gameInstance->obstaclesAtlas->get("cake.png");
+    emerald.setScale(EmeraldGame::scale * 1.5f);
+    pie.setScale(EmeraldGame::scale);
 }
 
 void CollectibleItem::initCollectible(vec2 pos, string name) {

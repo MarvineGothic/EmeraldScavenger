@@ -10,8 +10,8 @@
 #include "SpriteComponent.hpp"
 #include "PhysicsComponent.hpp"
 
-const vec2 PlatformComponent::tileScale(0.85f, 0.85f);
-const vec2 PlatformComponent::brickScale(0.3f, 0.3f);
+const vec2 PlatformComponent::tileScale(0.17f, 0.17f);
+const vec2 PlatformComponent::brickScale(0.15f, 0.15f);
 
 PlatformComponent::PlatformComponent(GameObject *gameObject) : Component(gameObject) {
     auto game = EmeraldGame::gameInstance;

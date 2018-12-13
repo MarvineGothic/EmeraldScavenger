@@ -25,10 +25,13 @@ shared_ptr<Level> Level::createDefaultLevel(EmeraldGame *game) {
     shared_ptr<Level> res = shared_ptr<Level>(new Level());
     res->game = game;
     // platform sprites:
-    // todo: make sprite sizes same
-    res->ground = EmeraldGame::gameInstance->obstaclesAtlas->get("tile ground.png");
-    res->brick = EmeraldGame::gameInstance->obstaclesAtlas->get("brick_1.png");
-    res->moss = EmeraldGame::gameInstance->obstaclesAtlas->get("moss_tile.png");
+    res->ground = EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_2.png");
+    res->brick = EmeraldGame::gameInstance->obstaclesAtlas->get("brick.png");
+    res->wood = EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_1.png");
+    res->blue = EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_3.png");
+    res->orange = EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_4.png");
+    res->green = EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_5.png");
+    res->brown = EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_6.png");
     return res;
 }
 
@@ -166,12 +169,12 @@ void Level::level_intro() {
     }
 
     // add rock
-    addRock(vec2{5.5, 5.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("meteorGrey_big1.png"),
+    addRock(vec2{5.5, 5.5}, EmeraldGame::gameInstance->obstaclesAtlas->get("boulder.png"),
             EmeraldGame::scale * 2.5f,
             0.2f, 0.5f, 1);
     // add Brick
-    addBrick(vec2{5, 2.5}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_wood.png"),
-             EmeraldGame::scale * 2.5f,
+    addBrick(vec2{5, 2.5}, EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_4.png"),
+             EmeraldGame::scale,
              0.2f, 1, 1);
 
     /*
@@ -460,8 +463,8 @@ void Level::level_phys() {
     addWall(33, 39, brick, 6);
 
     addWall(37, 46, brick, 2);
-    addBrick(vec2{39.5, 46}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_wood.png"),
-             EmeraldGame::scale * 4.0f,
+    addBrick(vec2{39.5, 46}, EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_6"),
+             EmeraldGame::scale * 3.0f,
              0.7f, 1, 1);
 
     addPlatform(20, 5, ground, 5, false);
@@ -513,8 +516,8 @@ void Level::level_phys() {
     addWall(15, 57, brick, 6);
     addPlatform(11, 57, ground, 4, false);
 
-    addBrick(vec2{19, 62}, EmeraldGame::gameInstance->gameSpritesAtlas->get("spr_wood.png"),
-             EmeraldGame::scale * 4.0f,
+    addBrick(vec2{19, 62}, EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_3.png"),
+             EmeraldGame::scale * 1.25f,
              0.7f, 1, 1);
 
     //Elevator 5
@@ -524,7 +527,7 @@ void Level::level_phys() {
     movingPlatformComponent->setMovementEnd({1, 61});
     movingPlatformComponent->setSpeed(5);
 
-    addRock(vec2{12, 40}, EmeraldGame::gameInstance->gameSpritesAtlas->get("meteorGrey_big1.png"),
+    addRock(vec2{12, 40}, EmeraldGame::gameInstance->obstaclesAtlas->get("boulder.png"),
             EmeraldGame::scale * 10.0f,
             0.2f, 0.5f, 1);
 }
@@ -1016,7 +1019,7 @@ shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
         res->initEnemy(EmeraldGame::gameInstance->obstaclesAtlas, pos, enemyType);
     } else {
         gameObject->name = "Enemy";
-        res->initEnemy(EmeraldGame::gameInstance->enemiesAtlas, pos, enemyType);
+        res->initEnemy(EmeraldGame::gameInstance->obstaclesAtlas, pos, enemyType);
     }
     return res;
 }

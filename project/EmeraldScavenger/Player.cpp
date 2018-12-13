@@ -20,7 +20,7 @@ Player::Player(GameObject *gameObject) : Entity(gameObject) {
     physicsComponent->fixRotation();
     physicsComponent->getFixture()->SetFriction(1);
     physicsComponent->getFixture()->SetDensity(0.1f);
-    auto playerSpriteObj = EmeraldGame::gameInstance->scavengerAtlas->get("boy-idle.png");
+    auto playerSpriteObj = EmeraldGame::gameInstance->obstaclesAtlas->get("idle1.png");
     playerSpriteObj.setScale(EmeraldGame::scale);
     spriteComponent->setSprite(playerSpriteObj);
     entitySprite = idle;
@@ -122,6 +122,12 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
             physicsComponent->addImpulse({-pV.x, -pV.y * 0.1f});
             EmeraldGame::gameInstance->audioManager->playSFX("lostLife.wav", 8);
         }
+    } else if (!invincible && (obj->name == "Boulder" || obj->name == "Poison")) {
+        lostLife = true;
+        blinkTime = 3.0f;
+        vec2 pV = physicsComponent->getLinearVelocity();
+        physicsComponent->addImpulse({-pV.x, -pV.y * 0.1f});
+        EmeraldGame::gameInstance->audioManager->playSFX("lostLife.wav", 8);
     }
     if (obj->name == "Emerald" && obj->getComponent<SpriteComponent>() != nullptr) {
         EmeraldGame::gameInstance->level->deleteEmerald(obj->getComponent<CollectibleItem>());
@@ -189,14 +195,14 @@ void Player::fireCannon(std::shared_ptr<sre::SpriteAtlas> spritesAtlas) {
     if (fireTimer > 2.5) {
         EmeraldGame::gameInstance->audioManager->playSFX("cannon.mp3");
         auto game = EmeraldGame::gameInstance;
-        game->deleteGameObjectsByName("Cannon");
-        auto cannonObject = game->createGameObject();
+        game->deleteGameObject(cannonObject);
+        cannonObject = game->createGameObject();
         cannonObject->name = "Cannon";
         auto spriteComponent = cannonObject->addComponent<SpriteComponent>();
         auto physicsScale = EmeraldGame::gameInstance->physicsScale;
         auto cannonPhysics = cannonObject->addComponent<PhysicsComponent>();
         auto cannonVelocity = 3.0f;
-        auto cannonRadius = 5 / physicsScale;
+        auto cannonRadius = 10 / physicsScale;
 
         auto cannonPos = gameObject->getPosition() / physicsScale;
         if (facingLeft) {
@@ -206,9 +212,9 @@ void Player::fireCannon(std::shared_ptr<sre::SpriteAtlas> spritesAtlas) {
         }
         cannonPhysics->initCircle(b2_dynamicBody, cannonRadius, cannonPos, 1);
         //    cannonPhysics->setSensor(true);
-        auto cannonSpriteObj = spritesAtlas->get("diamond blue.png");
-        cannonSpriteObj.setColor({0.0, 1.0, 0.0, 1.0});
-        cannonSpriteObj.setScale({0.05f, 0.05f});
+        int weaponSprite = (rand() % 3) + 1;
+        auto cannonSpriteObj = spritesAtlas->get("axe_" + to_string(weaponSprite) + ".png");
+        cannonSpriteObj.setScale({0.14f, 0.14f});
         spriteComponent->setSprite(cannonSpriteObj);
         vec2 movement{0, 0};
         if (facingLeft) {
