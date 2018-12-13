@@ -56,6 +56,7 @@ private:
 
     static const vec2 dragonScale;
     static const vec2 birdScale;
+	static const vec2 spikeScale;
 
     vector<shared_ptr<GameObject>> enemies;
     vector<Sprite> movingSprites;
