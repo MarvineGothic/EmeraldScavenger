@@ -46,7 +46,7 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "brown_rock.png",
+	"filename": "boulder_2.png",
 	"frame": {"x":1416,"y":717,"w":58,"h":58},
 	"rotated": false,
 	"trimmed": false,
@@ -343,7 +343,7 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "green_rock.png",
+	"filename": "boulder_1.png",
 	"frame": {"x":1416,"y":777,"w":58,"h":58},
 	"rotated": false,
 	"trimmed": false,
