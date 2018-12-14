@@ -406,10 +406,10 @@ void Level::level_phys() {
     int height = 70;
 
     startPosition = EmeraldGame::currentStartPosition;
-    //if (startPosition == vec2{ NULL , NULL }) {
-    startPosition = vec2{3.5, 2.5}; //Real starting position
-    //startPosition = vec2{ 15, 61.5 }; //This one's just here for quicker testing
-//}
+    if (startPosition == vec2{ NULL , NULL }) {
+		startPosition = vec2{3.5, 2.5}; //Real starting position
+		//startPosition = vec2{ 15, 61.5 }; //This one's just here for quicker testing
+	}
 
 
     vec2 levelMin = {width + width, height - 5};
@@ -634,7 +634,6 @@ void Level::level_proc() {
 
 	//Simpler version
 	/*
-	int i = 0;
 	while (prev_platform.x < (width - 30)) {
 		int length = (rand() % max_length) + min_length;
 		int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
@@ -646,7 +645,6 @@ void Level::level_proc() {
 	*/
 
 	//Simpler version V2
-	int i = 0;
 	std::set<int> heights = {};
 	while (prev_platform.x < (width - 30)) {
 		int length = (rand() % max_length) + min_length;
@@ -677,12 +675,11 @@ void Level::level_proc() {
 			//enemyFrequencyPercent chance of placing an enemy
 			if ((rand() % 100) < enemyFrequencyPercent) {
 				auto enemy = addEnemy(vec2{ (rand_x + length/2), prev_platform.y + 2}, Enemy::EnemyType::Zombie);
-				//enemy->getGameObject()->getComponent<PhysicsComponent>()->getFixture()->SetFriction(0);
 			}
 		}
 		prev_platform = vec2(rand_x + length, rand_y);
 	}
-
+	
 
 	//More advanced version (Unfinished - I stopped working on it since you need to be able to get back across the level, which this doesn't allow)
 	/*

@@ -74,6 +74,7 @@ class EmeraldGame : public b2ContactListener {
 
     void initPlayer();
 
+	void initVariables();
 
     void update(float time);
 

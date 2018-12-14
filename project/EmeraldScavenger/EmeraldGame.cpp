@@ -33,7 +33,7 @@ const vec2 EmeraldGame::scale(0.2f, 0.2f);
 EmeraldGame *EmeraldGame::gameInstance = nullptr;
 bool EmeraldGame::introCleared = false, EmeraldGame::physCleared = false,
         EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false,
-        EmeraldGame::bonusCleared = false;
+        EmeraldGame::bonusCleared = false, canEnterNextLevel = true;
 
 EmeraldGame::EmeraldGame()
         : debugDraw(physicsScale) {
@@ -179,6 +179,16 @@ void EmeraldGame::initPlayer() {
     camera->setFollowObject(player, {windowSize * 0.5f});
 }
 
+void EmeraldGame::initVariables() {
+	livesCounter = 5;
+	emeraldCounter = 0;
+	currentLevel = 0;
+	currentStartPosition = vec2{ NULL, NULL };
+	EmeraldGame::introCleared = false, EmeraldGame::physCleared = false,
+		EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false,
+		EmeraldGame::bonusCleared = false, canEnterNextLevel = true;
+}
+
 void EmeraldGame::completedLevel(int level) {
     switch (level) {
         case 0:
@@ -262,16 +272,20 @@ void EmeraldGame::onKey(SDL_Event &event) {
                 }
                 break;
             case SDLK_UP:
-                if (emeraldCounter >= Level::getEmeraldsNeeded() && player->getComponent<Player>()->exit) {
-                    if (emeraldCounter != 0)
-                        audioManager->playMusic("finish.mp3", 4, 0);
-                    gameState = GameState::NextLevel;
-                    completedLevel(currentLevel);
-                    currentStartPosition = nextStartPosition;
-                    currentLevel = nextLevel;
-                    initGame();
-                    emeraldCounter = 0;
-                }
+				if (canEnterNextLevel) {
+					if (emeraldCounter >= Level::getEmeraldsNeeded() && player->getComponent<Player>()->exit) {
+						canEnterNextLevel = false;
+						if (emeraldCounter != 0) {
+							audioManager->playMusic("finish.mp3", 4, 0);
+						}
+						gameState = GameState::NextLevel;
+						completedLevel(currentLevel);
+						currentStartPosition = nextStartPosition;
+						currentLevel = nextLevel;
+						initGame();
+						emeraldCounter = 0;
+					}
+				}
                 break;
             case SDLK_ESCAPE:
                 if (gameState != GameState::Pause) {
@@ -328,7 +342,7 @@ void EmeraldGame::update(float time) {
                 world->SetGravity(b2Vec2(0.0f, gravity));
                 printf("Current grav: %f\n", world->GetGravity().y);
             } else {
-                printf("Current player position: %f\n", player->position.y);
+                //printf("Current player position: %f\n", player->position.y);
                 gravity = (-150 / sqrt(player->position.y));
                 world = EmeraldGame::gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
@@ -354,6 +368,7 @@ void EmeraldGame::update(float time) {
         if (nextLevelDelta >= 2.0f) {
             level->clearEmeralds();
             nextLevelDelta = 0;
+			canEnterNextLevel = true;
             runGame();
         }
     } else if (gameState == GameState::Start) {
@@ -361,9 +376,8 @@ void EmeraldGame::update(float time) {
         gameState = GameState::Ready;
         background.initStaticBackground("start.png");
         level->clearEmeralds();
-        livesCounter = 5;
-        emeraldCounter = 0;
-    }
+		initVariables();
+	}
 }
 
 void EmeraldGame::render() {
