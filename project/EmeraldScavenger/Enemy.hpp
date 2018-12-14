@@ -54,6 +54,7 @@ public:
     bool isDead = false;
     
     float fireTimer = 0.0f;
+    int fireOffset = 0.0f;
 
 private:
     Sprite move1;

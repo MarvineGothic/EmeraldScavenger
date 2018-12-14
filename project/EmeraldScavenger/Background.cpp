@@ -20,14 +20,14 @@ void Background::renderBackground(RenderPass &renderPass, float offset) {
     renderPass.draw(batch, translate(vec3(offset, 0, 0)));
 }
 
-void Background::initDynamicBackground(string filename) {
+void Background::initDynamicBackground(string filename, float levelHeight, float levelWidth) {
     tex = Texture::create().withFile(move(filename))
             .withFilterSampling(false)
             .build();
 
     auto backgroundAtlas = SpriteAtlas::createSingleSprite(tex, "background", vec2(0, 0));
     auto backgroundSprite = backgroundAtlas->get("background");
-    float scaleY = EmeraldGame::windowSize.y / tex->getHeight();
+    float scaleY = levelHeight * Level::tileSize / tex->getHeight();
     //float scaleX = EmeraldGame::windowSize.x / tex->getWidth();
     backgroundSprite.setScale({scaleY, scaleY});
     auto batchBuilder = SpriteBatch::create();

@@ -318,13 +318,10 @@ void EmeraldGame::update(float time) {
                 gravity = (300 / sqrt(player->position.y));
                 world = EmeraldGame::gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
-                printf("Current grav: %f\n", world->GetGravity().y);
             } else {
-                printf("Current player position: %f\n", player->position.y);
                 gravity = (-150 / sqrt(player->position.y));
                 world = EmeraldGame::gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
-                printf("Current gravity: %f\n", world->GetGravity().y);
             }
             for (auto &go : gameObjectsList) {
                 if (go->getPosition().x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 &&
@@ -368,7 +365,6 @@ void EmeraldGame::render() {
         profiler.update();
         profiler.gui(false);
     }
-
     background.renderBackground(renderPass, 0.0f);
 
     auto pos = camera->getGameObject()->getPosition();

@@ -72,11 +72,10 @@ void Level::makeLevel(int level) {
 
 void Level::level_intro() {
     doorIsOpen = false;
-    game->background.initDynamicBackground("background.png");
     EmeraldGame::gameInstance->audioManager->playMusic("bgMusic.mp3", 4);
-
     int width = 200;
     int height = 30;
+    game->background.initDynamicBackground("fence_background.png", height, width);
 
     startPosition = EmeraldGame::currentStartPosition;
     if (startPosition == vec2{NULL, NULL}) {
@@ -95,27 +94,27 @@ void Level::level_intro() {
     addWall(0, 0, brick, height);
 
     // ceil
-    addPlatform(0, height, ground, width, false);
+    addPlatform(0, height, wood, width, false);
 
     // floor (part 1)
-    addPlatform(1, 0, ground, 130, false);
+    addPlatform(1, 0, wood, 130, false);
 
     // add some more platforms
-    addPlatform(15, 4, ground, 5, false);
-    addPlatform(23, 8, ground, 5, false);
-    addPlatform(31, 12, ground, 5, false);
+    addPlatform(15, 4, wood, 5, false);
+    addPlatform(23, 8, wood, 5, false);
+    addPlatform(31, 12, wood, 5, false);
     addWall(35, 0, brick, 12);
-    addPlatform(36, 5, ground, 9, false);
-    addPlatform(36, 7, ground, 1, false);
+    addPlatform(36, 5, wood, 9, false);
+    addPlatform(36, 7, wood, 1, false);
     addWall(45, 0, brick, 12);
-    addPlatform(45, 12, ground, 5, false);
+    addPlatform(45, 12, wood, 5, false);
     addWall(49, 0, brick, 12);
-    addPlatform(50, 5, ground, 9, false);
-    addPlatform(50, 7, ground, 1, false);
+    addPlatform(50, 5, wood, 9, false);
+    addPlatform(50, 7, wood, 1, false);
     addWall(59, 0, brick, 12);
-    addPlatform(59, 12, ground, 5, false);
+    addPlatform(59, 12, wood, 5, false);
     addWall(64, 12, brick, 5);
-    addPlatform(64, 17, ground, 17, false);
+    addPlatform(64, 17, wood, 17, false);
     addWall(69, 18, brick, 5);
     addWall(80, 0, brick, 18); //Put the following enemies on the platform with no movement
     /*
@@ -130,15 +129,15 @@ void Level::level_intro() {
     //Add some spikes here (at x = 125)
 
 
-    addPlatform(135, 0, ground, 10, false); //Floor (part 2)
+    addPlatform(135, 0, wood, 10, false); //Floor (part 2)
 
-    auto movingPlatform = addPlatform(150, 3, ground, 5, true);
+    auto movingPlatform = addPlatform(150, 3, wood, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({150, 3});
     movingPlatformComponent->setMovementEnd({160, 3});
     movingPlatformComponent->setSpeed(2);
 
-    addPlatform(170, 0, ground, width - 170, false); //Floor (part 3)
+    addPlatform(170, 0, wood, width - 170, false); //Floor (part 3)
 
     //addCollectible({ 175, 2 }, "diamond");
 
@@ -198,11 +197,11 @@ void Level::level_intro() {
 void Level::level_hub() {
     doorIsOpen = false;
     EmeraldGame::gameInstance->audioManager->playMusic("gravitySoundtrack.mp3", 4);
-    game->background.initDynamicBackground("background.png");
 
     int width = 50;
     int height = 50;
-
+    game->background.initDynamicBackground("background.png", width, height);
+    
     startPosition = EmeraldGame::currentStartPosition;
     if (startPosition == vec2{NULL, NULL}) {
         startPosition = vec2{6.5, 2.5};
@@ -294,11 +293,10 @@ void Level::level_hub() {
 void Level::level_grav() {
     doorIsOpen = false;
     EmeraldGame::gameInstance->audioManager->playMusic("gravitySoundtrack.mp3", 4);
-    game->background.initDynamicBackground("gravity_background.png");
 
     int width = 40;
     int height = 100;
-
+    game->background.initDynamicBackground("gravity_background.png", height, width);
 
     emeraldsNeeded = 4;
 
@@ -400,12 +398,11 @@ void Level::level_grav() {
 
 void Level::level_phys() {
     doorIsOpen = false;
-    game->background.initDynamicBackground("background.png");
-
     emeraldsNeeded = 5;
 
     int width = 70;
     int height = 70;
+    game->background.initDynamicBackground("gravity_background.png", height, width);
 
     startPosition = EmeraldGame::currentStartPosition;
     //if (startPosition == vec2{ NULL , NULL }) {
@@ -463,8 +460,8 @@ void Level::level_phys() {
     addWall(33, 39, brick, 6);
 
     addWall(37, 46, brick, 2);
-    addBrick(vec2{39.5, 46}, EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_6"),
-             EmeraldGame::scale * 3.0f,
+    addBrick(vec2{39.5, 46}, EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_6.png"),
+             EmeraldGame::scale * 2.0f,
              0.7f, 1, 1);
 
     addPlatform(20, 5, ground, 5, false);
@@ -541,10 +538,10 @@ float clamp(float n, float lower, float upper) {
 //Procedurally generates a level.
 void Level::level_proc() {
     doorIsOpen = false;
-    game->background.initDynamicBackground("background.png");
 
     int width = 200;
     int height = 30;
+    game->background.initDynamicBackground("fence_background.png", height, width);
     emeraldsNeeded = 1;
 
     startPosition = EmeraldGame::currentStartPosition;
@@ -561,9 +558,9 @@ void Level::level_proc() {
     // end wall
     addWall(width, 0, brick, height);
     // floor
-    addPlatform(0, 0, ground, 10, false);
+    addPlatform(0, 0, wood, 10, false);
     // ceil
-    addPlatform(0, height, ground, width, false);
+    addPlatform(0, height, wood, width, false);
 
     //Defines how far apart platforms are allowed to be
     vec2 min(2, -5);
@@ -590,7 +587,7 @@ void Level::level_proc() {
     float wall_r = 200;
 
     //Initial platform that starts chain
-    addPlatform(15, 5, ground, 5, false);
+    addPlatform(15, 5, wood, 5, false);
     vec2 prev_platform = vec2(15 + 5, 5);
 
     /*
@@ -611,10 +608,10 @@ void Level::level_proc() {
         int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
         int rand_y = clamp(static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y), floor,
                            ceil);
-        addPlatform(rand_x, rand_y, ground, length, false);
+        addPlatform(rand_x, rand_y, wood, length, false);
         prev_platform = vec2(rand_x + length, rand_y);
     }
-    addPlatform(width - 20, 0, ground, 20, false);
+    addPlatform(width - 20, 0, wood, 20, false);
 
     vector<shared_ptr<CollectibleItem>> temp;
     if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
@@ -632,7 +629,7 @@ void Level::level_proc() {
     }
 
     //Elevator
-    auto movingPlatform = addPlatform(width - 15, 2, ground, 5, true);
+    auto movingPlatform = addPlatform(width - 15, 2, wood, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({width - 22, 5});
     movingPlatformComponent->setMovementEnd({width - 22, ceil});
@@ -642,11 +639,10 @@ void Level::level_proc() {
 
 void Level::level_test() {
     doorIsOpen = false;
-    game->background.initDynamicBackground("background.png");
 
     int width = 30;
     int height = 30;
-
+    game->background.initDynamicBackground("fence_background.png", height, width);
 
     startPosition = EmeraldGame::currentStartPosition;
     if (startPosition == vec2{NULL, NULL}) {
@@ -657,10 +653,10 @@ void Level::level_test() {
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
 
-    game->background.initDynamicBackground("background.png");
+    game->background.initDynamicBackground("fence_background.png", height, width);
 
     addWall(0, 0, brick, height); //start wall
-    addPlatform(0, 0, ground, width, false); //Floor
+    addPlatform(0, 0, wood, width, false); //Floor
 
     addEnemy({28, 10}, Enemy::EnemyType::Boulder);
 
@@ -805,21 +801,21 @@ void Level::level_bonus_1() {
     emeraldsNeeded = 5;
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
-    game->background.initDynamicBackground("background.png");
+    game->background.initDynamicBackground("background.png", height, width);
 
     // start wall
     addWall(0, 0, brick, height);
     // floor
-    addPlatform(1, 0, ground, width - 200, false);
+    addPlatform(1, 0, wood, width - 200, false);
     // gap = 5
-    addPlatform(10, 0, ground, width - 115, false);
+    addPlatform(10, 0, wood, width - 115, false);
     // gap = 5
-    addPlatform(105, 0, ground, width - 105, false);
+    addPlatform(105, 0, wood, width - 105, false);
     // ceil
-    addPlatform(1, height - 1, ground, width - 1, false);
+    addPlatform(1, height - 1, wood, width - 1, false);
 
 
-    auto movingPlatform = addPlatform(10, 3, ground, 5, true);
+    auto movingPlatform = addPlatform(10, 3, wood, 5, true);
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({10, 3});
     movingPlatformComponent->setMovementEnd({10, 10});
@@ -901,7 +897,7 @@ void Level::level_bonus_2() {
     emeraldsNeeded = 5;
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
-    game->background.initDynamicBackground("background.png");
+    game->background.initDynamicBackground("background.png", width, height);
 
     // start wall
     addWall(0, 0, brick, height);

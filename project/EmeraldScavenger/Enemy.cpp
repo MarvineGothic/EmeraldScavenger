@@ -26,7 +26,7 @@ void Enemy::initEnemy(std::shared_ptr<SpriteAtlas> enemyAtlas, vec2 position, En
     //auto physicsScale = EmeraldGame::gameInstance->physicsScale;
     //physicsComponent = gameObject->addComponent<PhysicsComponent>();
     enemyVelocity = 0.25f;
-
+    fireOffset = (rand() % 20) + 10;
     //physicsComponent->getFixture()->SetRestitution(1);
     this->enemyType = enemyType;
     int enemySprite = (rand() % 3) + 1;
@@ -206,7 +206,7 @@ void Enemy::update(float deltaTime) {
     // ====================== Enemy DIES =======================
     if (!isDead)
         fireTimer += deltaTime;
-    if (fireTimer > 10.0) {
+    if (fireTimer > fireOffset) {
         dropBoulder();
     }
 }
@@ -277,10 +277,8 @@ void Enemy::updateSprite(float deltaTime) {
     } else if ((distance > 0.02 && !isDead) || (distance < -0.02 && !isDead)) {
         spriteIndex = (spriteIndex + 1) % movingSprites.size();
         Sprite movingSprite = movingSprites[spriteIndex];
-        if (distance > 0.02) //&& enemyType != EnemyType::Dragon)
+        if (distance > 0.02)
             movingSprite.setFlip({true, false});
-//        else if (distance < -0.02 && enemyType == EnemyType::Dragon)
-//            movingSprite.setFlip({true, false});
         gameObject->getComponent<SpriteComponent>()->setSprite(movingSprite);
         distance = 0.0f;
     }
@@ -296,8 +294,6 @@ void Enemy::updateSprite(float deltaTime) {
     if (world->GetGravity().y > 0) {
         auto lastSprite = gameObject->getComponent<SpriteComponent>()->getSprite();
         lastSprite.setFlip({false, true});
-        if (facingLeft)
-            lastSprite.setFlip({true, true});
         gameObject->getComponent<SpriteComponent>()->setSprite(lastSprite);
     }
 }
