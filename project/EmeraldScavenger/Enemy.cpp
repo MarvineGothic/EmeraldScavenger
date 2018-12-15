@@ -62,7 +62,7 @@ void Enemy::initEnemy(std::shared_ptr<SpriteAtlas> enemyAtlas, vec2 position, En
                    birdScale);
     } else if (enemyType == EnemyType::Dragon) {
         radius = 10 / physicsScale;
-        physicsComponent->initCircle(b2_dynamicBody, radius, position * Level::tileSize / physicsScale, 1);
+        physicsComponent->initCircle(b2_dynamicBody, radius * 0.9, position * Level::tileSize / physicsScale, 1);
         physicsComponent->setLinearVelocity({1.5, 0});
         auto dragonSpriteObj = enemyAtlas->get("flying" + to_string(enemySprite) + "_1.png");
         dragonSpriteObj.setScale(dragonScale);
@@ -124,7 +124,7 @@ void Enemy::initEnemy(std::shared_ptr<SpriteAtlas> enemyAtlas, vec2 position, En
         //physicsComponent->getBody()->ApplyAngularImpulse(5, true);
         physicsComponent->getFixture()->SetRestitution(0.4);
     }
-    if (!(enemyType == EnemyType::Boulder)) {
+    if (!(enemyType == EnemyType::Boulder || enemyType == EnemyType::SpikeMonster)) {
         pos = physicsComponent->getPosition();
         physicsComponent->fixRotation();
         physicsComponent->getFixture()->SetFriction(1);
@@ -188,7 +188,7 @@ void Enemy::update(float deltaTime) {
     b2Body *body = physicsComponent->getBody();
 
     // ====================== Enemy VELOCITY =====================
-    if (!(enemyType == EnemyType::Boulder)) {
+    if (!(enemyType == EnemyType::Boulder || enemyType == EnemyType::SpikeMonster)) {
         float accelerationSpeed = 0.01f;
         physicsComponent->addImpulse(movement * accelerationSpeed);
         float maximumVelocity = enemyVelocity;

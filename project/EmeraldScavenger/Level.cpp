@@ -15,6 +15,7 @@
 #include "Enemy.hpp"
 #include "Door.hpp"
 #include "CollectibleItem.hpp"
+#include <set>
 
 vec2 Level::startPosition = {};
 vec2 Level::finishPosition = {};
@@ -405,10 +406,10 @@ void Level::level_phys() {
     game->background.initDynamicBackground("gravity_background.png", height, width);
 
     startPosition = EmeraldGame::currentStartPosition;
-    //if (startPosition == vec2{ NULL , NULL }) {
-    startPosition = vec2{3.5, 2.5}; //Real starting position
-    //startPosition = vec2{ 15, 61.5 }; //This one's just here for quicker testing
-//}
+    if (startPosition == vec2{ NULL , NULL }) {
+		startPosition = vec2{3.5, 2.5}; //Real starting position
+		//startPosition = vec2{ 15, 61.5 }; //This one's just here for quicker testing
+	}
 
 
     vec2 levelMin = {width + width, height - 5};
@@ -534,13 +535,18 @@ float clamp(float n, float lower, float upper) {
     return std::max(lower, std::min(n, upper));
 }
 
+enum class Section {
+	Normal,
+	Stairs,
+	Drop
+};
 
 //Procedurally generates a level.
 void Level::level_proc() {
     doorIsOpen = false;
 
     int width = 200;
-    int height = 30;
+    int height = 28;
     game->background.initDynamicBackground("fence_background.png", height, width);
     emeraldsNeeded = 1;
 
@@ -553,34 +559,64 @@ void Level::level_proc() {
     levelWidth = static_cast<int>((width + 1) * tileSize);
     levelHeight = static_cast<int>(height * tileSize);
 
+	//addEnemy({ 5, 5 }, Enemy::EnemyType::SpikeMonster);
+
     // start wall
-    addWall(0, 0, brick, height);
+    addWall(0, 0, brick, height + 1);
     // end wall
-    addWall(width, 0, brick, height);
+    addWall(width, 0, brick, height + 1);
     // floor
     addPlatform(0, 0, wood, 10, false);
     // ceil
-    addPlatform(0, height, wood, width, false);
+    addPlatform(0, height+1, wood, width, false);
 
     //Defines how far apart platforms are allowed to be
-    vec2 min(2, -5);
-    vec2 max(6, 5);
+    vec2 init_min(2, -5);
+    vec2 init_max(6, 5);
 
-    int max_length;
-    int min_length;
+    int init_max_length;
+    int init_min_length;
 
-    //Defines how long platforms are allowed to be
-    if (game->livesCounter == 5) {
-        max_length = 4;
-        min_length = 1;
-    } else if (game->livesCounter < 5 && game->livesCounter > 2) {
-        max_length = 5;
-        min_length = 2;
-    } else {
-        max_length = 6;
-        min_length = 3;
-    }
+	int enemyPlatformMinLength;
+	int enemyFrequencyPercent;
+	int flyingEnemyFrequencyPercent;
 
+    //Defines difficulty parameters based on number of lives left
+    if (game->livesCounter > 4) {
+        init_max_length = 4;
+		init_min_length = 1;
+		enemyPlatformMinLength = 3;
+		enemyFrequencyPercent = 50;
+		flyingEnemyFrequencyPercent = 75;
+    } 
+	else if (game->livesCounter == 4) {
+		init_max_length = 5;
+		init_min_length = 2;
+		enemyPlatformMinLength = 4;
+		enemyFrequencyPercent = 30;
+		flyingEnemyFrequencyPercent = 50;
+	}
+	else if (game->livesCounter == 3) {
+		init_max_length = 5;
+		init_min_length = 2;
+		enemyPlatformMinLength = 4;
+		enemyFrequencyPercent = 20;
+		flyingEnemyFrequencyPercent = 25;
+	}
+	else if (game->livesCounter == 2) {
+		init_max_length = 6;
+		init_min_length = 3;
+		enemyPlatformMinLength = 5;
+		enemyFrequencyPercent = 10;
+		flyingEnemyFrequencyPercent = 10;
+	}
+	else {
+		init_max_length = 6;
+		init_min_length = 3;
+		enemyPlatformMinLength = 5;
+		enemyFrequencyPercent = 0; //No enemies on platforms
+		flyingEnemyFrequencyPercent = 0; //No flying enemies
+	}
     float floor = 1;
     float ceil = 15;
     float wall_l = 0;
@@ -590,28 +626,125 @@ void Level::level_proc() {
     addPlatform(15, 5, wood, 5, false);
     vec2 prev_platform = vec2(15 + 5, 5);
 
-    /*
-    Todo: Add special cases so jumps can either be very tall (max 6 in height)
-                                                or very long (max TBD), but not both
-          Add enemies
-          Add spikes
-          Add jewel-pickup (goal)
-          Add moving platform back to beginning of level once completed
-    */
+	int max_length = init_max_length;
+	int min_length = init_min_length;
+	vec2 min = init_min;
+	vec2 max = init_max;
+	Section section = Section::Normal;
 
-    int i = 0;
-    while (prev_platform.x < (width - 30)) {
-        //int min_y = clamp(min.y, floor, ceil);
-        //int max_y = clamp(max.y, floor, ceil);
+	//Simpler version
+	/*
+	while (prev_platform.x < (width - 30)) {
+		int length = (rand() % max_length) + min_length;
+		int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
+		int rand_y = clamp(static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y), floor, ceil);
+		addPlatform(rand_x, rand_y, ground, length, false);
+		prev_platform = vec2(rand_x + length, rand_y);
+	}
+	addPlatform(width - 20, 0, ground, 20, false);
+	*/
 
-        int length = (rand() % max_length) + min_length;
-        int rand_x = static_cast<int>((rand() % (int) ((max.x - min.x) + 1)) + min.x + prev_platform.x);
-        int rand_y = clamp(static_cast<int>((rand() % (int) ((max.y - min.y) + 1)) + min.y + prev_platform.y), floor,
-                           ceil);
-        addPlatform(rand_x, rand_y, wood, length, false);
-        prev_platform = vec2(rand_x + length, rand_y);
-    }
-    addPlatform(width - 20, 0, wood, 20, false);
+	//Simpler version V2
+	std::set<int> heights = {};
+	while (prev_platform.x < (width - 30)) {
+		int length = (rand() % max_length) + min_length;
+		int min_y = glm::max(min.y, floor - prev_platform.y); //Finds the smaller of max.y or the distance to the ceiling
+		int max_y = glm::min(max.y, ceil - prev_platform.y); //Finds the larger of min.y or the distance to the floor
+		int rand_x = static_cast<int>((rand() % (int)((max.x - min.x) + 1)) + min.x + prev_platform.x);
+		int rand_y = clamp(static_cast<int>((rand() % (int)((max_y - min_y) + 1)) + min_y + prev_platform.y), floor, ceil);
+		addPlatform(rand_x, rand_y, ground, length, false);
+
+		//Add flying enemy
+		//If this platform isn't at the same height as the previous platform
+		if (rand_y != prev_platform.y) {
+			//If another platform exists in the same height
+			const bool duplicate = heights.find(rand_y) != heights.end();
+			if (duplicate) {
+				if ((rand() % 100) < flyingEnemyFrequencyPercent) {
+					addEnemy(vec2{ rand_x - 2, rand_y + 0.53 }, Enemy::EnemyType::Dragon);
+				}
+			}
+			else {
+				heights.insert(rand_y);
+			}
+		}
+
+		//Add enemy on platform
+		//If platform is long enough to have an enemy
+		if (length >= enemyPlatformMinLength) {
+			//enemyFrequencyPercent chance of placing an enemy
+			if ((rand() % 100) < enemyFrequencyPercent) {
+				auto enemy = addEnemy(vec2{ (rand_x + length/2), prev_platform.y + 2}, Enemy::EnemyType::Zombie);
+			}
+		}
+		prev_platform = vec2(rand_x + length, rand_y);
+	}
+	
+
+	//More advanced version (Unfinished - I stopped working on it since you need to be able to get back across the level, which this doesn't allow)
+	/*
+	int i = 0;
+	int special = 0;
+	while (prev_platform.x < (width - 30)) {
+		switch (section) {
+		case Section::Normal:
+			int length = (rand() % max_length) + min_length;
+			int rand_x = static_cast<int>((rand() % (int)((max.x - min.x) + 1)) + min.x + prev_platform.x);
+			int rand_y = clamp(static_cast<int>((rand() % (int)((max.y - min.y) + 1)) + min.y + prev_platform.y), floor, ceil);
+			addPlatform(rand_x, rand_y, ground, length, false);
+			prev_platform = vec2(rand_x + length, rand_y);
+			break;
+		case Section::Stairs:
+			min = vec2{ init_min.x, 2 };
+			max = vec2{ init_max.x, 5 };
+			special = 3;
+			break;
+		case Section::Drop:
+			min = vec2{ init_min.x, -8 };
+			max = vec2{ init_max.x, -ceil };
+			special = 1;
+			break;
+		}
+
+		special--;
+		//Reset parameters if special event is over
+		if (special == 0) {
+			max_length = init_max_length;
+			min_length = init_min_length;
+			min = init_min;
+			max = init_max;
+			section = Section::Normal;
+		}
+
+		//Stairs section
+		if (special == 0 && prev_platform.y < floor + ((ceil - floor) / 2)) {
+			section = Section::Stairs;
+			min = vec2{ init_min.x, 2 };
+			max = vec2{ init_max.x, 5 };
+			special = 3;
+		}
+
+		//Drop section
+		else if (special == 0 && prev_platform.y > floor + ((ceil - floor) / 2)) {
+			section = Section::Drop;
+			min = vec2{ init_min.x, -8 };
+			max = vec2{ init_max.x, -ceil };
+			special = 1;
+		}
+		else {
+			section = Section::Normal;
+			int length = (rand() % max_length) + min_length;
+			int rand_x = static_cast<int>((rand() % (int)((max.x - min.x) + 1)) + min.x + prev_platform.x);
+			int rand_y = clamp(static_cast<int>((rand() % (int)((max.y - min.y) + 1)) + min.y + prev_platform.y), floor, ceil);
+			addPlatform(rand_x, rand_y, ground, length, false);
+			prev_platform = vec2(rand_x + length, rand_y);
+			break;
+		}
+	}
+	addPlatform(width - 20, 0, ground, 20, false);
+	*/
+
+	addPlatform(width - 20, 0, ground, 20, false);
 
     vector<shared_ptr<CollectibleItem>> temp;
     if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
@@ -1010,7 +1143,7 @@ shared_ptr<PlatformComponent> Level::addWall(int x, int y, Sprite sprite, int le
 shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
     auto gameObject = game->createGameObject();
     auto res = gameObject->addComponent<Enemy>();
-    if (enemyType == Enemy::EnemyType::Boulder) {
+    if (enemyType == Enemy::EnemyType::Boulder || enemyType == Enemy::EnemyType::SpikeMonster) {
         gameObject->name = "Boulder";
         res->initEnemy(EmeraldGame::gameInstance->obstaclesAtlas, pos, enemyType);
     } else {
