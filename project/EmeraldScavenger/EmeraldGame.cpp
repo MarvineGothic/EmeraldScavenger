@@ -76,20 +76,20 @@ EmeraldGame::EmeraldGame()
 // ============================================ INIT FUNCTIONS =========================================================
 
 void EmeraldGame::initAssets() {
-    obstaclesAtlas = SpriteAtlas::create("obstacles.json", Texture::create()
-            .withFile("obstacles.png")
+    platformerArtAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
+            .withFile("platformer-art-deluxe.png")
             .withFilterSampling(false)
             .build());
     gameSpritesAtlas = SpriteAtlas::create("gameSprites.json", Texture::create()
             .withFile("gameSprites.png")
             .withFilterSampling(false)
             .build());
-    uiAtlas = SpriteAtlas::create("ui.json", Texture::create()
-            .withFile("ui.png")
+    obstaclesAtlas = SpriteAtlas::create("obstacles.json", Texture::create()
+            .withFile("obstacles.png")
             .withFilterSampling(false)
             .build());
-    platformerArtAtlas = SpriteAtlas::create("platformer-art-deluxe.json", Texture::create()
-            .withFile("platformer-art-deluxe.png")
+    uiAtlas = SpriteAtlas::create("ui.json", Texture::create()
+            .withFile("ui.png")
             .withFilterSampling(false)
             .build());
     level = Level::createDefaultLevel(this);
