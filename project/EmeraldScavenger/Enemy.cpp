@@ -124,7 +124,7 @@ void Enemy::initEnemy(std::shared_ptr<SpriteAtlas> enemyAtlas, vec2 position, En
         //physicsComponent->getBody()->ApplyAngularImpulse(5, true);
         physicsComponent->getFixture()->SetRestitution(0.4);
     }
-    if (!(enemyType == EnemyType::Boulder || enemyType == EnemyType::SpikeMonster)) {
+    if (!(enemyType == EnemyType::Boulder)) {
         pos = physicsComponent->getPosition();
         physicsComponent->fixRotation();
         physicsComponent->getFixture()->SetFriction(1);
@@ -188,7 +188,7 @@ void Enemy::update(float deltaTime) {
     b2Body *body = physicsComponent->getBody();
 
     // ====================== Enemy VELOCITY =====================
-    if (!(enemyType == EnemyType::Boulder || enemyType == EnemyType::SpikeMonster)) {
+    if (!(enemyType == EnemyType::Boulder)) {
         float accelerationSpeed = 0.01f;
         physicsComponent->addImpulse(movement * accelerationSpeed);
         float maximumVelocity = enemyVelocity;

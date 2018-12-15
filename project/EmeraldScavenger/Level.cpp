@@ -1143,7 +1143,7 @@ shared_ptr<PlatformComponent> Level::addWall(int x, int y, Sprite sprite, int le
 shared_ptr<Enemy> Level::addEnemy(vec2 pos, Enemy::EnemyType enemyType) {
     auto gameObject = game->createGameObject();
     auto res = gameObject->addComponent<Enemy>();
-    if (enemyType == Enemy::EnemyType::Boulder || enemyType == Enemy::EnemyType::SpikeMonster) {
+    if (enemyType == Enemy::EnemyType::Boulder) {
         gameObject->name = "Boulder";
         res->initEnemy(EmeraldGame::gameInstance->obstaclesAtlas, pos, enemyType);
     } else {
