@@ -14,7 +14,7 @@ public:
 
     Sprite backgroundSprite;
 
-    void initDynamicBackground(string filename);
+    void initDynamicBackground(string filename, float levelHeight, float levelWidth);
 
     void initStaticBackground(string filename);
 

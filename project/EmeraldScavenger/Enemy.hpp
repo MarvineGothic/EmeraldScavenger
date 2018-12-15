@@ -30,7 +30,7 @@ public:
         Dragon,
         AngryBird,
 		Boulder,
-        SpikeMonster,
+        Poison,
     };
 
     void updateSprite(float deltaTime);
@@ -49,19 +49,25 @@ public:
     
     void initEnemy(shared_ptr<SpriteAtlas> enemyAtlas, vec2 position, EnemyType enemyType);
     
+    void dropBoulder();
+    
     bool isDead = false;
+    
+    float fireTimer = 0.0f;
+    int fireOffset = 0.0f;
 
 private:
     Sprite move1;
 
     static const vec2 dragonScale;
     static const vec2 birdScale;
-	static const vec2 spikeScale;
+    static const vec2 boulderScale;
 
     vector<shared_ptr<GameObject>> enemies;
     vector<Sprite> movingSprites;
     vector<Sprite> deadSprites;
-
+    
+    shared_ptr<GameObject> cannonObject;
     bool isGrounded = false;
     float radius;
     bool left = false;

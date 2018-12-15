@@ -80,16 +80,8 @@ void EmeraldGame::initAssets() {
             .withFile("obstacles.png")
             .withFilterSampling(false)
             .build());
-    enemiesAtlas = SpriteAtlas::create("enemiesSprites.json", Texture::create()
-            .withFile("enemiesSprites.png")
-            .withFilterSampling(false)
-            .build());
     gameSpritesAtlas = SpriteAtlas::create("gameSprites.json", Texture::create()
             .withFile("gameSprites.png")
-            .withFilterSampling(false)
-            .build());
-    scavengerAtlas = SpriteAtlas::create("scavengerStages.json", Texture::create()
-            .withFile("scavengerStages.png")
             .withFilterSampling(false)
             .build());
     uiAtlas = SpriteAtlas::create("ui.json", Texture::create()
@@ -108,7 +100,7 @@ void EmeraldGame::initAssets() {
     pauseSprite = gameSpritesAtlas->get("spr_paused.png");
     levelSprite = gameSpritesAtlas->get("level.png");
     levelSprite.setPosition({-50.0f, 0.0f});
-    emeraldSprite = obstaclesAtlas->get("diamond blue.png");
+    emeraldSprite = obstaclesAtlas->get("emerald.png");
     emeraldSprite.setScale(EmeraldGame::scale * 0.8f);
 
     audioManager = AudioManager::instance();
@@ -166,13 +158,13 @@ void EmeraldGame::initPlayer() {
     auto playerComponent = player->addComponent<Player>();
 
     playerComponent->setSprites(
-            scavengerAtlas->get("boy-idle.png"),
-            scavengerAtlas->get("jump_upboy.png"),
-            scavengerAtlas->get("jump_fallboy.png"),
-            scavengerAtlas->get("frame-1_boy.png"),
-            scavengerAtlas->get("frame-2_boy.png"),
-            scavengerAtlas->get("frame-3_boy.png"),
-            scavengerAtlas->get("boy-hit.png")
+            obstaclesAtlas->get("idle1.png"),
+            obstaclesAtlas->get("jump1.png"),
+            obstaclesAtlas->get("jump2.png"),
+            obstaclesAtlas->get("running1.png"),
+            obstaclesAtlas->get("running2.png"),
+            obstaclesAtlas->get("running3.png"),
+            obstaclesAtlas->get("hit.png")
     );
 
     // set camera follow player:
@@ -340,13 +332,10 @@ void EmeraldGame::update(float time) {
                 gravity = (300 / sqrt(player->position.y));
                 world = EmeraldGame::gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
-                printf("Current grav: %f\n", world->GetGravity().y);
             } else {
-                //printf("Current player position: %f\n", player->position.y);
                 gravity = (-150 / sqrt(player->position.y));
                 world = EmeraldGame::gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
-                printf("Current gravity: %f\n", world->GetGravity().y);
             }
             for (auto &go : gameObjectsList) {
                 if (go->getPosition().x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 &&
@@ -390,7 +379,6 @@ void EmeraldGame::render() {
         profiler.update();
         profiler.gui(false);
     }
-
     background.renderBackground(renderPass, 0.0f);
 
     auto pos = camera->getGameObject()->getPosition();

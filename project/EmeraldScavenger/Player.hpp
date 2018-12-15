@@ -23,7 +23,7 @@ class Player : public Entity, public b2RayCastCallback {
     float distance = 0.0f;
     bool touchesPlatform = false;
     bool isGrounded = false;
-
+    shared_ptr<GameObject> cannonObject;
     float radius;
     bool left = false;
     bool right = false;

@@ -49,7 +49,7 @@ class Level {
     static vec2 startPosition, finishPosition;
 
     static int emeraldsNeeded;
-    Sprite ground, brick, moss;
+    Sprite ground, brick, wood, orange, blue, green, brown;
     EmeraldGame *game{};
 
     vector<shared_ptr<CollectibleItem>> collectibles;
