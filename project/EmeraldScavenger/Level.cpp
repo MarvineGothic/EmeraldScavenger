@@ -136,7 +136,7 @@ void Level::level_intro() {
     auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
     movingPlatformComponent->setMovementStart({150, 3});
     movingPlatformComponent->setMovementEnd({160, 3});
-    movingPlatformComponent->setSpeed(2);
+    movingPlatformComponent->setSpeed(3);
 
     addPlatform(170, 0, wood, width - 170, false); //Floor (part 3)
 
@@ -157,6 +157,7 @@ void Level::level_intro() {
     if (collectibles.empty() && EmeraldGame::gameInstance->getEmeraldCounter() == 0) {
         collectibles.emplace_back(addCollectible(vec2(width - 5, 1.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(width - 10, 1.5f), "Pie"));
+		collectibles.emplace_back(addCollectible(vec2(33.5f, 13.5f), "Pie"));
     } else if (!collectibles.empty()) {
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
@@ -176,22 +177,6 @@ void Level::level_intro() {
     addBrick(vec2{5, 2.5}, EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_4.png"),
              EmeraldGame::scale,
              0.2f, 1, 1);
-
-    /*
-    auto movingPlatform = addPlatform(10, 3, 2, 5, true);
-    auto movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent->setMovementStart({ 10, 3 });
-    movingPlatformComponent->setMovementEnd({ 10, 10 });
-    // add some enemies to the level
-    addEnemy({ 50, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 25, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 75, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 100, 2 }, Enemy::EnemyType::Zombie);
-    addEnemy({ 75, 10 }, Enemy::EnemyType::AngryBird);
-    addEnemy({ 100, 5 }, Enemy::EnemyType::Dragon);
-    addEnemy({ 30, 5 }, Enemy::EnemyType::AngryBird);
-    addEnemy({ 50, 5 }, Enemy::EnemyType::Dragon);
-*/
 
 }
 
@@ -411,7 +396,6 @@ void Level::level_phys() {
 		//startPosition = vec2{ 15, 61.5 }; //This one's just here for quicker testing
 	}
 
-
     vec2 levelMin = {width + width, height - 5};
     vec2 levelMax = {width, height};
 
@@ -440,7 +424,8 @@ void Level::level_phys() {
         collectibles.emplace_back(addCollectible(vec2(36.5f, 40.5f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(40.0f, 58.0f), "Emerald"));
         collectibles.emplace_back(addCollectible(vec2(38.0f, 58.0f), "Pie"));
-        collectibles.emplace_back(addCollectible(vec2(width - 4.5f, 68.5f), "Emerald"));
+		collectibles.emplace_back(addCollectible(vec2(21.0f, 28.5f), "Pie"));
+		collectibles.emplace_back(addCollectible(vec2(width - 4.5f, 68.5f), "Emerald"));
     } else if(!collectibles.empty()){
         for (auto &cItem : collectibles) {
             temp.emplace_back(addCollectible(cItem->getPosition(), cItem->getName()));
@@ -453,8 +438,11 @@ void Level::level_phys() {
     }
 
     addPlatform(1, 10, ground, 5, false);
-    addPlatform(1, 30, ground, 40, false);
-    addWall(41, 30, brick, 9);
+	addPlatform(1, 27, ground, 40, false);
+    addPlatform(3, 30, ground, 36, false);
+	addWall(5, 31, brick, 2);
+	addWall(33, 31, brick, 2);
+    addWall(41, 27, brick, 12);
     addWall(41, 45, brick, 15);
     addPlatform(33, 38, ground, 8, false);
     addPlatform(33, 45, ground, 8, false);
@@ -467,6 +455,10 @@ void Level::level_phys() {
 
     addPlatform(20, 5, ground, 5, false);
     addPlatform(25, 10, ground, width - 25, false);
+	addWall(25, 5, brick, 5);
+	addWall(25, 1, brick, 2);
+	addWall(24, 1, brick, 1);
+	addWall(width - 1, 11, brick, 1);
 
     addEnemy({30, 2}, Enemy::EnemyType::Zombie);
     addEnemy({35, 2}, Enemy::EnemyType::Zombie);
@@ -512,6 +504,7 @@ void Level::level_phys() {
     addPlatform(15, 59, ground, 26, false);
     addPlatform(11, 67, ground, width - 11, false);
     addWall(15, 57, brick, 6);
+	addWall(16, 60, brick, 1);
     addPlatform(11, 57, ground, 4, false);
 
     addBrick(vec2{19, 62}, EmeraldGame::gameInstance->obstaclesAtlas->get("tiles_3.png"),
@@ -519,9 +512,9 @@ void Level::level_phys() {
              0.7f, 1, 1);
 
     //Elevator 5
-    movingPlatform = addPlatform(1, 37, ground, 5, true);
+    movingPlatform = addPlatform(1, 40, ground, 5, true);
     movingPlatformComponent = movingPlatform->getGameObject()->addComponent<MovingPlatformComponent>();
-    movingPlatformComponent->setMovementStart({1, 37});
+    movingPlatformComponent->setMovementStart({1, 40});
     movingPlatformComponent->setMovementEnd({1, 61});
     movingPlatformComponent->setSpeed(5);
 

@@ -172,7 +172,7 @@ void EmeraldGame::initPlayer() {
 }
 
 void EmeraldGame::initVariables() {
-	livesCounter = 5;
+	livesCounter = 4;
 	emeraldCounter = 0;
 	currentLevel = 0;
 	currentStartPosition = vec2{ NULL, NULL };
@@ -301,8 +301,10 @@ void EmeraldGame::update(float time) {
     // ========================== by: Sergiy Isakov 19.11.18 00:52 =====================
     if (gameState == GameState::Running) {
         updatePhysics();
-        if (time > 0.03) // if framerate approx 30 fps then run two physics steps
+        if (time > 0.03) // if framerate approx less than 30 fps then run two physics steps
             updatePhysics();
+		if (time > 0.05) // if framerate approx less than 20 fps then run three physics steps
+			updatePhysics();
 
         for (auto &gameObject : gameObjectsList) {
             gameObject->update(time);
