@@ -37,7 +37,6 @@ void Door::initDoor(vec2 pos, bool isOpen, bool isExit, int level, vec2 nextLeve
     this->isExit = isExit;
     if (isOpen) {
         spriteComponent->setSprite(open);
-        Level::doorIsOpen = true;
     } else spriteComponent->setSprite(close);
 
     physicsComponent->initBox(b2_staticBody,
@@ -47,8 +46,8 @@ void Door::initDoor(vec2 pos, bool isOpen, bool isExit, int level, vec2 nextLeve
                               1);
     physicsComponent->setSensor(true);
 
-	this->level = level;
-	this->nextLevelStartPosition = nextLevelStartPosition;
+    this->level = level;
+    this->nextLevelStartPosition = nextLevelStartPosition;
 
     gameObject->setPosition(vec2{pos.x, pos.y} * Level::tileSize);
 }
