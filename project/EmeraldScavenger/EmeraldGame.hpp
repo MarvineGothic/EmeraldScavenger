@@ -77,7 +77,7 @@ class EmeraldGame : public b2ContactListener {
 
     void render();
 
-	void completedLevel(int level);
+	void completedLevel(Level::LevelName level);
 
     void onKey(SDL_Event &event);
 
@@ -112,7 +112,7 @@ class EmeraldGame : public b2ContactListener {
 public:
     EmeraldGame();
 
-    static int currentLevel, nextLevel;
+    static Level::LevelName currentLevel, nextLevel;
 	static vec2 currentStartPosition, nextStartPosition;
 
     shared_ptr<GameObject> createGameObject();

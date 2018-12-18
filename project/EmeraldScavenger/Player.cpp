@@ -150,7 +150,7 @@ void Player::onCollisionStart(PhysicsComponent *comp) {
     if (obj->name == "Door" && obj->getComponent<Door>()->isExit) {
         exit = true;
 
-        EmeraldGame::nextLevel = obj->getComponent<Door>()->level;
+        EmeraldGame::nextLevel = static_cast<Level::LevelName>(obj->getComponent<Door>()->level);
         EmeraldGame::nextStartPosition = obj->getComponent<Door>()->nextLevelStartPosition;
 
     }

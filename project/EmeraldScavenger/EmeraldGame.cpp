@@ -24,8 +24,8 @@ auto currentTime = gettimeofday(&macTime, NULL);
 auto time_ms = (macTime.tv_sec * 1000) + (macTime.tv_usec / 1000);
 #endif
 
-int EmeraldGame::currentLevel = 0;
-int EmeraldGame::nextLevel = 1;
+Level::LevelName EmeraldGame::currentLevel = Level::LevelName::Intro;
+Level::LevelName EmeraldGame::nextLevel = Level::LevelName::Hub;
 vec2 EmeraldGame::currentStartPosition = vec2{NULL, NULL};
 vec2 EmeraldGame::nextStartPosition = vec2{NULL, NULL};
 const vec2 EmeraldGame::windowSize(800, 600);
@@ -170,34 +170,34 @@ void EmeraldGame::initPlayer() {
 }
 
 void EmeraldGame::initVariables() {
-	livesCounter = 5;
+	livesCounter = 4;
 	emeraldCounter = 0;
-	currentLevel = 0;
+	currentLevel = Level::LevelName::Intro;
 	currentStartPosition = vec2{ NULL, NULL };
 	EmeraldGame::introCleared = false, EmeraldGame::physCleared = false,
 		EmeraldGame::gravCleared = false, EmeraldGame::procCleared = false,
 		EmeraldGame::bonusCleared = false, canEnterNextLevel = true;
 }
 
-void EmeraldGame::completedLevel(int level) {
+void EmeraldGame::completedLevel(Level::LevelName level) {
     switch (level) {
-        case 0:
-            introCleared = true;
-            break;
-        case 2:
-            gravCleared = true;
-            break;
-        case 3:
-            physCleared = true;
-            break;
-        case 4:
-            procCleared = true;
-            break;
-        case 8:
-            bonusCleared = true;
-            break;
-        default:
-            break;
+	case Level::LevelName::Intro:
+        introCleared = true;
+        break;
+    case Level::LevelName::Grav:
+        gravCleared = true;
+        break;
+    case Level::LevelName::Phys:
+        physCleared = true;
+        break;
+    case Level::LevelName::Proc:
+        procCleared = true;
+        break;
+    case Level::LevelName::Bonus2:
+        bonusCleared = true;
+        break;
+    default:
+        break;
     }
 }
 
@@ -319,13 +319,13 @@ void EmeraldGame::update(float time) {
         }
         if (livesCounter < 1) {
             initGame();
-            currentLevel = 0;
+            currentLevel = Level::LevelName::Intro;
             gameState = GameState::GameOver;
             audioManager->playSFX("gameOver.mp3", 4);
         }
         // ==========================    CHANGES GRAVITY    =============================
         // ========================== by: Eimantas Urbutis  =============================
-        if (currentLevel == 2) {
+        if (currentLevel == Level::LevelName::Grav) {
             float gravity;
             if (player->position.x > gameInstance->getLevel()->getWidth() / 2 &&
                 player->position.y > gameInstance->getLevel()->getHeight() / 10) {
@@ -396,7 +396,7 @@ void EmeraldGame::render() {
         spriteBatchBuilder.addSprite(pauseSprite);
     } else if (gameState == GameState::NextLevel) {
         spriteBatchBuilder.addSprite(levelSprite);
-        auto levelNumber = uiAtlas->get("numeral" + to_string(currentLevel) + ".png");
+        auto levelNumber = uiAtlas->get("numeral" + to_string(static_cast<int>(currentLevel)) + ".png");
         levelNumber.setScale({2.0f, 2.0f});
         levelNumber.setPosition({100.0f, 5.0f});
         spriteBatchBuilder.addSprite(levelNumber);
