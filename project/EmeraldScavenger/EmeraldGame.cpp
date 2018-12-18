@@ -57,20 +57,18 @@ EmeraldGame::EmeraldGame()
     initAssets();
     initGame();
 
-    if (gameState != GameState::Pause) {
-        // setup callback functions
-        r.keyEvent = [&](SDL_Event &e) {
-            onKey(e);
-        };
-        r.frameUpdate = [&](float deltaTime) {
-            update(deltaTime);
-        };
-        r.frameRender = [&]() {
-            render();
-        };
-        // start game loop
-        r.startEventLoop();
-    }
+    // setup callback functions
+    r.keyEvent = [&](SDL_Event &e) {
+        onKey(e);
+    };
+    r.frameUpdate = [&](float deltaTime) {
+        update(deltaTime);
+    };
+    r.frameRender = [&]() {
+        render();
+    };
+    // start game loop
+    r.startEventLoop();
 }
 
 // ============================================ INIT FUNCTIONS =========================================================
@@ -172,7 +170,7 @@ void EmeraldGame::initPlayer() {
 }
 
 void EmeraldGame::initVariables() {
-	livesCounter = 4;
+	livesCounter = 5;
 	emeraldCounter = 0;
 	currentLevel = 0;
 	currentStartPosition = vec2{ NULL, NULL };
@@ -264,20 +262,20 @@ void EmeraldGame::onKey(SDL_Event &event) {
                 }
                 break;
             case SDLK_UP:
-				if (canEnterNextLevel) {
-					if (emeraldCounter >= Level::getEmeraldsNeeded() && player->getComponent<Player>()->exit) {
-						canEnterNextLevel = false;
-						if (emeraldCounter != 0) {
-							audioManager->playMusic("finish.mp3", 4, 0);
-						}
-						gameState = GameState::NextLevel;
-						completedLevel(currentLevel);
-						currentStartPosition = nextStartPosition;
-						currentLevel = nextLevel;
-						initGame();
-						emeraldCounter = 0;
-					}
-				}
+
+                if (canEnterNextLevel && emeraldCounter >= Level::getEmeraldsNeeded() &&
+                    player->getComponent<Player>()->exit) {
+                    canEnterNextLevel = false;
+                    if (emeraldCounter != 0) {
+                        audioManager->playMusic("finish.mp3", 4, 0);
+                    }
+                    gameState = GameState::NextLevel;
+                    completedLevel(currentLevel);
+                    currentStartPosition = nextStartPosition;
+                    currentLevel = nextLevel;
+                    initGame();
+                    emeraldCounter = 0;
+                }
                 break;
             case SDLK_ESCAPE:
                 if (gameState != GameState::Pause) {
@@ -328,23 +326,23 @@ void EmeraldGame::update(float time) {
         // ==========================    CHANGES GRAVITY    =============================
         // ========================== by: Eimantas Urbutis  =============================
         if (currentLevel == 2) {
-            float gravity = -9.8;
-            if (player->position.x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 &&
-                player->position.y > EmeraldGame::gameInstance->getLevel()->getHeight() / 10) {
+            float gravity;
+            if (player->position.x > gameInstance->getLevel()->getWidth() / 2 &&
+                player->position.y > gameInstance->getLevel()->getHeight() / 10) {
                 gravity = (300 / sqrt(player->position.y));
-                world = EmeraldGame::gameInstance->world;
+                world = gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
             } else {
                 gravity = (-150 / sqrt(player->position.y));
-                world = EmeraldGame::gameInstance->world;
+                world = gameInstance->world;
                 world->SetGravity(b2Vec2(0.0f, gravity));
             }
             for (auto &go : gameObjectsList) {
-                if (go->getPosition().x > EmeraldGame::gameInstance->getLevel()->getWidth() / 2 &&
-                    go->position.y > EmeraldGame::gameInstance->getLevel()->getHeight() / 10) {
+                if (go->getPosition().x > gameInstance->getLevel()->getWidth() / 2 &&
+                    go->position.y > gameInstance->getLevel()->getHeight() / 10) {
                     if (go->getComponent<SpriteComponent>()) {
                         if (go->name != "Player" && go->name != "Enemy" &&
-                            go->getPosition().y > EmeraldGame::gameInstance->getLevel()->getHeight() / 10) {
+                            go->getPosition().y > gameInstance->getLevel()->getHeight() / 10) {
                             auto currentSprite = go->getComponent<SpriteComponent>()->getSprite();
                             currentSprite.setFlip({false, true});
                             go->getComponent<SpriteComponent>()->setSprite(currentSprite);
@@ -359,7 +357,7 @@ void EmeraldGame::update(float time) {
         if (nextLevelDelta >= 2.0f) {
             level->clearEmeralds();
             nextLevelDelta = 0;
-			canEnterNextLevel = true;
+            canEnterNextLevel = true;
             runGame();
         }
     } else if (gameState == GameState::Start) {
@@ -367,8 +365,8 @@ void EmeraldGame::update(float time) {
         gameState = GameState::Ready;
         background.initStaticBackground("start.png");
         level->clearEmeralds();
-		initVariables();
-	}
+        initVariables();
+    }
 }
 
 void EmeraldGame::render() {
@@ -407,7 +405,7 @@ void EmeraldGame::render() {
     // ======================== UI LIVES AND EMERALDS ==================================
     // ===================== by: Sergiy Isakov 17.11.18 22.17 =======================
     if (gameState == GameState::Running || gameState == GameState::Pause) {
-        auto livesSprite = gameSpritesAtlas->get("spr_heart" + to_string(livesCounter) + ".png");
+        auto livesSprite = uiAtlas->get("spr_heart" + to_string(livesCounter) + ".png");
         livesSprite.setPosition({pos.x - windowSize.x * 0.4f, pos.y + windowSize.y * 0.45f});
         livesSprite.setScale(EmeraldGame::scale * 1.5f);
         spriteBatchBuilder.addSprite(livesSprite);

@@ -11,14 +11,12 @@ target_link_libraries(EmeraldScavenger ${all_libs})
 
 # copy files to dest
 file(COPY
-	assets/fence_background.png
-	assets/gravity_background.png
+        assets/fence_background.png
+        assets/gravity_background.png
         assets/background.png
         assets/start.png
         assets/fireSprites.json assets/fireSprites.png
-        assets/enemiesSprites.json assets/enemiesSprites.png
         assets/obstacles.json assets/obstacles.png
-        assets/scavengerStages.json assets/scavengerStages.png
         assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png
         assets/gameSprites.json assets/gameSprites.png
         assets/ui.json assets/ui.png
@@ -35,18 +33,16 @@ file(COPY
         assets/sounds/glassbell.wav
         assets/sounds/jump.wav
         assets/sounds/inPit.wav
-	assets/sounds/gravitySoundtrack.mp3
-	assets/sounds/cannon.mp3
+        assets/sounds/gravitySoundtrack.mp3
+        assets/sounds/cannon.mp3
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
 file(COPY
-	assets/fence_background.png
-	assets/gravity_background.png
+        assets/fence_background.png
+        assets/gravity_background.png
         assets/background.png
         assets/start.png
         assets/fireSprites.json assets/fireSprites.png
-        assets/enemiesSprites.json assets/enemiesSprites.png
         assets/obstacles.json assets/obstacles.png
-        assets/scavengerStages.json assets/scavengerStages.png
         assets/platformer-art-deluxe.json assets/platformer-art-deluxe.png
         assets/gameSprites.json assets/gameSprites.png
         assets/ui.json assets/ui.png
@@ -64,8 +60,8 @@ file(COPY
         assets/sounds/glassbell.wav
         assets/sounds/jump.wav
         assets/sounds/inPit.wav
-	assets/sounds/gravitySoundtrack.mp3
-	assets/sounds/cannon.mp3
+        assets/sounds/gravitySoundtrack.mp3
+        assets/sounds/cannon.mp3
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release)
 
 IF (WIN32)

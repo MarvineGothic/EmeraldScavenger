@@ -20,7 +20,6 @@ class PhysicsComponent;
 enum class GameState {
     Start,
     Pause,
-    Menu,
     Ready,
     Running,
     GameOver,
